@@ -1,4 +1,5 @@
 import './globals.css'
+import MainToolbar from './components/common/MainToolBar'
 
 export const metadata = {
   title: 'Create Next App',
@@ -11,8 +12,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <div>
+      <MainToolbar></MainToolbar>
       <body>{children}</body>
-    </html>
+    </div>
   )
 }
