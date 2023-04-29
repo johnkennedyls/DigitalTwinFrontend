@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 import { TextField, Button, Select, MenuItem, Checkbox , FormControl , OutlinedInput,List, ListItem   } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import Autocomplete from '@mui/material/Autocomplete';
-import AlarmService from './services/AlarmService';
+import AlarmService from '../../services/AlarmService';
 
-function App() {
+function AddAlarm() {
   const [valor, setValor] = useState('');
   const [tags, setTags] = useState([]);
   const [events, setEvents] = useState([]);
@@ -40,7 +37,7 @@ function App() {
     useEffect(() => {
       async function getEvents() {
         const events = await AlarmService.getEvents();
-        setEmails(events);
+        setEvents(events);
       }
       getEvents();
     }, []);
@@ -49,7 +46,9 @@ function App() {
   useEffect(() => {
     async function getEmails() {
       const emails = await AlarmService.getEmails();
-      setUsers(emails);
+      setEmails
+      
+      (emails);
     }
     getEmails();
   }, []);
@@ -169,4 +168,4 @@ function App() {
   );
 }
 
-export default App
+export default AddAlarm
