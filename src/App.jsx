@@ -9,7 +9,6 @@ function App() {
       <div style={{maxWidth:'80%', margin:'auto'}}>
         <TimeSeries/>
       </div>
-      
     </MainLayout>
   )
 }
