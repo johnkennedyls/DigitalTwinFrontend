@@ -1,0 +1,124 @@
+{
+    "Planta Bioreactor 40LA": [
+        {
+            "Temperatura": 32.5,
+            "Presión": 1.2,
+            "Nivel de líquido": 40.2,
+            "Date": "28/04/23 6:53:12"
+        },
+        {
+            "Temperatura": 32.5,
+            "Presión": 1.2,
+            "Nivel de líquido": 40.2,
+            "Date": "28/04/23 6:53:23"
+        },
+        {
+            "Temperatura": 33.8,
+            "Presión": 1.1,
+            "Nivel de líquido": 39.5,
+            "Date": "28/04/23 6:53:43"
+        },
+        {
+            "Temperatura": 34.2,
+            "Presión": 1.3,
+            "Nivel de líquido": 41.1,
+            "Date": "28/04/23 6:53:44"
+        },
+        {
+            "Temperatura": 31.6,
+            "Presión": 1.2,
+            "Nivel de líquido": 38.9,
+            "Date": "28/04/23 6:54:12"
+        },
+        {
+            "Temperatura": 33.1,
+            "Presión": 1.4,
+            "Nivel de líquido": 39.8,
+            "Date": "28/04/23 6:54:16"
+        },
+        {
+            "Temperatura": 31.5,
+            "Presión": 1.1,
+            "Nivel de líquido": 37.6,
+            "Date": "28/04/23 6:54:19"
+        },
+        {
+            "Temperatura": 34.8,
+            "Presión": 1.2,
+            "Nivel de líquido": 40.6,
+            "Date": "28/04/23 6:54:21"
+        },
+        {
+            "Temperatura": 32.9,
+            "Presión": 1.3,
+            "Nivel de líquido": 39.9,
+            "Date": "28/04/23 6:54:29"
+        },
+        {
+            "Temperatura": 33.7,
+            "Presión": 1.1,
+            "Nivel de líquido": 39.2,
+            "Date": "28/04/23 6:54:49"
+        },
+        {
+            "Temperatura": 34.4,
+            "Presión": 1.4,
+            "Nivel de líquido": 41.5,
+            "Date": "28/04/23 6:54:59"
+        },
+        {
+            "Temperatura": 32.1,
+            "Presión": 1.2,
+            "Nivel de líquido": 39.1,
+            "Date": "28/04/23 6:55:02"
+        },
+        {
+            "Temperatura": 31.8,
+            "Presión": 1.3,
+            "Nivel de líquido": 38.7,
+            "Date": "28/04/23 6:55:11"
+        },
+        {
+            "Temperatura": 33.9,
+            "Presión": 1.2,
+            "Nivel de líquido": 40.1,
+            "Date": "28/04/23 6:55:15"
+        },
+        {
+            "Temperatura": 35.2,
+            "Presión": 1.3,
+            "Nivel de líquido": 41.9,
+            "Date": "28/04/23 6:55:22"
+        },
+        {
+            "Temperatura": 32.2,
+            "Presión": 1.1,
+            "Nivel de líquido": 38.2,
+            "Date": "28/04/23 6:55:29"
+        },
+        {
+            "Temperatura": 33.3,
+            "Presión": 1.4,
+            "Nivel de líquido": 39.7,
+            "Date": "28/04/23 6:55:31"
+        },
+        {
+            "Temperatura": 31.2,
+            "Presión": 1.2,
+            "Nivel de líquido": 38.4,
+            "Date": "28/04/23 6:55:32"
+        },
+        {
+            "Temperatura": 34.6,
+            "Presión": 1.3,
+            "Nivel de líquido": 40.9,
+            "Date": "28/04/23 6:55:44"
+        }
+    ],
+    "Planta Biorector 40LB": [
+        {}
+    ],
+    "Planta Condensador 20L": [
+        {}
+    ]
+}

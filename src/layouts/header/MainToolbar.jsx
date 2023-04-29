@@ -1,31 +1,39 @@
-import { AppBar, Toolbar, IconButton, Box, Button } from '@mui/material';
-import { Logout, Notifications, HelpOutline } from '@mui/icons-material';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Logout from '@mui/icons-material/Logout';
+import Notifications from '@mui/icons-material/Notifications';
+import HelpOutline from '@mui/icons-material/HelpOutline';
+
 import icesi_logo from '/src/assets/images/ICESI_logo.png';
 import otro_logo from '/src/assets/images/ICESI_logo.png';
+import './MainToolbar.css';
 
 export default function MainToolbar() {
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#64b5f6', borderRadius: 3 }}>
+    <AppBar position="static" className="appBar">
       <Toolbar>
-        <Box display="flex" alignItems="center">
-          <img src={icesi_logo} alt="Icesi Logo" height="40px" />
-          <Box mx={1}>
-            <div style={{ borderLeft: '1px solid #FFF', height: '30px', marginLeft: '5px', marginRight: '5px' }} />
+        <Box className="logoBox">
+          <img src={icesi_logo} alt="Icesi Logo" className="logo" />
+          <Box className="separatorBox">
+            <div className="separator" />
           </Box>
-          <img src={otro_logo} alt="Otro Logo" height="40px" />
+          <img src={otro_logo} alt="Otro Logo" className="logo" />
         </Box>
-        <Box flexGrow={1} display="flex" justifyContent="center" alignItems="center">
-          <Button color="inherit" sx={{ marginRight: 2 }}>
+        <Box className="buttonBox">
+          <Button color="inherit" className="button">
             Plantas
           </Button>
-          <Button color="inherit" sx={{ marginRight: 2 }}>
+          <Button color="inherit" className="button">
             Alarmas
           </Button>
-          <Button color="inherit">
+          <Button color="inherit" className="button">
             Gráficas
           </Button>
         </Box>
-        <Box display="flex" alignItems="center">
+        <Box className="iconBox">
           <IconButton edge="end" color="inherit" aria-label="logout">
             <Logout />
           </IconButton>
