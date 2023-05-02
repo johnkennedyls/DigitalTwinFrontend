@@ -1,172 +1,78 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { TextField, Button, Select, MenuItem, Checkbox , FormControl , OutlinedInput,List, ListItem   } from '@mui/material';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import Autocomplete from '@mui/material/Autocomplete';
 import AlarmService from './services/AlarmService';
-
-function App() {
-  const [valor, setValor] = useState('');
-  const [tags, setTags] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [emails, setEmails] = useState([]);
-  const [conditional, setConditional] = useState('');
+import { DataGrid } from '@mui/x-data-grid';
+import { IconButton } from '@mui/material';
+import { Delete, Edit, Add } from '@mui/icons-material';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import ListAlarm from  './pages/alarm-management/ListAlarm.jsx';
 
 
-  const [selectedValue, setSelectedValue] = useState("");
-  const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-  const checkedIcon = <CheckBoxIcon fontSize="small" />;
+const App = () => {
 
-  const handleChange = (event) => {
-    setOperador(event.target.value);
-    if (event.target.value === "Rango") {
-      setValor("");
+  const addAlarmPath = "/add-alarm"
+  const editAlarmPath = "/edit-alarm"
+  const [alarms, setAlarms] = useState([]);
+
+  const columns = [
+    {
+      title: "Nombre",
+      field: "sysName"
+    },
+    {
+        title: "Descripción",
+        field: "sysName"
+    },
+    {
+        title: "Tag",
+        field: "sysName"
+    },
+    {
+        title: "Condición",
+        field: "sysName"
+    }
+  ];
+
+  useEffect(() => {
+    getAlarms()
+  }, []);
+
+  const getAlarms = async () => {
+    try {
+      const data = await AlarmService.getAlarms();
+      setAlarms(data);
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  //Metodo para obtener la lista de tags
-  useEffect(() => {
-    async function getTags() {
-      const tags = await AlarmService.getAlarms();
-      setTags(tags);
-    }
-    getTags();
-  }, []);
+  
+// Definir las columnas del DataGrid
+const systemColumns = [
+  { field: 'sysId', headerName: 'ID', width: 90 },
+  { field: 'name', headerName: 'Nombre', width: 200 },
+  { field: 'description', headerName: 'Descripción', width: 300 },
+  {
+    field: 'actions',
+    headerName: 'Acciones',
+    width: 150,
+    sortable: false,
+    disableColumnMenu: true,
+  },
+];
 
-    //Metodo para obtener la lista de eventos
-    useEffect(() => {
-      async function getEvents() {
-        const events = await AlarmService.getEvents();
-        setEmails(events);
-      }
-      getEvents();
-    }, []);
-
-      //Metodo para obtener la lista de emails
-  useEffect(() => {
-    async function getEmails() {
-      const emails = await AlarmService.getEmails();
-      setUsers(emails);
-    }
-    getEmails();
-  }, []);
-
+  const systemData = [
+    { sysId: 1, name: 'Sistema 1', description: 'Descripción del sistema 1' },
+    { sysId: 2, name: 'Sistema 2', description: 'Descripción del sistema 2' },
+    { sysId: 3, name: 'Sistema 3', description: 'Descripción del sistema 3' },
+  ];
   return (
-    <>
-    <div style={{ display: 'flex', flexDirection: 'column', height: '200px', marginBottom: '20px' }}>
-  <TextField
-    label="Nombre"
-    value={valor}
-    style={{ marginRight: '10px', marginBottom: '20px' }}
-  />
-  <TextField
-    label="Descripción"
-    value={valor}
-    multiline
-    rows={4}
-    style={{ marginRight: '10px', height: '80px',marginBottom: '70px' }}
-  />
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-    <Select
-                      labelId="listTags"
-                      id="listTags"
-                      label="Tag"
-                      
-                    >
-                      {tags.map((tag) => (
-                        <MenuItem
-                          key={tag.instId}
-                          label={selectedValue ? selectedValue : "tag"}
-                          value={tag.tagid}
-                        >
-                          {tag.tagName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-      <FormControl style={{ marginLeft: '10px' }}>
-        <Select
-          value={conditional}
-          onChange={handleChange}
-        >
-          <MenuItem value="<">&lt;</MenuItem>
-          <MenuItem value=">=">&gt;=</MenuItem>
-          <MenuItem value=">">&gt;</MenuItem>
-          <MenuItem value="<=">&lt;=</MenuItem>
-          <MenuItem value="=">=</MenuItem>
-          <MenuItem value="Rango">Rango</MenuItem>
-        </Select>
-      </FormControl>
-      {conditional === "Rango" && (
-        <>
-          <TextField
-            label="Valor"
-            value={valor}
-            style={{ marginLeft: '20px' }}
-          />
-          <span style={{ marginLeft: '10px', marginRight: '10px' }}>-</span>
-          <TextField
-            label="Valor"
-            value={valor}
-          />
-        </>
-      )}
-      {conditional !== "Rango" && (
-        <TextField
-          label="Valor"
-          value={valor}
-          style={{ marginLeft: '20px' }}
-        />
-      )}
-
+    <div >
+      <ListAlarm>
+        
+      </ListAlarm>
     </div>
-    <Select
-                      labelId="listEvents"
-                      id="listEvents"
-                      label="Institucion"
-                      
-                    >
-                      {events.map((event) => (
-                        <MenuItem
-                          key={event.instId}
-                          label={selectedValue ? selectedValue : "tag"}
-                          value={event.instId}
-                          style={{ marginRight: '10px', marginTop: '40px' }}
-                        >
-                          {event.instName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-
-                    <div>
-                    <Autocomplete
-      multiple
-      id="listEmails"
-      options={emails}
-      disableCloseOnSelect
-      getOptionLabel={(option) => option.emails.email}
-      renderOption={(props, option, { selected }) => (
-        <li {...props}>
-          <Checkbox
-            icon={icon}
-            checkedIcon={checkedIcon}
-            style={{ marginRight: 8 }}
-            checked={selected}
-          />
-          {option.title}
-        </li>
-      )}
-      style={{ width: 500 }}
-      renderInput={(params) => (
-        <TextField {...params} label="Emails" />
-      )}
-    />
-    </div>  
-                    </div>
-    </>
-  );
+  )
 }
 
-export default App
+export default App;

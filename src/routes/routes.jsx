@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 import AddAlarm from '../pages/alarm-management/AddAlarm';
 import EditAlarm from '../pages/alarm-management/EditAlarm';
 import ListAlarm from '../pages/alarm-management/ListAlarm';
+import App from '../App.jsx'
 
 const routes = () => (
   <React.Fragment>
