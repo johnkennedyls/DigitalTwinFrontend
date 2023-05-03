@@ -4,7 +4,7 @@ import { BrowserRouter, Switch } from "react-router-dom";
 import { Provider } from 'react-redux'
 import routes from "./routes/routes.jsx";
 
-import {store} from './store'
+import { store } from './store'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,7 +13,7 @@ ReactDOM.render(
         <Switch>
           {routes()}
         </Switch>
-      </BrowserRouter>\
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

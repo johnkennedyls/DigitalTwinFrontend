@@ -23,13 +23,13 @@ export default function MainToolbar() {
           <img src={otro_logo} alt="Otro Logo" className="logo" />
         </Box>
         <Box className="buttonBox">
-          <Button color="inherit" className="button">
+          <Button color="inherit" className="button" href='/manage-plant'>
             Plantas
           </Button>
-          <Button color="inherit" className="button">
+          <Button color="inherit" className="button" href='/manage-alarm'>
             Alarmas
           </Button>
-          <Button color="inherit" className="button">
+          <Button color="inherit" className="button" href='/manage-charts'>
             Gráficas
           </Button>
         </Box>
