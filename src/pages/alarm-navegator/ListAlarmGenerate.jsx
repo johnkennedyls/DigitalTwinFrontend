@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import AlarmService from '../../services/AlarmService';
 import AvatarLetter  from '../../components/AvatarLetter.jsx'; 
-import { Avatar, IconButton } from '@mui/material';
+import {  IconButton } from '@mui/material';
+import ChipState  from '../../components/ChipState.jsx'; 
 import { Delete, Edit, Add,Visibility } from '@mui/icons-material';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { Typography, Button } from '@mui/material';
@@ -55,10 +56,38 @@ const useStyles = makeStyles({
     backgroundColor: 'red',
     marginRight: '5px',
   },
+  badge: {
+    display: 'inline-block',
+    textTransform: 'uppercase',
+    padding: '8px 12px',
+    margin: '0 2px',
+    fontSize: '10px',
+    fontWeight: 'bold',
+    borderRadius: '14px',
+    letterSpacing: '0.6px',
+    lineHeight: 1,
+    boxShadow: '1px 2px 5px 0px rgb(0 0 0 / 5%)',
+    alignItems: 'center',
+    alignSelf: 'center',
+    color: '#ffffff',
+    backgroundColor: '#a7e8bd',
+    '&[state="Activado"]': {
+      backgroundColor: '#a7e8bd',
+      color: '#036c39',
+    },
+    '&[state="paused"]': {
+      backgroundColor: '#ffb3b3',
+      color: '#8c0000',
+    },
+    '&[state="vacation"]': {
+      backgroundColor: '#ffe58f',
+      color: '#ad6800',
+    },
+  },
 });
 
 
-const ListAlarm = () => {
+const ListAlarmGenerate = () => {
   const classes = useStyles();
   const addAlarmPath = "/add-alarm"
   const editAlarmPath = "/edit-alarm"
@@ -66,21 +95,13 @@ const ListAlarm = () => {
 
   const columns = [
     {
-      title: "Nombre",
-      field: "nameAlarm"
+      title: "Condición",
+      field: "condition"
     },
     {
-        title: "Descripción",
-        field: "descriptionAlarm"
+        title: "Fecha de Activación",
+        field: "dateActive"
     },
-    {
-        title: "Tag",
-        field: "tagAlarm"
-    },
-    {
-        title: "Condición",
-        field: "conditionAlarm"
-    }
   ];
 
   useEffect(() => {
@@ -96,15 +117,12 @@ const ListAlarm = () => {
     }
   };
 
-  
   const data = [
     {
       alarmid: 1,
-      nameAlarm: "Sistema A",
-      descriptionAlarm: "Descripción del sistema A",
-      tagAlarm: "tag-1",
-      conditionAlarm: "Condiciones del sistema A",
-      state: "Activado",
+      condition: "H20>0.3",
+      dateActive: "20-04-10 8:10:21 AM",
+      state: "Activa",
       avatars: [
         { name: "John Doe" },
         { name: "Pane Doe"},
@@ -114,54 +132,35 @@ const ListAlarm = () => {
       ]
     },
     {
-      alarmid: 2,
-      nameAlarm: "Sistema B",
-      descriptionAlarm: "Descripción del sistema B",
-      tagAlarm: "tag-1",
-      conditionAlarm: "Condiciones del sistema B",
-      state: "No Activado",
-      avatars: [
-        { name: "Alex Smith"},
-        { name: "Sarah Johnson"},
-        { name: "Kohn Doe" },
-        { name: "Lohn Doe" }
-      ]
-    },
-    {
-      alarmid: 3,
-      nameAlarm: "Sistema C",
-      descriptionAlarm: "Descripción del sistema C",
-      tagAlarm: "tag-1",
-      conditionAlarm: "Condiciones del sistema C",
-      state: "Activado",
-      avatars: [
-        { name: "David Lee"},
-        { name: "Emily Chen" },
-        { name: "Kohn Doe" },
-        { name: "Lohn Doe" }
-      ]
-    },
-    {
-      alarmid: 4,
-      nameAlarm: "Sistema D",
-      descriptionAlarm: "Descripción del sistema D",
-      tagAlarm: "tag-1",
-      conditionAlarm: "Condiciones del sistema D",
-      state: "Activado",
-      avatars: [
-        { name: "Michael Davis"},
-        { name: "Jennifer Kim"},
-        { name: "Kohn Doe" },
-        { name: "Lohn Doe" }
-      ]
-    }
+        alarmid: 2,
+        condition: "POD=3.3",
+        dateActive: "20-04-10 8:10:21 AM",
+        state: "En Revisión",
+        avatars: [
+          { name: "John Doe" },
+          { name: "Pane Doe"},
+          { name: "Kohn Doe" },
+          { name: "Lohn Doe" },
+          { name: "Cohn Doe" }
+        ]
+      },
+      {
+        alarmid: 3,
+        condition: "R>0.3",
+        dateActive: "20-04-10 8:10:21 AM",
+        state: "Cerrada",
+        avatars: [
+          { name: "John Doe" },
+          { name: "Pane Doe"},
+          { name: "Kohn Doe" },
+          { name: "Lohn Doe" },
+          { name: "Cohn Doe" }
+        ]
+      }
   ];
 
   return (
     <div className={classes.tableContainer}>
-      <Typography className={classes.title} variant="h3" color="primary">
-              Gestión de Alarmas
-            </Typography>
       <Table className={classes.table}>
   <TableHead>
     <TableRow>
@@ -170,7 +169,7 @@ const ListAlarm = () => {
           {column.title}
         </TableCell>
       ))}
-       <TableCell width={100} className={classes.tableCell}>Estado</TableCell>
+        <TableCell width={100} className={classes.tableCell}>Estado</TableCell>
        <TableCell width={100} className={classes.tableCell}>Usuarios Asignados</TableCell> 
       <TableCell width={100} className={classes.tableCell}>Acciones</TableCell>
     </TableRow>
@@ -183,18 +182,9 @@ const ListAlarm = () => {
             {row[column.field]}
           </TableCell>
         ))}
-         <TableCell>
-            {row.state === "Activado" ? (
-              <div>
-                <div className={classes.greenBall}></div>
-                <span>Activado</span>
-              </div>
-            ) : (
-              <div>
-                <div className={classes.redBall}></div>
-                <span>No Activado</span>
-              </div>
-            )}
+        <TableCell>
+          <ChipState state={row.state}>
+          </ChipState>
           </TableCell>
           <TableCell>
         <AvatarLetter names={row.avatars} />
@@ -203,29 +193,13 @@ const ListAlarm = () => {
               <IconButton aria-label="show" onClick={() => handleEdit(row)}>
                 <Visibility />
               </IconButton>
-              <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
-                <Edit />
-              </IconButton>
-              <IconButton aria-label="delete" onClick={() => handleDelete(row)}>
-                <Delete />
-              </IconButton>
-            </TableCell>
+        </TableCell>
       </TableRow>
     ))}
   </TableBody>
 </Table>
-       <Button
-       className={classes.button}
-        startIcon={<Add />}
-        size="large"
-        variant="contained"
-        color="primary"
-        style={{ marginBottom: 10 }}
-      >
-        Crear Alarma
-      </Button>
     </div>
   )
 }
 
-export default ListAlarm;
+export default ListAlarmGenerate;

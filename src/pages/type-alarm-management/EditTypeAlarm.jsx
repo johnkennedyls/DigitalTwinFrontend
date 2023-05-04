@@ -102,7 +102,7 @@ const alarm = {
  
 };
 
-function AddAlarm() {
+function EditTypeAlarm() {
   const classes = useStyles();
   const history = useHistory();
 
@@ -112,13 +112,25 @@ function AddAlarm() {
   const [events, setEvents] = useState([]);
   const [emails, setEmails] = useState([]);
   const [conditional, setConditional] = useState('');
+  const [valor, setValor] = useState('');
+
+  const [age, setAge] = useState('');
+
+  const handleChangeTest = (event) => {
+    setAge(event.target.value);
+  };
 
 
-
+  const handleChangeTag = (event) => {
+    setTag(event.target.value);
+  };
 
 
   const handleChangeConditional = (event) => {
     setConditional(event.target.value);
+    if (event.target.value === "Rango") {
+      setValor("");
+    }
   };
 
   //Metodo para obtener la lista de tags
@@ -189,12 +201,29 @@ function AddAlarm() {
           <MenuItem value=">">&gt;</MenuItem>
           <MenuItem value="<=">&lt;=</MenuItem>
           <MenuItem value="=">=</MenuItem>
+          <MenuItem value="Rango">Rango</MenuItem>
         </Select>
         </FormControl>
+      {conditional === "Rango" && (
+        <>
+          <TextField
+            label="Min"
+            value={valor}
+            style={{ width: '100px', marginLeft: '10px' }}
+          />
+          <TextField
+            label="Max"
+            value={valor}
+            style={{ width: '100px', marginLeft: '30px' }}
+          />
+        </>
+      )}
+      {conditional !== "Rango" && (
         <TextField
           label="Valor"
-          type="text"
+          value={valor}
         />
+      )}
     </div>
     <FormControl >
     <InputLabel id="event">Evento a realizar cuando se genere la alarma</InputLabel>     
@@ -236,7 +265,7 @@ function AddAlarm() {
           </li>
         )}
         renderInput={(params) => (
-          <TextField {...params} label="Seleccione los correos donde se enviara una notificación" />
+          <TextField {...params} label="Seleccione los correos para enviar notificaciones" />
         )}
       />
     </div>
@@ -276,4 +305,4 @@ function AddAlarm() {
   );
 }
 
-export default AddAlarm
+export default EditTypeAlarm

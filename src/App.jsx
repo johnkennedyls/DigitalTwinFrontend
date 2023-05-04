@@ -5,7 +5,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { IconButton } from '@mui/material';
 import { Delete, Edit, Add } from '@mui/icons-material';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import ListAlarm from  './pages/alarm-management/ListAlarm.jsx';
+import ListAlarm from  './pages/type-alarm-management/ListAlarm.js';
 
 
 const App = () => {

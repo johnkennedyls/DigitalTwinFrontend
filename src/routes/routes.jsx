@@ -1,15 +1,18 @@
 import React from 'react';
 import { Route } from 'react-router';
-import AddAlarm from '../pages/alarm-management/AddAlarm';
-import EditAlarm from '../pages/alarm-management/EditAlarm';
-import ListAlarm from '../pages/alarm-management/ListAlarm';
-import App from '../App.jsx'
+import AddTypeAlarm from '../pages/type-alarm-management/AddTypeAlarm';
+import EditTypeAlarm from '../pages/type-alarm-management/EditTypeAlarm';
+import ListTypeAlarm from '../pages/type-alarm-management/ListTypeAlarm';
+import ListAlarmGenerate from '../pages/alarm-navegator/ListAlarmGenerate';
+import DetailAlarmGenerate from '../pages/alarm-navegator/DetailAlarmGenerate';
 
 const routes = () => (
   <React.Fragment>
-    <Route path="/add-alarm" component={AddAlarm} />
-    <Route path="/edit-alarm" component={EditAlarm} />
-    <Route path="/manage-alarm" component={ListAlarm} />
+    <Route path="/add-type-alarm" component={AddTypeAlarm} />
+    <Route path="/edit-type-alarm" component={EditTypeAlarm} />
+    <Route path="/manage-type-alarm" component={ListTypeAlarm} />
+    <Route path="/navegator-alarm" component={ListAlarmGenerate} />
+    <Route path="/detail-alarm" component={DetailAlarmGenerate} />
   </React.Fragment>
 );
 
