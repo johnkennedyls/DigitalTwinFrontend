@@ -8,6 +8,7 @@ import WelcomeLayout from '../layouts/welcome/WelcomeLayout';
 import MainLayout from '../layouts/main/MainLayout';
 import SVGRender from '../components/svg/SVGRender';
 import TestChart from '../components/charts/TestChart';
+import { MyComponent } from '../pages/testing/MyComponent';
 
 const MainLayoutRoutes = () => (
   <Switch>
@@ -16,7 +17,8 @@ const MainLayoutRoutes = () => (
     <Route path="/manage-alarm" component={ListAlarm} />
     <Route path="/manage-charts" component={ListTimeSeries} />
     <Route path="/chart" component={TestChart} />
-    <Route path="/svg" component={SVGRender} />
+    <Route path="/svg" component={SVGRender} /> 
+    {/* <Route path="/testing" component={MyComponent} /> */}
   </Switch>
 );
 

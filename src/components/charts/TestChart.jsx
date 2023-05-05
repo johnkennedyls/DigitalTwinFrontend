@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import ReactECharts from 'echarts-for-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateDummy } from '../../features/plant/plantSlice';
-import { DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, DEFAULT_TIME_SERIES_OPTION } from '../../services/utils/constants';
+import { DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, DEFAULT_TIME_SERIES_OPTION, DEFAULT_MARK_LINE_FORMAT } from '../../services/utils/constants';
 import { deepCopy } from '../../services/utils/funtions';
 
 export default function TestChart() {
@@ -26,7 +26,16 @@ export default function TestChart() {
         const series1 = deepCopy(DEFAULT_SERIES_FORMAT)
         series1.name = 'test1'
         series1['data'] = plantState['Planta Bioreactor 40LA']['Temperatura']
+
+        const markLine1 = deepCopy(DEFAULT_MARK_LINE_FORMAT)
+        markLine1.data[0].name = 'test1Max'
+        markLine1.data[0].yAxis = 37
+        markLine1.data[0].lineStyle.color = colors[0]
+        series1['markLine'] = markLine1
+
         option.series.push(series1)
+
+       
 
         return option;
     }
@@ -41,7 +50,6 @@ export default function TestChart() {
                 Click Here
             </Button>
             <ReactECharts option={getOption()} style={{ width: 1200 }}>TestChart</ReactECharts>
-
         </>
 
     )

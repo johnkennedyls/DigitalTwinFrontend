@@ -184,7 +184,7 @@ export default function TimeSeries() {
           )}
         </Box>
       </Box>
-      {showGraphic() && (
+      {(showGraphic() && showTags()) && (
         <Box>
           <ReactECharts option={getOption()} style={{ height: 400 }} />
           <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -194,7 +194,7 @@ export default function TimeSeries() {
           </Box>
         </Box>
       )}
-      {showTags() && (
+      {showTags() && isPlaying && (
         <Box>
           <Autocomplete
             clearIcon={false}

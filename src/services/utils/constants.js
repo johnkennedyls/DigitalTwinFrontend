@@ -23,10 +23,20 @@ export const DEFAULT_TIME_SERIES_OPTION = {
   },
   dataZoom: [
     {
-      id: 'dataZoomX',
-      type: 'slider',
-      xAxisIndex: [0]
+      show: true,
+      realtime: true,
+    },
+    {
+      type: 'inside',
+      realtime: true,
     }
+    // {
+    //   show: true,
+    //   realtime: true,
+    //   id: 'dataZoomX',
+    //   type: 'slider',
+    //   xAxisIndex: [0]
+    // }
   ],
   xAxis: [
     {
@@ -34,7 +44,6 @@ export const DEFAULT_TIME_SERIES_OPTION = {
       axisTick: {
         alignWithLabel: true
       },
-      // prettier-ignore
       data: []
     }
   ],
@@ -61,4 +70,21 @@ export const DEFAULT_SERIES_FORMAT = {
   name: '',
   type: 'line',
   data: []
+}
+export const DEFAULT_MARK_LINE_FORMAT = {
+  data: [
+    {
+      name: '',
+      yAxis: 0, 
+      label: {
+        position: 'middle',
+        formatter: ''
+      },
+      lineStyle: {
+        color: '',
+        type: 'dashed',
+        opacity: 0.5
+      }
+    }
+  ]
 }

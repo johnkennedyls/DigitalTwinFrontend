@@ -11,7 +11,7 @@ const WelcomeLayout = () => {
 
   const [logoWidth, setLogoWidth] = useState(null);
   const titleRef = useRef();
-
+  
   useEffect(() => {
     if (titleRef.current) {
       setLogoWidth(titleRef.current.offsetWidth);
