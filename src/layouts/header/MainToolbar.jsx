@@ -14,6 +14,7 @@ import './MainToolbar.css';
 export default function MainToolbar() {
   return (
     <AppBar position="static" className="appBar">
+
       <Toolbar>
         <Box className="logoBox">
           <img src={icesi_logo} alt="Icesi Logo" className="logo" />

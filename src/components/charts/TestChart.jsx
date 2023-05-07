@@ -1,14 +1,12 @@
-import { Button } from '@mui/material';
 import ReactECharts from 'echarts-for-react';
-import { useSelector, useDispatch } from 'react-redux';
-import { updateDummy } from '../../features/plant/plantSlice';
+import { useSelector } from 'react-redux';
+
 import { DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, DEFAULT_TIME_SERIES_OPTION, DEFAULT_MARK_LINE_FORMAT } from '../../services/utils/constants';
 import { deepCopy } from '../../services/utils/funtions';
 
 export default function TestChart() {
 
-    const plantState = useSelector(state => state.plants)
-    const dispatch = useDispatch()
+    const tags = useSelector(state => state.tags)
 
     const getOption = () => {
         const colors = ['#003366']
@@ -16,7 +14,7 @@ export default function TestChart() {
         option.color = colors
         option.legend.data = ['test1']
 
-        option['xAxis'][0]['data'] = plantState['Planta Bioreactor 40LA']['Date']
+        option['xAxis'][0]['data'] = tags.date
 
         const yAxis1 = deepCopy(DEFAULT_Y_AXIS_FORMAT)
         yAxis1.name = 'test1'
@@ -25,7 +23,7 @@ export default function TestChart() {
         
         const series1 = deepCopy(DEFAULT_SERIES_FORMAT)
         series1.name = 'test1'
-        series1['data'] = plantState['Planta Bioreactor 40LA']['Temperatura']
+        series1['data'] = tags[2]
 
         const markLine1 = deepCopy(DEFAULT_MARK_LINE_FORMAT)
         markLine1.data[0].name = 'test1Max'
@@ -34,21 +32,12 @@ export default function TestChart() {
         series1['markLine'] = markLine1
 
         option.series.push(series1)
-
-       
-
+        
         return option;
-    }
-
-    const handleB = () => {
-        dispatch(updateDummy(Math.random() * 100))
     }
 
     return (
         <>
-            <Button onClick={handleB}>
-                Click Here
-            </Button>
             <ReactECharts option={getOption()} style={{ width: 1200 }}>TestChart</ReactECharts>
         </>
 

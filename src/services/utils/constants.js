@@ -1,7 +1,29 @@
 import { generateRandomDarkColorsArray } from "./funtions"
+import moment from 'moment'
 
 export const DEFAULT_TIME_SERIES_OPTION = {
-  color: generateRandomDarkColorsArray(100),
+  color: [
+  "#FF5733", // Rojo brillante
+  "#FFC300", // Amarillo brillante
+  "#28A745", // Verde brillante
+  "#007BFF", // Azul brillante
+  "#FFC0CB", // Rosa claro
+  "#6C757D", // Gris oscuro
+  "#17A2B8", // Turquesa brillante
+  "#E83E8C", // Rosa oscuro
+  "#FFD700", // Oro
+  "#8A2BE2", // Violeta
+  "#7FFF00", // Chartreuse
+  "#D2691E", // Chocolate
+  "#DC143C", // Rojo carmesí
+  "#FF4500", // Rojo naranja
+  "#2E8B57", // Verde marino
+  "#ADFF2F", // Verde amarillo
+  "#FFA07A", // Salmón claro
+  "#20B2AA", // Verde claro
+  "#BA55D3", // Orquídea medio
+  "#F08080", // Coral claro
+  ...generateRandomDarkColorsArray(100)],
   tooltip: {
     trigger: 'axis',
     axisPointer: {
@@ -30,13 +52,6 @@ export const DEFAULT_TIME_SERIES_OPTION = {
       type: 'inside',
       realtime: true,
     }
-    // {
-    //   show: true,
-    //   realtime: true,
-    //   id: 'dataZoomX',
-    //   type: 'slider',
-    //   xAxisIndex: [0]
-    // }
   ],
   xAxis: [
     {

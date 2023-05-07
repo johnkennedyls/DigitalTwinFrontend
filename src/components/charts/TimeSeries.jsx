@@ -28,21 +28,23 @@ ECharts.use([
   DataZoomComponent,
   AxisPointerComponent,
   LineChart,
-  SingleAxisComponent,
+  SingleAxisComponent
 ]);
 
 export default function TimeSeries() {
 
   // REDUX DATA
   const plantState = useSelector(state => state.plants)
+  const tagsState = useSelector(state => state.tags)
 
   // FORMS
-  const [mode, setMode] = useState("");
+  const [mode, setMode] = useState('');
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
 
   // PLANTS
   const [plant, setPlant] = useState("");
   const [plants, setPlants] = useState([])
+
   useEffect(() => {
     const currentPlants = Object.keys(plantState)
     setPlants(currentPlants)
@@ -52,10 +54,8 @@ export default function TimeSeries() {
     if (plant === "") {
       return
     }
-    const data = plantState[plant]
+    const data = plantState[plant].tags
     const currentTags = Object.keys(data)
-    
-    currentTags.splice(-1, 1)
     setSelectedTags([])
     setTags(currentTags)
   }, [plant]);
@@ -71,26 +71,31 @@ export default function TimeSeries() {
       return currentOption
     }
     const option = deepCopy(DEFAULT_TIME_SERIES_OPTION)
-    option.legend.data = selectedTags
+    option.legend.data = []
+    selectedTags.forEach((tag) => {
+      option.legend.data.push(plantState[plant]['tags'][tag])
+    })
 
-    option.xAxis[0].data = plantState[plant]['Date']
+    option.xAxis[0].data = tagsState.date
 
     for (let i = 0; i < selectedTags.length; i++) {
       const tag = selectedTags[i]
+      const tagName = plantState[plant]['tags'][tag]
       const currentYaxis = deepCopy(DEFAULT_Y_AXIS_FORMAT)
-      currentYaxis.name = tag
+      currentYaxis.name = tagName
       currentYaxis.offset = 80 * i
       currentYaxis.axisLine.lineStyle.color = option.color[i]
       option.yAxis.push(currentYaxis)
 
       const currentSeries = deepCopy(DEFAULT_SERIES_FORMAT)
-      currentSeries.name = tag
-      currentSeries.data = plantState[plant][tag]
+      currentSeries.name = tagName
+      currentSeries.data = tagsState[tag]
       if (i != 0) {
         currentSeries['yAxisIndex'] = i
       }
       option.series.push(currentSeries)
     }
+
     currentOption = option
     return option;
   }
@@ -99,7 +104,6 @@ export default function TimeSeries() {
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
-    console.log(isPlaying ? 'Pausa' : 'Reproducir');
   };
 
   const handleTagChange = (event, value) => {
@@ -126,17 +130,15 @@ export default function TimeSeries() {
     return selectedTags.length > 0
   }
 
-  
-
   return (
     <Box style={{ maxWidth: '80%', margin: 'auto' }}>
       <Box>
         <FormControl fullWidth variant="outlined" margin="normal">
           <InputLabel>Planta</InputLabel>
           <Select value={plant} onChange={handlePlantChange} label="Planta">
-            {plants.map((plant) => (
-              <MenuItem key={plant} value={plant}>
-                {plant}
+            {plants.map((currentPlant) => (
+              <MenuItem key={currentPlant} value={currentPlant}>
+                { plantState[currentPlant]['name']}
               </MenuItem>
             ))}
           </Select>
@@ -202,12 +204,12 @@ export default function TimeSeries() {
             options={tags}
             value={selectedTags}
             onChange={handleTagChange}
-            getOptionLabel={(option) => option}
+            getOptionLabel={(option) => plantState[plant]['tags'][option]}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
                 <Chip
                   key={option}
-                  label={option}
+                  label={plantState[plant]['tags'][option]}
                   color="primary"
                   onDelete={(_, clicked) => {
                     if (clicked) {

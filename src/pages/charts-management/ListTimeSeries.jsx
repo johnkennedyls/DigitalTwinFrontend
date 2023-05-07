@@ -1,13 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TimeSeries from '../../components/charts/TimeSeries'
 import IconButton from '@mui/material/IconButton';
-
-import { useSelector, useDispatch } from 'react-redux';
-import { updatePlantData } from '/src/features/plant/plantSlice';
 
 export default function ListTimeSeries() {
 
@@ -21,41 +18,6 @@ export default function ListTimeSeries() {
         setCharts(charts.filter((_, i) => i !== index));
         console.log('Eliminar gráfica:', index);
     };
-
-    // REDUX DATA
-    const plantState = useSelector(state => state.plants)
-
-    // TESTS
-    const generateRandomDataForPlant = (sensors) => {
-        const data = {};
-        sensors.forEach((sensor) => {
-            if (sensor == 'Date') {
-                data[sensor] = new Date().toLocaleString();
-                return
-            }
-            data[sensor] = Math.random() * 100;
-        });
-        return data;
-    }
-    const dispatch = useDispatch();
-
-    function generateRandomValues() {
-
-        const plants = Object.keys(plantState);
-        plants.forEach((currentPlant) => {
-            const sensors = Object.keys(plantState[currentPlant]);
-            const data = generateRandomDataForPlant( sensors);
-            // console.log(data)
-            dispatch(updatePlantData({ plantName: currentPlant, newData: data }));
-        });
-    }
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            generateRandomValues();
-        }, 3500);
-        return () => clearInterval(interval);
-    }, []);
 
     return (
         <Box>

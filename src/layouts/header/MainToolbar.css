@@ -1,42 +1,41 @@
 .appBar {
-    background-color: #64b5f6;
-    border-radius: 3px;
-  }
-  
-  .logoBox {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo {
-    height: 40px;
-  }
-  
-  .separatorBox {
-    margin-left: 1rem;
-    margin-right: 1rem;
-  }
-  
-  .separator {
-    border-left: 1px solid #fff;
-    height: 30px;
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-  
-  .buttonBox {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .button {
-    margin-right: 0.5rem;
-  }
-  
-  .iconBox {
-    display: flex;
-    align-items: center;
-  }
-  
+  background-color: #64b5f6;
+  border-radius: 3px;
+}
+
+.logoBox {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+}
+
+.separatorBox {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.separator {
+  border-left: 1px solid #fff;
+  height: 30px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.buttonBox {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  margin-right: 0.5rem;
+}
+
+.iconBox {
+  display: flex;
+  align-items: center;
+}
