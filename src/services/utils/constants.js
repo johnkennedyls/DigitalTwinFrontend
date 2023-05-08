@@ -1,5 +1,4 @@
 import { generateRandomDarkColorsArray } from "./funtions"
-import moment from 'moment'
 
 export const DEFAULT_TIME_SERIES_OPTION = {
   color: [
@@ -31,8 +30,7 @@ export const DEFAULT_TIME_SERIES_OPTION = {
     }
   },
   grid: {
-    right: '0%',
-    left: '30%'
+    bottom: '40%',
   },
   toolbox: {
     feature: {
@@ -55,7 +53,12 @@ export const DEFAULT_TIME_SERIES_OPTION = {
   ],
   xAxis: [
     {
-      type: 'category',
+      type: 'time',
+      axisLabel: {
+        rotate: 45,
+        align: 'right',
+        formatter: '{yyyy}-{mm}-{dd}  \n{hh}:{mm}:{ss}  '
+      },
       axisTick: {
         alignWithLabel: true
       },
@@ -84,6 +87,7 @@ export const DEFAULT_Y_AXIS_FORMAT = {
 export const DEFAULT_SERIES_FORMAT = {
   name: '',
   type: 'line',
+  Symbol: 'circle',
   data: []
 }
 export const DEFAULT_MARK_LINE_FORMAT = {
@@ -103,3 +107,4 @@ export const DEFAULT_MARK_LINE_FORMAT = {
     }
   ]
 }
+export const SYMBOLS = ['emptyCircle', 'rect', 'triangle', 'diamond', 'circle', 'roundRect', 'pin', 'arrow']

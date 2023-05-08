@@ -21,7 +21,7 @@ import { Autocomplete } from '@mui/material'
 import { useSelector } from 'react-redux';
 import { deepCopy } from '../../services/utils/funtions';
 
-import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT } from '../../services/utils/constants';
+import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, SYMBOLS } from '../../services/utils/constants';
 
 ECharts.use([
   ToolboxComponent,
@@ -67,6 +67,7 @@ export default function TimeSeries() {
   let currentOption = {}
 
   const getOption = () => {
+    const OFFSET = 60
     if(!isPlaying){
       return currentOption
     }
@@ -76,20 +77,22 @@ export default function TimeSeries() {
       option.legend.data.push(plantState[plant]['tags'][tag])
     })
 
+    option.grid['left'] = `${OFFSET * selectedTags.length}px`
+
     option.xAxis[0].data = tagsState.date
 
     for (let i = 0; i < selectedTags.length; i++) {
       const tag = selectedTags[i]
       const tagName = plantState[plant]['tags'][tag]
       const currentYaxis = deepCopy(DEFAULT_Y_AXIS_FORMAT)
-      currentYaxis.name = tagName
-      currentYaxis.offset = 80 * i
+      currentYaxis.offset = OFFSET * i
       currentYaxis.axisLine.lineStyle.color = option.color[i]
       option.yAxis.push(currentYaxis)
 
       const currentSeries = deepCopy(DEFAULT_SERIES_FORMAT)
       currentSeries.name = tagName
       currentSeries.data = tagsState[tag]
+      currentSeries.symbol = SYMBOLS[i%SYMBOLS.length]
       if (i != 0) {
         currentSeries['yAxisIndex'] = i
       }
@@ -188,7 +191,7 @@ export default function TimeSeries() {
       </Box>
       {(showGraphic() && showTags()) && (
         <Box>
-          <ReactECharts option={getOption()} style={{ height: 400 }} />
+          <ReactECharts key={selectedTags.length} option={getOption()} style={{ height: 400 }} />
           <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <IconButton onClick={handlePlayPause}>
               {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}

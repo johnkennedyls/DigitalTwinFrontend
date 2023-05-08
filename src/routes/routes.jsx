@@ -3,11 +3,12 @@ import AddAlarm from '../pages/alarm-management/AddAlarm';
 import EditAlarm from '../pages/alarm-management/EditAlarm';
 import ListAlarm from '../pages/alarm-management/ListAlarm';
 import ListTimeSeries from '../pages/charts-management/ListTimeSeries';
+import Plant from '../pages/plant-management/Plant';
 import WelcomeLayout from '../layouts/welcome/WelcomeLayout';
-import SVGRender from '../components/svg/SVGRender';
 import TestChart from '../components/charts/TestChart';
 
 import App from '../App';
+
 
 const MainLayoutRoutes = () => (
   <App>
@@ -17,7 +18,7 @@ const MainLayoutRoutes = () => (
       <Route path="/manage-alarm" component={ListAlarm} />
       <Route path="/manage-charts" component={ListTimeSeries} />
       <Route path="/chart" component={TestChart} />
-      <Route path="/svg" component={SVGRender} />
+      <Route path="/svg" component={Plant} />
     </Switch>
   </App>
 );

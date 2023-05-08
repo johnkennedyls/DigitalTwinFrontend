@@ -15,16 +15,18 @@ export const tagSlice = createSlice({
           state[tag.assetId] = [];
         }
 
-        state[tag.assetId].push(tag.value)
+        const currentDate = moment(new Date(tag.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
+        state[tag.assetId].push([currentDate,tag.value])
+        state.date.push(currentDate)
         if (state[tag.assetId].length > LIMIT_STORED_DATA) {
           state[tag.assetId].shift()
+          state.date.shift()
         }
       });
       
       if(state.date.length > LIMIT_STORED_DATA) {
         state.date.shift()
       }
-      state.date.push(moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'))
     }
   },
 })
