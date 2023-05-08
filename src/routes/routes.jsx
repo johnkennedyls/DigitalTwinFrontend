@@ -3,11 +3,11 @@ import { Route } from 'react-router';
 import AddAlarm from '../pages/alarm-management/AddAlarm';
 import EditAlarm from '../pages/alarm-management/EditAlarm';
 import ListAlarm from '../pages/alarm-management/ListAlarm';
-import AddPlant from '../pages/plant-management/AddPlant.jsx';
-import EditPlant from '../pages/plant-management/EditPlant.jsx';
-import ListPlant from '../pages/plant-management/ListPlant.jsx';
-import PlantPage from '../pages/plant-management/PlantPage.jsx';
-import App from '../App.jsx'
+import AddPlant from '../pages/plant-management/AddPlant';
+import TagsPlantForm from '/src/components/plant/TagsPlantForm'
+import EditPlant from '../pages/plant-management/EditPlant';
+import ListPlant from '../pages/plant-management/ListPlant';
+import PlantPage from '../pages/plant-management/PlantPage';
 
 const routes = () => (
   <React.Fragment>
@@ -15,6 +15,7 @@ const routes = () => (
     <Route path="/edit-alarm" component={EditAlarm} />
     <Route path="/manage-alarm" component={ListAlarm} />
     <Route path="/add-plant" component={AddPlant}/>
+    <Route path="/add-plant-2" component={TagsPlantForm}/>
     <Route path="/edit-plant" component={EditPlant}/>
     <Route path="/list-plant" component={ListPlant}/>
     <Route path="/plants/:id" component={PlantPage} />

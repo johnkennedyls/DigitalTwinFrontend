@@ -1,118 +1,159 @@
-import React, { useState } from 'react';
-import { Button, TextField, Typography, Box, Select, MenuItem } from '@mui/material';
-import { styled } from '@mui/system';
-import { Snackbar } from '@mui/material';
+import { useState } from 'react';
+import { Button, TextField, Grid, Paper, Typography } from '@mui/material';
+import ImageIcon from '@mui/icons-material/Image';
 
-const Container = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '100vh',
-});
-
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 
 const AddPlant = () => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null);
+  const [plant, setPlant] = useState({ name: '', description: '', image: null });
+  const [crop, setCrop] = useState({ aspect: 1, width: 100 });
+  const [src, setSrc] = useState(null);
+  const [croppedImageUrl, setCroppedImageUrl] = useState(null);
 
-  const [conventionValue, setConventionValue] = useState('');
-  const [showAlert, setShowAlert] = useState(false);
 
-  const handleImageChange = (event) => {
-    setImage(event.target.files[0]);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPlant({ ...plant, [name]: value });
   };
 
-  const handleConventionTypeChange = (event) => {
-    setConventionType(event.target.value);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSrc(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const handleDeleteImage = () => {
-    setImage(null);
+  const handleImageCrop = async (crop) => {
+    if (!src || !crop.width || !crop.height) {
+      return;
+    }
+
+    const croppedImageUrl = await getCroppedImage(src, crop);
+    setCroppedImageUrl(croppedImageUrl);
+    setPlant({ ...plant, image: croppedImageUrl });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setShowAlert(true);
+
+  const getCroppedImage = (imageSrc, crop) => {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const image = new Image();
+      image.src = imageSrc;
+      image.onload = () => {
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+        canvas.width = crop.width;
+        canvas.height = crop.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(
+          image,
+          crop.x * scaleX,
+          crop.y * scaleY,
+          crop.width * scaleX,
+          crop.height * scaleY,
+          0,
+          0,
+          crop.width,
+          crop.height
+        );
+        canvas.toBlob((blob) => {
+          const croppedImageUrl = URL.createObjectURL(blob);
+          resolve(croppedImageUrl);
+        }, 'image/jpeg');
+      };
+    });
   };
 
-  const handleAlertClose = () => {
-    setShowAlert(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(plant);
+    // Aquí puedes enviar los datos del formulario a tu backend, si es necesario.
   };
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-   Agregar planta
-      </Typography>
-      <Box component="form" onSubmit={handleSubmit}>
-        <TextField
-          label="Nombre planta"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          sx={{ width: '100%', my: 1 }}
-        />
-        <TextField
-          label="Descripcion"
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-          multiline
-          rows={4}
-          sx={{ width: '100%', my: 1 }}
-        />
-        <Box sx={{ width: '100%', my: 1 }}>
-        
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            id="image-input"
-            style={{ display: 'none' }}
-          />
-          <label htmlFor="image-input">
-                    
-            <Button variant="contained" component="span" sx={{ mr: 1 }}>
-                
-              Seleccionar imagen planta
-            </Button>
-          </label>
-          {image && (
-            <Button variant="outlined" onClick={handleDeleteImage}>
-              Borrar imagen
-            </Button>
-          )}
-        </Box>
-        {image && (
-          <Box sx={{ width: '100%', my: 1 }}>
-            <Typography variant="body1" gutterBottom>
-              Image preview:
-            </Typography>
-            <img src={URL.createObjectURL(image)} alt="Plant" width="200" height="200" />
-          </Box>
-        )}
-        
-        <TextField
-          label="Convenciones"
-          value={conventionValue}
-          onChange={(event) => setConventionValue(event.target.value)}
-          sx={{ width: '100%', my: 1 }}
-        />
-        <Button type="submit" variant="contained" sx={{ mt: 2 }}>
-          Agregar planta
-        </Button>
-      </Box>
+    <Grid container justifyContent="center">
+      <Grid item xs={12} sm={6} md={4}>
+        <Paper elevation={3} sx={{ p: 4, my: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            Agregar planta
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Nombre"
+              name="name"
+              value={plant.name}
+              onChange={handleChange}
+              fullWidth
+              required
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Descripción"
+              name="description"
+              value={plant.description}
+              onChange={handleChange}
+              fullWidth
+              multiline
+              rows={4}
+              sx={{ mb: 2 }}
+            />
+            <label htmlFor="image-upload">
+              <input
+                accept="image/*"
+                id="image-upload"
+                type="file"
+                onChange={handleImageChange}
+                style={{ display: 'none' }}
+              />
+              <Button variant="outlined" component="span" startIcon={<ImageIcon />}>
+                Cargar imagen
+              </Button>
+            </label>
+            {src && (
+              <>
+                <h1>HOLAAAAA</h1>
+                <ReactCrop
+                  src={src}
+                  crop={crop}
+                  ruleOfThirds
+                  onChange={(newCrop) => setCrop(newCrop)}
+                  onComplete={handleImageCrop}
+                  style={{ marginTop: 16 }}
+                >
+                  <img src={src}></img>
+                </ReactCrop>
+              </>
 
-      <Snackbar
-      open={showAlert}
-      autoHideDuration={6000}
-      onClose={handleAlertClose}
-      message="Plant added successfully"
-    />
-
-    </Container>
+            )}
+            {croppedImageUrl && (
+              <img
+                src={croppedImageUrl}
+                alt="Vista previa de la imagen de la planta"
+                style={{
+                  maxWidth: '100%',
+                  marginTop: 16,
+                  objectFit: 'cover',
+                }}
+              />
+            )}
+            <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
+              Agregar planta
+            </Button>
+          </form>
+        </Paper>
+      </Grid>
+    </Grid>
   );
+
+
+
+
 };
 
 export default AddPlant;
