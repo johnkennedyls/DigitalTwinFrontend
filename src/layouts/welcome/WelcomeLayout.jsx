@@ -19,7 +19,7 @@ const WelcomeLayout = () => {
   }, []);
 
   const handleLogin = () => {
-    window.location.href = 'http://localhost:5173/chart';
+    window.location.href = 'http://localhost:5173/manage-charts';
   };
 
   return (
