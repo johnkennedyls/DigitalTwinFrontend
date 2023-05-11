@@ -2,46 +2,53 @@ import * as React from 'react';
 import { makeStyles } from '@mui/styles';
 import CommentBox  from '../../components/CommentBox';
 import ListAvatar  from '../../components/ListAvatar';
-import { TextField,Select,FormControl,InputLabel,MenuItem,Button,Typography} from '@mui/material';
-import ChipState  from '../../components/ChipState.jsx'; 
+import { Select,FormControl,MenuItem,Typography} from '@mui/material';
+import validate from "validate.js";
+import Paper from '@mui/material/Paper';
 
 const useStyles = makeStyles({
-    root: {
-      display: 'flex',
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& > *': {
+      flexDirection: 'column',
+      padding: '10px 10px',
+      textAlign: 'left',
       '& > *': {
-        height: '400px',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '60px 100px 60px 100px',
-        textAlign: 'left',
-        '& > *': {
-          width: '100%', // Cambiar el ancho al 100% para que los elementos ocupen todo el ancho disponible
-        },
+        width: '100%', 
       },
     },
-    left: {
-      width: '40%',
-      '& > *': {
-        height: '50%',
-        flexGrow: 1,
-      },
-    },
-    right: {
-      width: '60%',
+  },
+  paperContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100vw',
+    height: '100vh',
+  },
+  left: {
+    width: '40%',
+    '& > *': {
+      height: 'auto',
+      flexGrow: 1,
+      margin: '15px 10px 10px 0px',
+    }
+  },
+  right: {
+    width: '60%',
+    height: '70%',
+    '& > *': {
+      height: 'auto',
       flexGrow: 1,
     },
+  },
     commentsSection: {
       height: '70%',
     },
     firstElement: {
       width: '100%',
     },
-    leftContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        gap: '10px', 
-      },
     button: {   
         width: '100px', 
         height:'40px', 
@@ -75,6 +82,18 @@ const comments = [
       author: "Scott",
       comment: "Wish I could come, but I'm out of town this…",
     },
+    {
+      id: 4,
+      title: "Summer BBQ",
+      author: "Scott",
+      comment: "Wish I could come, but I'm out of town this…",
+    },
+    {
+      id: 4,
+      title: "Summer BBQ",
+      author: "Scott",
+      comment: "Wish I could come, but I'm out of town this…",
+    },
    
   ];
 
@@ -82,9 +101,13 @@ const DetailAlarmGenerate = () => {
     const classes = useStyles();
   
     return (
+      <div className={classes.paperContainer}>
+        <Paper elevation={3} style={{ width: '800px', height: '450px',margin: '10px' }}>
         <div className={classes.root}>
           <div className={classes.left}>
-            <div className={classes.leftContainer}>
+          <Typography variant="body1" gutterBottom>
+                    Planta:
+            </Typography>
             <Typography variant="body1" gutterBottom>
                     Tipo de Alarma:
             </Typography>
@@ -101,7 +124,6 @@ const DetailAlarmGenerate = () => {
           <MenuItem value="Cerrada">Cerrada</MenuItem>
         </Select>
         </FormControl>
-            </div>
             <div>
             <Typography variant="body1" gutterBottom>
                     Usuarios Asignados 
@@ -111,11 +133,13 @@ const DetailAlarmGenerate = () => {
           </div>
           <div className={`${classes.right} ${classes.commentsSection}`}>
           <Typography variant="body1" gutterBottom>
-                Comentarios 
+                Historial de Acciones 
             </Typography>
             <CommentBox comments={comments} />
           </div>
         </div>
+        </Paper>
+      </div>
       );
     };
 export default DetailAlarmGenerate;

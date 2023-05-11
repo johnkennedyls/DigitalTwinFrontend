@@ -136,7 +136,7 @@ return (
       <TextField
           value={currentComment}
           onChange={handleCommentChange}
-          label="Agrega un comentario"
+          label="Agrega una acción"
           variant="outlined"
           margin="dense"
         />
@@ -149,7 +149,7 @@ return (
           color="primary"
           onClick={handleAddComment}
         >
-          Añadir Comentario
+          Añadir acción
         </Button>
       </div>
     </>

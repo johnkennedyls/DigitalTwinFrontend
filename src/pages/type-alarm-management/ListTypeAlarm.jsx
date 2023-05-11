@@ -1,12 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import TypeAlarmService from '../../services/TypeAlarmService';
+import {getTypeAlarms,deleteTypeAlarm} from '../../services/TypeAlarmService';
 import AvatarLetter  from '../../components/AvatarLetter.jsx'; 
 import { IconButton } from '@mui/material';
 import { Delete, Edit, Add,Visibility } from '@mui/icons-material';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { Typography, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { useHistory } from "react-router-dom";
+import Paper from '@mui/material/Paper';
+import AlertDialog  from '../../components/AlertDialog.jsx'; 
 
 
 const useStyles = makeStyles({
@@ -39,151 +42,93 @@ const useStyles = makeStyles({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  greenBall: {
-    display: 'inline-block',
-    width: '10px',
-    height: '10px',
-    borderRadius: '50%',
-    backgroundColor: '#76D7C4',
-    marginRight: '5px',
-  },
-  redBall: {
-    display: 'inline-block',
-    width: '10px',
-    height: '10px',
-    borderRadius: '50%',
-    backgroundColor: 'red',
-    marginRight: '5px',
-  },
-  badge: {
-    display: 'inline-block',
-    textTransform: 'uppercase',
-    padding: '8px 12px',
-    margin: '0 2px',
-    fontSize: '10px',
-    fontWeight: 'bold',
-    borderRadius: '14px',
-    letterSpacing: '0.6px',
-    lineHeight: 1,
-    boxShadow: '1px 2px 5px 0px rgb(0 0 0 / 5%)',
+  paperContainer: {
+    display: 'flex',
+    justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'center',
-    color: '#ffffff',
-    backgroundColor: '#a7e8bd',
-    '&[state="Activado"]': {
-      backgroundColor: '#a7e8bd',
-      color: '#036c39',
-    },
-    '&[state="paused"]': {
-      backgroundColor: '#ffb3b3',
-      color: '#8c0000',
-    },
-    '&[state="vacation"]': {
-      backgroundColor: '#ffe58f',
-      color: '#ad6800',
-    },
+    width: '100vw',
+    height: '100vh',
   },
 });
 
 
 const ListTypeAlarm = () => {
   const classes = useStyles();
-  const addAlarmPath = "/add-alarm"
-  const editAlarmPath = "/edit-alarm"
+  const history = useHistory();
+
+  const addTypeAlarmPath = "/add-type-alarm"
+  const editTypeAlarmPath = "/edit-type-alarm/"
   const [alarms, setAlarms] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [currentRow, setCurrentRow] = useState(null);
 
   const columns = [
     {
+      title: "Planta",
+      field: "plantName"
+    },
+    {
       title: "Nombre",
-      field: "nameAlarm"
+      field: "typeAlarmName"
     },
     {
         title: "Descripción",
-        field: "descriptionAlarm"
+        field: "typeAlarmDescription"
     },
     {
-        title: "Tag",
-        field: "tagAlarm"
+        title: "Maximo de Alarmas",
+        field: "numberAlarmsMax"
     },
     {
         title: "Condición",
-        field: "conditionAlarm"
+        field: "condition"
     }
   ];
+
+  const handleOpenDialog = (row) => {
+    setCurrentRow(row);
+    setOpen(true);
+  };
+  
+
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
+
+  const handleEdit = (row) => {
+    history.push(`${editTypeAlarmPath}${row.typeAlarmId}`);
+  };
+
+
+  const handleDelete = () => {
+    if (currentRow) {
+      console.log(`Eliminando la fila con id ${currentRow.typeAlarmId}`);
+      deleteTypeAlarm(currentRow.typeAlarmId)
+    .then(() => {
+      // eliminar la fila de la tabla
+      const newAlarms = alarms.filter(alarm => alarm.typeAlarmId !== currentRow.typeAlarmId);
+      setAlarms(newAlarms);
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    }
+    setOpen(false);
+  };
 
   useEffect(() => {
     getAlarms()
   }, []);
 
-  const getAlarms = async () => {
-    try {
-      const data = await TypeAlarmService.getAlarms();
+  const getAlarms = () => {
+    getTypeAlarms()
+    .then((data) => {
       setAlarms(data);
-    } catch (error) {
-      console.error(error);
-    }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   };
-
-  
-  const data = [
-    {
-      alarmid: 1,
-      nameAlarm: "Sistema A",
-      descriptionAlarm: "Descripción del sistema A",
-      tagAlarm: "tag-1",
-      conditionAlarm: "Condiciones del sistema A",
-      state: "Activa",
-      avatars: [
-        { name: "John Doe" },
-        { name: "Pane Doe"},
-        { name: "Kohn Doe" },
-        { name: "Lohn Doe" },
-        { name: "Cohn Doe" }
-      ]
-    },
-    {
-      alarmid: 2,
-      nameAlarm: "Sistema B",
-      descriptionAlarm: "Descripción del sistema B",
-      tagAlarm: "tag-1",
-      conditionAlarm: "Condiciones del sistema B",
-      state: "Inactiva",
-      avatars: [
-        { name: "Alex Smith"},
-        { name: "Sarah Johnson"},
-        { name: "Kohn Doe" },
-        { name: "Lohn Doe" }
-      ]
-    },
-    {
-      alarmid: 3,
-      nameAlarm: "Sistema C",
-      descriptionAlarm: "Descripción del sistema C",
-      tagAlarm: "tag-1",
-      conditionAlarm: "Condiciones del sistema C",
-      state: "Inactiva",
-      avatars: [
-        { name: "David Lee"},
-        { name: "Emily Chen" },
-        { name: "Kohn Doe" },
-        { name: "Lohn Doe" }
-      ]
-    },
-    {
-      alarmid: 4,
-      nameAlarm: "Sistema D",
-      descriptionAlarm: "Descripción del sistema D",
-      tagAlarm: "tag-1",
-      conditionAlarm: "Condiciones del sistema D",
-      state: "Activa",
-      avatars: [
-        { name: "Michael Davis"},
-        { name: "Jennifer Kim"},
-        { name: "Kohn Doe" },
-        { name: "Lohn Doe" }
-      ]
-    }
-  ];
 
   return (
     <div className={classes.tableContainer}>
@@ -203,15 +148,15 @@ const ListTypeAlarm = () => {
     </TableRow>
   </TableHead>
   <TableBody>
-    {data.map((row) => (
-      <TableRow key={row.alarmid}>
+    {alarms.map((row) => (
+      <TableRow key={row.typeAlarmId}>
         {columns.map((column) => (
-          <TableCell key={`${row.alarmid}-${column.field}`} width={column.width}>
+          <TableCell key={`${row.typeAlarmId}-${column.field}`} width={column.width}>
             {row[column.field]}
           </TableCell>
         ))}
           <TableCell>
-        <AvatarLetter names={row.avatars} />
+        <AvatarLetter names={row.usersAssigned} />
       </TableCell> 
        <TableCell align="right" className={classes.actionCell}>
               <IconButton aria-label="show" onClick={() => handleEdit(row)}>
@@ -220,7 +165,7 @@ const ListTypeAlarm = () => {
               <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
                 <Edit />
               </IconButton>
-              <IconButton aria-label="delete" onClick={() => handleDelete(row)}>
+              <IconButton aria-label="delete" onClick={() => handleOpenDialog(row)}>
                 <Delete />
               </IconButton>
             </TableCell>
@@ -228,8 +173,16 @@ const ListTypeAlarm = () => {
     ))}
   </TableBody>
 </Table>
+<AlertDialog
+        open={open}
+        onClose={handleCloseDialog}
+        onDelete={handleDelete}
+        title="Eliminar elemento"
+        message="¿Está seguro de que desea eliminar este elemento?"
+      />
        <Button
-       className={classes.button}
+        className={classes.button}
+        href={addTypeAlarmPath}
         startIcon={<Add />}
         size="large"
         variant="contained"

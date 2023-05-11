@@ -1,88 +1,75 @@
 import axios from 'axios';
 const API_URL = "http://localhost:8080"
 
-class TypeAlarmService{
 
-    async getTypeAlarms() {
-        try {
-        const response = await axios.get(API_URL+"/type-alarms");
-        return response.data;
-        } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    }
-
-    async getTypeAlarmById(alarmid) {
-        try {
-        const response = await axios.get(`${API_URL}/type-alarm/${alarmid}`);
-        return response.data;
-        } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    }
-
-    async deleteTypeAlarm(alarmid) {
-        try {
-        const response = await axios.delete(`${API_URL}/type-alarm/delete/${alarmid}`);
-        return response.data;
-        } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    }
-
-    async createTypeAlarm(alarmData) {
-        try {
-          const response = await axios.post(`${API_URL}/type-alarm/create`, alarmData);
-          return response.data;
-        } catch (error) {
+export function getTypeAlarms() {
+  return axios.get(API_URL+"/typeAlarms/")
+      .then(response => response.data)
+      .catch(error => {
           console.error(error);
           throw error;
-        }
-    }
-
-    async updateTypeAlarm(alarmid,alarmData) {
-        try {
-            const response = await axios.put(`${API_URL}/type-alarm/update/${alarmid}`, alarmData);
-            return response.data;
-        } catch (error) {
-          console.error(error);
-          throw error;
-        }
-      }
-
-      async getEmails() {
-        try {
-        const response = await axios.get(API_URL+"/emails");
-        return response.data;
-        } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    }
-
-    async getTags() {
-        try {
-        const response = await axios.get(API_URL+"/tags");
-        return response.data;
-        } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    }
-
-    async getEvents() {
-        try {
-        const response = await axios.get(API_URL+"/events");
-        return response.data;
-        } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    }
-
+      });
 }
 
-export default new TypeAlarmService();
+export function getTypeAlarmById(alarmid) {
+  return axios.get(`${API_URL}/typeAlarms/${alarmid}`)
+      .then(response => response.data)
+      .catch(error => {
+          console.error(error);
+          throw error;
+      });
+}
+
+export function deleteTypeAlarm(alarmid) {
+  return axios.delete(`${API_URL}/typeAlarms/delete/${alarmid}`)
+      .then(response => response.data)
+      .catch(error => {
+          console.error(error);
+          throw error;
+      });
+}
+
+export function createTypeAlarm(alarmData) {
+  return axios.post(`${API_URL}/typeAlarms/create`, alarmData)
+      .then(response => response.data)
+      .catch(error => {
+          console.error(error);
+          throw error;
+      });
+}
+
+export function updateTypeAlarm(alarmid,alarmData) {
+  return axios.put(`${API_URL}/type-alarm/update/${alarmid}`, alarmData)
+      .then(response => response.data)
+      .catch(error => {
+          console.error(error);
+          throw error;
+      });
+}
+
+export function getEmails() {
+  return axios.get(API_URL+"/emails")
+      .then(response => response.data)
+      .catch(error => {
+          console.error(error);
+          throw error;
+      });
+}
+
+export function getTags() {
+  return axios.get(API_URL+"/tags")
+      .then(response => response.data)
+      .catch(error => {
+          console.error(error);
+          throw error;
+      });
+}
+
+export function getEvents() {
+  return axios.get(API_URL+"/events")
+      .then(response => response.data)
+      .catch(error => {
+          console.error(error);
+          throw error;
+      });
+}

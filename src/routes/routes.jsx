@@ -9,7 +9,7 @@ import DetailAlarmGenerate from '../pages/alarm-navegator/DetailAlarmGenerate';
 const routes = () => (
   <React.Fragment>
     <Route path="/add-type-alarm" component={AddTypeAlarm} />
-    <Route path="/edit-type-alarm" component={EditTypeAlarm} />
+    <Route path="/edit-type-alarm/:id" component={EditTypeAlarm} />
     <Route path="/manage-type-alarm" component={ListTypeAlarm} />
     <Route path="/navegator-alarm" component={ListAlarmGenerate} />
     <Route path="/detail-alarm" component={DetailAlarmGenerate} />

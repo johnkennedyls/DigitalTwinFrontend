@@ -42,7 +42,7 @@ const useStyles = makeStyles({
       },
     },
     listItemAvatar: {
-        marginLeft: 40, 
+        marginLeft: 15, 
         marginRight: 30, 
       },
   });

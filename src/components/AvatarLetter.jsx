@@ -11,14 +11,14 @@ function AvatarLetter({ names }) {
   return (
     <AvatarGroup max={3}>
       {displayedNames.map((avatar, index) => {
-        const letter = avatar.name[0];
-        const color = getAvatarColor(avatar.name[0]);
+        const letter = avatar[0];
+        const color = getAvatarColor(avatar[0]);
 
         return (
           <Avatar 
-            key={name} 
+            key={index} 
             sx={{ bgcolor: color }}
-            title={avatar.name}
+            title={avatar}
           >
             {letter}
           </Avatar>
@@ -27,7 +27,7 @@ function AvatarLetter({ names }) {
       {remainingNames.length > 0 && (
         <Avatar 
         sx={{ bgcolor: blue }}
-          title={remainingNames.map(name => name.name).join(', ')}
+          title={remainingNames.map(name => name).join(', ')}
         >
           +{remainingNames.length}
         </Avatar>
