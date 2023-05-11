@@ -29,7 +29,7 @@ function ListPlant() {
   const [plants, setPlants] = useState(initialPlants);
 
   const handleAdd = () => {
-    // Implementar la función para agregar una nueva planta
+    window.location.href = 'http://localhost:5173/add-plant';
   };
 
   const handleEdit = (id) => {

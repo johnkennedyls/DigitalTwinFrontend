@@ -67,7 +67,7 @@ const AddPlant = () => {
   };
 
   return (
-    <Container>
+    <Container style={{marginTop:'5rem'}}>
       <Stepper activeStep={activeStep}>
         {steps.map((label) => (
           <Step key={label}>

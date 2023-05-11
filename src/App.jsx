@@ -1,78 +1,67 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import AlarmService from './services/AlarmService';
-import { DataGrid } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
-import { Delete, Edit, Add } from '@mui/icons-material';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import ListAlarm from  './pages/alarm-management/ListAlarm.jsx';
+import PropTypes from 'prop-types'
+import MainLayout from './layouts/main/MainLayout'
 
+import { useEffect } from 'react';
+import { StompClient } from '/src/services/utils/stompClient';
 
-const App = () => {
+import { updateTagData } from '/src/features/plant/tagSlice'
+import { loadAllPlantsData } from './features/plant/plantSlice';
+import { useDispatch } from 'react-redux';
 
-  const addAlarmPath = "/add-alarm"
-  const editAlarmPath = "/edit-alarm"
-  const [alarms, setAlarms] = useState([]);
+import {getPlantsData} from './services/PlantService'
 
-  const columns = [
-    {
-      title: "Nombre",
-      field: "sysName"
-    },
-    {
-        title: "Descripción",
-        field: "sysName"
-    },
-    {
-        title: "Tag",
-        field: "sysName"
-    },
-    {
-        title: "Condición",
-        field: "sysName"
-    }
-  ];
+const App = ({ children }) => {
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    getAlarms()
-  }, []);
-
-  const getAlarms = async () => {
-    try {
-      const data = await AlarmService.getAlarms();
-      setAlarms(data);
-    } catch (error) {
+  const loadPLantData = () => {
+    getPlantsData()
+    .then((data) => {
+      dispatch(loadAllPlantsData(data));
+    })
+    .catch((error) => {
       console.error(error);
-    }
+    });
+  }
+
+  const onDisconnect = () => {
+    console.log('Disconnected from WebSocket server');
   };
 
-  
-// Definir las columnas del DataGrid
-const systemColumns = [
-  { field: 'sysId', headerName: 'ID', width: 90 },
-  { field: 'name', headerName: 'Nombre', width: 200 },
-  { field: 'description', headerName: 'Descripción', width: 300 },
-  {
-    field: 'actions',
-    headerName: 'Acciones',
-    width: 150,
-    sortable: false,
-    disableColumnMenu: true,
-  },
-];
+  const onMessageReceived = (message) => {
+    
+    const parsedMessage = JSON.parse(message.body);
+    dispatch(updateTagData(parsedMessage));
+  };
 
-  const systemData = [
-    { sysId: 1, name: 'Sistema 1', description: 'Descripción del sistema 1' },
-    { sysId: 2, name: 'Sistema 2', description: 'Descripción del sistema 2' },
-    { sysId: 3, name: 'Sistema 3', description: 'Descripción del sistema 3' },
-  ];
+  const onConnect = () => {
+    console.log('Connected to WebSocket server');
+    stompClient.subscribe('/topic/random', onMessageReceived);
+  };
+
+  const stompClient = new StompClient(
+    'http://localhost:8080/websocket',
+    onConnect,
+    onDisconnect
+  );
+
+  useEffect(() => {
+    loadPLantData();
+    stompClient.connect();
+    return () => {
+      stompClient.disconnect();
+    };
+  }, []);
+
   return (
-    <div >
-      <ListAlarm>
-        
-      </ListAlarm>
-    </div>
+    <MainLayout>
+      {children}
+    </MainLayout>
   )
 }
+
+App.propTypes = {
+  children: PropTypes.element,
+}
+
 
 export default App;
