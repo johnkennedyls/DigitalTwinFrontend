@@ -1,141 +1,107 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from '@mui/icons-material/Add';
-import { IconButton } from "@mui/material";
-import styled from "styled-components";
-
 import {
   Box,
   Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Pagination,
-  Typography,
-  ButtonBase,
-} from "@mui/material";
+  IconButton,
+  Avatar,
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import { DataGrid } from '@mui/x-data-grid';
 
 const initialPlants = [
   {
     id: 1,
-    name: "Planta Bioreactor 40L",
-    image:
-      "https://www.icesi.edu.co/images/instalaciones/lab-planta-piloto-17.jpg",
+    name: "Planta 1",
+    description: "Descripción de la planta 1",
+    imageUrl: "https://www.icesi.edu.co/images/instalaciones/lab-planta-piloto-17.jpg",
   },
   {
     id: 2,
-    name: "Planta de ejemplo 2",
-    image:
-      "https://www.icesi.edu.co/images/instalaciones/lab-planta-piloto-18.jpg",
-  },
-  {
-    id: 3,
-    name: "Planta de ejemplo 3",
-    image:
-      "https://www.icesi.edu.co/images/instalaciones/lab-planta-piloto-11.jpg",
-  },
-  {
-    id: 4,
-    name: "Planta de ejemplo 4",
-    image: "https://via.placeholder.com/150",
-  },
+    name: "Planta 2",
+    description: "Descripción de la planta 2",
+    imageUrl: "https://www.icesi.edu.co/images/instalaciones/lab-planta-piloto-17.jpg",
+  }
 ];
 
-const Container = styled(Box)({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  height: "100vh",
-});
-
-const ListPlant = () => {
-  const [page, setPage] = useState(1);
+function ListPlant() {
   const [plants, setPlants] = useState(initialPlants);
 
-  const handlePageChange = (event, value) => {
-    setPage(value);
+  const handleAdd = () => {
+    // Implementar la función para agregar una nueva planta
   };
 
-  const history = useHistory();
-  const handleClick = (plantId) => {
-    history.push(`/plants/${plantId}`);
+  const handleEdit = (id) => {
+    console.log(`Editar planta con id ${id}`);
+    // Implementar la función para editar una planta
   };
 
-  const handleDelete = (plantId) => {
-    setPlants(plants.filter((plant) => plant.id !== plantId));
+  const handleDelete = (id) => {
+    setPlants(plants.filter((plant) => plant.id !== id));
   };
+
+  const columns = [
+    {
+      field: 'imageUrl',
+      headerName: 'Imagen',
+      sortable: false,
+      width: 120,
+      renderCell: (params) => (
+        <Avatar src={params.value} alt={params.row.name} />
+      ),
+    },
+    { field: 'name', headerName: 'Nombre', width: 200 },
+    { field: 'description', headerName: 'Descripción', flex: 1 },
+    {
+      field: 'actions',
+      headerName: 'Acciones',
+      sortable: false,
+      width: 150,
+      disableClickEventBubbling: true,
+      renderCell: (params) => {
+        return (
+          <div>
+            <IconButton
+              color="primary"
+              onClick={() => handleEdit(params.row.id)}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              color="secondary"
+              onClick={() => handleDelete(params.row.id)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
-    <Container>
-      <Box
-        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-      >
-        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-          <Box>
-            <Button variant="contained" color="primary" sx={{ mr: 1 }}>
-              Nuevo
-            </Button>
-          </Box>
-          <Box>
-            <Button variant="contained" color="secondary">
-              Ordenar
-            </Button>
-          </Box>
-        </Box>
-      
-        {plants.slice((page - 1) * 3, page * 3).map((plant) => (
-          <Card key={plant.id} sx={{ display: "flex", mb: 2 }} >
-         
-              <CardMedia onClick={()=> handleClick(plant.id)}
-                component="img"
-                sx={{ width: 150 }}
-                image={plant.image}
-                alt={plant.name}
-              />
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  flexGrow: 1,
-                }}
-              >
-                <CardContent>
-                  <Typography
-                    gutterBottom
-                    variant="h4"
-                    component="div"
-                    sx={{ textAlign: "center" }}
-                  >
-                    {plant.name}
-                  </Typography>
-                </CardContent>
-                
-                <CardActions sx={{ justifyContent: "flex-end" }}>
-                  
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDelete(plant.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </CardActions>
-              </Box>
-        
-          </Card>
-        ))}
-
-        <Pagination
-          count={Math.ceil(plants.length / 2)}
-          page={page}
-          onChange={handlePageChange}
-        />
+    <Box m={4} maxWidth={1000} mx="auto">
+      <DataGrid
+        rows={plants}
+        columns={columns}
+        pageSize={10}
+        rowsPerPageOptions={[10,25,50]}
+        pagination
+        disableSelectionOnClick
+      />
+      <Box mt={2}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleAdd}
+        >
+          Agregar planta
+        </Button>
       </Box>
-    </Container>
+    </Box>
   );
-};
+}
 
 export default ListPlant;
