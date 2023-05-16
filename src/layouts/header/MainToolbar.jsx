@@ -9,7 +9,7 @@ import HelpOutline from '@mui/icons-material/HelpOutline';
 
 import icesi_logo from '/src/assets/images/ICESI_logo.png';
 import otro_logo from '/src/assets/images/ICESI_logo.png';
-import logobioinc from '/Users/sebastianmorales/Desktop/pdg_code_front/src/assets/images/logoBioInc.png';
+import logobioinc from '../../assets/logo_bioinc.png';
 import './MainToolbar.css';
 
 export default function MainToolbar() {
