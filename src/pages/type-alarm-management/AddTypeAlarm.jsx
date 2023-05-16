@@ -115,9 +115,12 @@ const alarm = {
 };
 
 function AddTypeAlarm() {
+
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+
   const classes = useStyles();
   const history = useHistory();
-  const typeAlarmListPath = "/manage-type-alarm"
+  const typeAlarmListPath = `${publicUrl}/manage-type-alarm`
 
   //const [tags, setTags] = useState([]);
   const [tag, setTag] = useState([]);

@@ -136,9 +136,13 @@ const tags = [
 ];
 
 function EditTypeAlarm() {
+
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+
+
   const classes = useStyles();
   const history = useHistory();
-  const typeAlarmListPath = "/manage-type-alarm"
+  const typeAlarmListPath = `${publicUrl}/manage-type-alarm`
   const [loading, setLoading] = useState(true);
 
   const { id } = useParams();

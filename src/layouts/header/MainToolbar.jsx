@@ -8,11 +8,13 @@ import Notifications from '@mui/icons-material/Notifications';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 
 import icesi_logo from '/src/assets/images/ICESI_logo.png';
-import otro_logo from '/src/assets/images/ICESI_logo.png';
-import logobioinc from '../../assets/logo_bioinc.png';
+import logobioinc from '/src/assets/logo_bioinc.png';
 import './MainToolbar.css';
 
 export default function MainToolbar() {
+  
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+
   return (
     <AppBar position="static" className="appBar">
 
@@ -25,13 +27,13 @@ export default function MainToolbar() {
           <img src={logobioinc} alt="Otro Logo" className="logo" />
         </Box>
         <Box className="buttonBox">
-          <Button color="inherit" className="button" href='/manage-plant'>
+          <Button color="inherit" className="button" href={`${publicUrl}/manage-plant`}>
             Plantas
           </Button>
-          <Button color="inherit" className="button" href='/manage-alarm'>
+          <Button color="inherit" className="button" href={`${publicUrl}/manage-type-alarm`}>
             Alarmas
           </Button>
-          <Button color="inherit" className="button" href='/manage-charts'>
+          <Button color="inherit" className="button" href={`${publicUrl}/manage-charts`}>
             Gráficas
           </Button>
         </Box>

@@ -8,6 +8,7 @@ import './WelcomeLayout.css';
 
 const WelcomeLayout = () => {
   
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
 
   const [logoWidth, setLogoWidth] = useState(null);
   const titleRef = useRef();
@@ -19,7 +20,7 @@ const WelcomeLayout = () => {
   }, []);
 
   const handleLogin = () => {
-    window.location.href = 'http://localhost:5173/manage-charts';
+    window.location.href = `${publicUrl}/manage-plant`;
   };
 
   return (

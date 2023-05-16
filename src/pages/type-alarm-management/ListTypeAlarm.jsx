@@ -82,11 +82,15 @@ const plants = [
 ];
 
 const ListTypeAlarm = () => {
+
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+
   const classes = useStyles();
   const history = useHistory();
 
-  const addTypeAlarmPath = "/add-type-alarm"
-  const editTypeAlarmPath = "/edit-type-alarm/"
+  const addTypeAlarmPath = `${publicUrl}/add-type-alarm`
+  const editTypeAlarmPath = `${publicUrl}/edit-type-alarm/`
+  
   const [alarms, setAlarms] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);

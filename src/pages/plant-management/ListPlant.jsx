@@ -26,10 +26,11 @@ const initialPlants = [
 ];
 
 function ListPlant() {
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const [plants, setPlants] = useState(initialPlants);
 
   const handleAdd = () => {
-    window.location.href = 'http://localhost:5173/add-plant';
+    window.location.href = `${publicUrl}/add-plant`;
   };
 
   const handleEdit = (id) => {
