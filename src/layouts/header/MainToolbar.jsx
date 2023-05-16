@@ -9,6 +9,7 @@ import HelpOutline from '@mui/icons-material/HelpOutline';
 
 import icesi_logo from '/src/assets/images/ICESI_logo.png';
 import otro_logo from '/src/assets/images/ICESI_logo.png';
+import logobioinc from '../../assets/logo_bioinc.png';
 import './MainToolbar.css';
 
 export default function MainToolbar() {
@@ -21,7 +22,7 @@ export default function MainToolbar() {
           <Box className="separatorBox">
             <div className="separator" />
           </Box>
-          <img src={otro_logo} alt="Otro Logo" className="logo" />
+          <img src={logobioinc} alt="Otro Logo" className="logo" />
         </Box>
         <Box className="buttonBox">
           <Button color="inherit" className="button" href='/manage-plant'>
