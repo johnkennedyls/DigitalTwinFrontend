@@ -9,10 +9,14 @@ import {
 } from '@mui/material';
 
 function AlertDialog(props) {
-  const { open, onClose, onDelete, title, message } = props;
+  const { open, onClose, onDelete, onConfirm, title, message, confirm } = props;
 
-  const handleDelete = () => {
-    onDelete();
+  const handleAction = () => {
+    if (confirm) {
+      onConfirm();
+    } else {
+      onDelete();
+    }
     onClose();
   };
 
@@ -26,8 +30,8 @@ function AlertDialog(props) {
         <Button onClick={onClose} color="primary">
           Cancelar
         </Button>
-        <Button onClick={handleDelete} color="secondary" autoFocus>
-          Eliminar
+        <Button onClick={handleAction} color="secondary" autoFocus>
+          {confirm ? "Confirmar" : "Eliminar"}
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import AlarmService from '../../services/AlarmService';
+import {getAlarmsGenerate} from '../../services/AlarmService';
 import AvatarLetter  from '../../components/AvatarLetter.jsx'; 
+import { useHistory } from "react-router-dom";
 import {  IconButton } from '@mui/material';
 import ChipState  from '../../components/ChipState.jsx'; 
 import { Delete, Edit, Add,Visibility } from '@mui/icons-material';
@@ -84,80 +85,55 @@ const useStyles = makeStyles({
       color: '#ad6800',
     },
   },
+  actionColumn: {
+    width: '150px', 
+    textAlign: 'center !important',
+  },
+  centeredCell: {
+    textAlign: 'center !important',
+  },
 });
 
 
 const ListAlarmGenerate = () => {
   const classes = useStyles();
-  const addAlarmPath = "/add-alarm"
-  const editAlarmPath = "/edit-alarm"
   const [alarms, setAlarms] = useState([]);
+  const detailAlarmPath = "/detail-alarm/"
+  const history = useHistory();
 
   const columns = [
+    {
+      title: "Tipo de Alarma",
+      field: "typeAlarmName"
+    },
     {
       title: "Condición",
       field: "condition"
     },
     {
         title: "Fecha de Activación",
-        field: "dateActive"
+        field: "activationDate"
     },
   ];
+
+  const handleShowDetail = (row) => {
+    history.push(`${detailAlarmPath}${row.alarmId}`);
+  };
 
   useEffect(() => {
     getAlarms()
   }, []);
 
-  const getAlarms = async () => {
-    try {
-      const data = await AlarmService.getAlarms();
+  const getAlarms = () => {
+    getAlarmsGenerate()
+    .then((data) => {
+      console.log("HABER",data)
       setAlarms(data);
-    } catch (error) {
-      console.error(error);
-    }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   };
-
-  const data = [
-    {
-      alarmid: 1,
-      condition: "H20>0.3",
-      dateActive: "20-04-10 8:10:21 AM",
-      state: "Activa",
-      avatars: [
-        { name: "John Doe" },
-        { name: "Pane Doe"},
-        { name: "Kohn Doe" },
-        { name: "Lohn Doe" },
-        { name: "Cohn Doe" }
-      ]
-    },
-    {
-        alarmid: 2,
-        condition: "POD=3.3",
-        dateActive: "20-04-10 8:10:21 AM",
-        state: "En Revisión",
-        avatars: [
-          { name: "John Doe" },
-          { name: "Pane Doe"},
-          { name: "Kohn Doe" },
-          { name: "Lohn Doe" },
-          { name: "Cohn Doe" }
-        ]
-      },
-      {
-        alarmid: 3,
-        condition: "R>0.3",
-        dateActive: "20-04-10 8:10:21 AM",
-        state: "Cerrada",
-        avatars: [
-          { name: "John Doe" },
-          { name: "Pane Doe"},
-          { name: "Kohn Doe" },
-          { name: "Lohn Doe" },
-          { name: "Cohn Doe" }
-        ]
-      }
-  ];
 
   return (
     <div className={classes.tableContainer}>
@@ -175,7 +151,7 @@ const ListAlarmGenerate = () => {
     </TableRow>
   </TableHead>
   <TableBody>
-    {data.map((row) => (
+    {alarms.map((row) => (
       <TableRow key={row.alarmid}>
         {columns.map((column) => (
           <TableCell key={`${row.alarmid}-${column.field}`} width={column.width}>
@@ -183,14 +159,14 @@ const ListAlarmGenerate = () => {
           </TableCell>
         ))}
         <TableCell>
-          <ChipState state={row.state}>
+          <ChipState state={row.stateAlarmName}>
           </ChipState>
           </TableCell>
           <TableCell>
-        <AvatarLetter names={row.avatars} />
+          <AvatarLetter names={row.usersAssigned} />
       </TableCell> 
        <TableCell align="right" className={classes.actionCell}>
-              <IconButton aria-label="show" onClick={() => handleEdit(row)}>
+              <IconButton aria-label="show" onClick={() => handleShowDetail(row)}>
                 <Visibility />
               </IconButton>
         </TableCell>

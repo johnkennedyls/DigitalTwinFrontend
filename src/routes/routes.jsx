@@ -12,7 +12,7 @@ const routes = () => (
     <Route path="/edit-type-alarm/:id" component={EditTypeAlarm} />
     <Route path="/manage-type-alarm" component={ListTypeAlarm} />
     <Route path="/navegator-alarm" component={ListAlarmGenerate} />
-    <Route path="/detail-alarm" component={DetailAlarmGenerate} />
+    <Route path="/detail-alarm/:id" component={DetailAlarmGenerate} />
   </React.Fragment>
 );
 

@@ -11,6 +11,7 @@ import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Add } from '@mui/icons-material';
 import getAvatarColor from './ColorsAvatar';
+import {formatDate} from './FormatterDate';
 
 const useStyles = makeStyles({
     commentContainer: {
@@ -61,99 +62,111 @@ const useStyles = makeStyles({
         alignItems: 'center', // Centra el botón verticalmente
         height: '60px', // Altura del contenedor del botón
       },
+      emptyCommentMessage: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%', // Ajusta la altura según tus necesidades
+      },
   });
   
     
-    function CommentBox({ comments }) {
-        const classes = useStyles();
+  function CommentBox({ comments }) {
+      const classes = useStyles();
 
-        const [currentComment, setCurrentComment] = useState('');
-  const [commentList, setCommentList] = useState(comments);
+      const [currentComment, setCurrentComment] = useState('');
+      const [commentList, setCommentList] = useState(comments || []); 
 
-  const handleCommentChange = (event) => {
-    setCurrentComment(event.target.value);
-  };
-
-  const handleAddComment = () => {
-    if (currentComment !== '') {
-      const newComment = {
-        id: commentList.length + 1,
-        title: '',
-        author: 'Guest',
-        comment: currentComment,
+      const handleCommentChange = (event) => {
+        setCurrentComment(event.target.value);
       };
-      setCommentList([...commentList, newComment]);
-      setCurrentComment('');
-    }
-  };
 
+      useEffect(() => {
+        setCommentList(comments || []);
+      }, [comments]);
 
+      const handleAddComment = () => {
+        if (currentComment !== '') {
+          const newComment = {
+            id: commentList.length + 1,
+            title: '',
+            author: 'Guest',
+            comment: currentComment,
+          };
+          setCommentList([...commentList, newComment]);
+          setCurrentComment('');
+        }
+      };
 
-return (
-    <>
-      <div className={classes.commentContainer}>
-        <List className={classes.commentList}>
-          {commentList.map((comment) => (
-            <React.Fragment key={comment.id}>
-              <ListItem alignItems="flex-start" className={classes.comment}>
-                <ListItemAvatar>
-                  <Avatar
-                    style={{ backgroundColor: getAvatarColor(comment.author[0]) }}
-                  >
-                    {comment.author.charAt(0)}
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={comment.title}
-                  secondary={
-                    <React.Fragment>
-                      <Typography
-                        sx={{ display: 'inline' }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
-                        {comment.author}
-                      </Typography>
-                      <br />
-                      <Typography
-                        sx={{ display: 'inline' }}
-                        component="span"
-                        variant="body2"
-                        color="text.secondary"
-                      >
-                        {comment.comment}
-                      </Typography>
-                    </React.Fragment>
-                  }
-                />
-              </ListItem>
-              <Divider variant="inset" component="li" className={classes.divider} />
-            </React.Fragment>
-          ))}
-        </List>
-      </div>
-      <TextField
-          value={currentComment}
-          onChange={handleCommentChange}
-          label="Agrega una acción"
-          variant="outlined"
-          margin="dense"
-        />
-      <div className={classes.buttonWrapper}>
-        <Button
-          className={classes.button}
-          startIcon={<Add />}
-          size="large"
-          variant="contained"
-          color="primary"
-          onClick={handleAddComment}
-        >
-          Añadir acción
-        </Button>
-      </div>
-    </>
-);
+      return (
+        <>
+          <div className={classes.commentContainer}>
+            <List className={classes.commentList}>
+              {commentList.length === 0 ? (
+                <Typography variant="body1" className={classes.emptyCommentMessage}><em>Aún no hay acciones</em></Typography>
+              ) : (
+                commentList.map((comment) => (
+                  <React.Fragment key={comment.id}>
+                    <ListItem alignItems="flex-start" className={classes.comment}>
+                      <ListItemAvatar>
+                        <Avatar
+                          style={{ backgroundColor: getAvatarColor(comment.actionHistoryUsername.charAt(0)) }}
+                        >
+                          {comment.actionHistoryUsername.charAt(0)}
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={comment.actionHistoryUsername}
+                        secondary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: 'inline' }}
+                              component="span"
+                              variant="body2"
+                              color="text.primary"
+                            >
+                              {formatDate(comment.actionHistoryDate)}
+                            </Typography>
+                            <br />
+                            <Typography
+                              sx={{ display: 'inline' }}
+                              component="span"
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              {comment.actionHistoryDescription}
+                            </Typography>
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>
+                    <Divider variant="inset" component="li" className={classes.divider} />
+                  </React.Fragment>
+                ))
+              )}
+            </List>
+          </div>
+          <TextField
+            value={currentComment}
+            onChange={handleCommentChange}
+            label="Agrega una acción"
+            variant="outlined"
+            margin="dense"
+          />
+          <div className={classes.buttonWrapper}>
+            <Button
+              className={classes.button}
+              startIcon={<Add />}
+              size="large"
+              variant="contained"
+              color="primary"
+              onClick={handleAddComment}
+            >
+              Añadir acción
+            </Button>
+          </div>
+        </>
+      );
 }
 
 export default CommentBox;

@@ -11,6 +11,7 @@ function AvatarLetter({ names }) {
   return (
     <AvatarGroup max={3}>
       {displayedNames.map((avatar, index) => {
+        console.log("OLAA",avatar)
         const letter = avatar[0];
         const color = getAvatarColor(avatar[0]);
 

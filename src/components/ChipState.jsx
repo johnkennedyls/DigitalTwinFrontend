@@ -24,11 +24,11 @@ function ChipState({ state }) {
           backgroundColor: '#a7e8bd',
           color: '#036c39',
         },
-        '&[data-state="En Revisión"]': {
-            backgroundColor: 'F9E38B',
+        '&[data-state="En Revision"]': {
+            backgroundColor: '#F9E38B',
             color: '#9E8211',
           },
-        '&[data-state="Cerrada"]': {
+        '&[data-state="Cerrado"]': {
           backgroundColor: '#ffb3b3',
           color: '#8c0000',
         },

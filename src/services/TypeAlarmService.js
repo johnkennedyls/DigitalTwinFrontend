@@ -11,6 +11,15 @@ export function getTypeAlarms() {
       });
 }
 
+export function getTypeAlarmsByPlant(plantid) {
+    return axios.get(`${API_URL}/typeAlarms/plant/${plantid}`)
+        .then(response => response.data)
+        .catch(error => {
+            console.error(error);
+            throw error;
+        });
+  }
+
 export function getTypeAlarmById(alarmid) {
   return axios.get(`${API_URL}/typeAlarms/${alarmid}`)
       .then(response => response.data)
@@ -39,7 +48,7 @@ export function createTypeAlarm(alarmData) {
 }
 
 export function updateTypeAlarm(alarmid,alarmData) {
-  return axios.put(`${API_URL}/type-alarm/update/${alarmid}`, alarmData)
+  return axios.put(`${API_URL}/typeAlarms/edit/${alarmid}`, alarmData)
       .then(response => response.data)
       .catch(error => {
           console.error(error);

@@ -16,7 +16,7 @@ const useStyles = makeStyles({
       },
     listItem: {
       marginBottom: '8px',
-      padding: '8px 16px',
+      padding: '8px 10px',
       transition: '0.3s',
       borderBottom: '1px solid #f1f1f1', // Agrega un borde inferior a los elementos de la lista
     },
@@ -42,41 +42,40 @@ const useStyles = makeStyles({
       },
     },
     listItemAvatar: {
-        marginLeft: 15, 
-        marginRight: 30, 
+        marginLeft: 10, 
+        marginRight: 10, 
       },
   });
 
-function ListAvatar({ items }) {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.usersContainer}>
-      <List dense className={classes.root}>
-        {items.map((item) => (
-          <ListItem
-            key={item.id}
-            disablePadding
-            className={classes.listItem}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = '#f1f1f1')
-            }
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '')
-            }
-          >
-            <ListItemAvatar className={classes.listItemAvatar}>
-              <Avatar
-                style={{ backgroundColor: getAvatarColor(item.name[0]) }}
-              >
-                {item.name.charAt(0)}
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={item.name} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
-}
+  function ListAvatar({ items }) {
+    const classes = useStyles();
+  
+    return (
+      <div className={classes.usersContainer}>
+        <List dense className={classes.root}>
+          {items && items.map((item) => (
+            <ListItem
+              key={item}
+              disablePadding
+              className={classes.listItem}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = '#f1f1f1')
+              }
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '')}
+            >
+              <ListItemAvatar className={classes.listItemAvatar}>
+                <Avatar
+                  style={{ backgroundColor: getAvatarColor(item.charAt(0)) }}
+                >
+                  {item.charAt(0)}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={item} />
+            </ListItem>
+          ))}
+        </List>
+      </div>
+    );
+  }
 
 export default ListAvatar;

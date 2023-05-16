@@ -6,7 +6,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
-import {getTypeAlarmById} from '../../services/TypeAlarmService';
+import {getTypeAlarmById,updateTypeAlarm} from '../../services/TypeAlarmService';
 import { Save,Cancel } from '@mui/icons-material';
 import validate from "validate.js";
 import Paper from '@mui/material/Paper';
@@ -298,15 +298,17 @@ function EditTypeAlarm() {
 
 
 
-  const createTypeAlarm = async (event) => {
-    try {
+  const editTypeAlarm = async (event) => {
       console.log(dataForm.values)
-      //const newTypeAlarm = await TypeAlarmService.createTypeAlarm(dataForm.values);
-      console.log('El tipo de alarma se creó correctamente', newTypeAlarm);
-    } catch (error) {
-      console.error('Hubo un error al crear el tipo de alarma', error);
-    }
-  };
+      updateTypeAlarm(id,dataForm.values).then((data) => {
+        setTimeout(() => {
+          history.push(`${typeAlarmListPath}`);
+        }, 2000);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
 
   return (
@@ -513,7 +515,7 @@ function EditTypeAlarm() {
   <Button
     disabled={!dataForm.isValid}
     type="submit"
-    onClick={createTypeAlarm}
+    onClick={editTypeAlarm}
     variant="contained"
     color="primary"
     style={{ marginRight: '20px',marginBottom: '20px' }}
