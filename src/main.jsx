@@ -1,5 +1,7 @@
 if (typeof window !== 'undefined') {
   window.global = window;
+} else {
+  window.global = {}
 }
 import "@mui/material/styles";
 import React from "react";
