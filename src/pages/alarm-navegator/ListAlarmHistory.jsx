@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import {getAlarmsGenerate} from '../../services/AlarmService';
+import {getAlarmsHistory} from '../../services/AlarmService';
 import AvatarLetter  from '../../components/alarms/AvatarLetter.jsx'; 
 import { useHistory } from "react-router-dom";
 import {  IconButton } from '@mui/material';
@@ -101,7 +101,7 @@ const useStyles = makeStyles({
 });
 
 
-const ListAlarmGenerate = () => {
+const ListAlarmHistory = () => {
   const classes = useStyles();
   const [alarms, setAlarms] = useState([]);
   const detailAlarmPath = "/detail-alarm/"
@@ -145,7 +145,7 @@ const handleChangeRowsPerPage = (event) => {
   }, []);
 
   const getAlarms = () => {
-    getAlarmsGenerate()
+    getAlarmsHistory()
     .then((data) => {
       setAlarms(data);
     })
@@ -244,4 +244,4 @@ const handleChangeRowsPerPage = (event) => {
   )
 }
 
-export default ListAlarmGenerate;
+export default ListAlarmHistory;

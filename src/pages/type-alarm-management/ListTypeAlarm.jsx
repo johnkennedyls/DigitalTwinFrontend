@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column', // Agrega una dirección de columna para colocar los elementos en una columna
     alignItems: 'center',
-    marginTop: '50px',
+    marginTop: '20px',
     marginBottom: '20px', 
   },
   table: {
@@ -28,7 +28,6 @@ const useStyles = makeStyles({
     marginBottom: '50px',
   },
   button: {
-    marginTop: '70px', 
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -87,6 +86,7 @@ const ListTypeAlarm = () => {
 
   const addTypeAlarmPath = "/add-type-alarm"
   const editTypeAlarmPath = "/edit-type-alarm/"
+  const showTypeAlarmPath = "/detail-type-alarm/"
   const [alarms, setAlarms] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);
@@ -140,6 +140,10 @@ const handleChangeRowsPerPage = (event) => {
     history.push(`${editTypeAlarmPath}${row.typeAlarmId}`);
   };
 
+  const handleShow = (row) => {
+    history.push(`${showTypeAlarmPath}${row.typeAlarmId}`);
+  };
+
 
   const handleDelete = () => {
     if (currentRow) {
@@ -186,7 +190,7 @@ const handleChangeRowsPerPage = (event) => {
   return (
     <>
     <div className={classes.tableContainer}>
-    <FormControl style={{ width: '250px' }}>
+    <FormControl style={{ width: '250px',marginBottom:'20px' }}>
   <InputLabel id="plant">Planta</InputLabel>       
   <Select
     labelId="plant"
@@ -202,7 +206,7 @@ const handleChangeRowsPerPage = (event) => {
     ))}
   </Select>
 </FormControl>
-<TableContainer component={Paper} style={{ width: '1100px', height: '340px' }}>
+<TableContainer component={Paper} style={{ width: '1100px', height: '340px',overflow: 'visible'  }}>
   <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
     <TableHead>
       <TableRow>
@@ -239,7 +243,7 @@ const handleChangeRowsPerPage = (event) => {
               <AvatarLetter names={row.usersAssigned} />
             </TableCell>
             <TableCell className={classes.actionColumn}>
-              <IconButton aria-label="show" onClick={() => handleEdit(row)}>
+              <IconButton aria-label="show" onClick={() => handleShow(row)}>
                 <Visibility />
               </IconButton>
               <IconButton aria-label="edit" onClick={() => handleEdit(row)}>

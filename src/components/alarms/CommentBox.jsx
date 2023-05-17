@@ -15,7 +15,7 @@ import {formatDate} from '../../services/utils/FormatterDate';
 
 const useStyles = makeStyles({
     commentContainer: {
-      maxHeight: 400,
+      height: 'auto',
       overflowY: 'auto',
       width: '100%',
       maxWidth: 'none',
@@ -39,6 +39,7 @@ const useStyles = makeStyles({
       margin: '0 -16px',
       border: '1px solid #f1f1f1', 
       height: 230,
+      width: 460,
     },
     comment: {
       marginBottom: 16,
@@ -76,9 +77,12 @@ const useStyles = makeStyles({
 
       const [currentComment, setCurrentComment] = useState('');
       const [commentList, setCommentList] = useState(comments || []); 
+      const [isButtonEnabled, setIsButtonEnabled] = useState(false);
 
       const handleCommentChange = (event) => {
-        setCurrentComment(event.target.value);
+        const value = event.target.value;
+        setCurrentComment(value);
+        setIsButtonEnabled(value !== '');
       };
 
       useEffect(() => {
@@ -161,6 +165,7 @@ const useStyles = makeStyles({
               variant="contained"
               color="primary"
               onClick={handleAddComment}
+              disabled={!isButtonEnabled}
             >
               Añadir acción
             </Button>

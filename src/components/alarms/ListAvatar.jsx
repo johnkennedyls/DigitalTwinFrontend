@@ -21,7 +21,7 @@ const useStyles = makeStyles({
       borderBottom: '1px solid #f1f1f1', // Agrega un borde inferior a los elementos de la lista
     },
     usersContainer: {
-      maxHeight: 200,
+      maxHeight: (props) => props.maxHeight,
       overflowY: 'auto',
       width: '100%',
   
@@ -47,8 +47,8 @@ const useStyles = makeStyles({
       },
   });
 
-  function ListAvatar({ items }) {
-    const classes = useStyles();
+  function ListAvatar({ items, maxHeight }) {
+    const classes = useStyles({ maxHeight });
   
     return (
       <div className={classes.usersContainer}>
