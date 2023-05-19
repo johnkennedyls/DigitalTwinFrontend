@@ -11,6 +11,8 @@ import { useDispatch } from 'react-redux';
 import {getPlantsData} from './services/PlantService'
 
 const App = ({ children }) => {
+
+  const apiUrl = import.meta.env.VITE_API_URL;
   const dispatch = useDispatch();
 
   const loadPLantData = () => {
@@ -39,7 +41,7 @@ const App = ({ children }) => {
   };
 
   const stompClient = new StompClient(
-    'http://localhost:8080/websocket',
+    `${apiUrl}/websocket`,
     onConnect,
     onDisconnect
   );
