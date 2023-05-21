@@ -13,6 +13,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
 import AlertDialog  from '../../components/alarms/AlertDialog.jsx'; 
+import { useSelector } from 'react-redux';
 
 
 const useStyles = makeStyles({
@@ -81,12 +82,28 @@ const plants = [
 ];
 
 const ListTypeAlarm = () => {
+
+  const plantState = useSelector(state => state.plants)
+  const [plants, setPlants] = useState([])
+
+  
+  useEffect(() => {
+    const currentPlants = Object.keys(plantState)
+    setPlants(currentPlants)
+    console.log("PLANTSSS",plants)
+  }, []);
+
+
+
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+
   const classes = useStyles();
   const history = useHistory();
 
-  const addTypeAlarmPath = "/add-type-alarm"
-  const editTypeAlarmPath = "/edit-type-alarm/"
-  const showTypeAlarmPath = "/detail-type-alarm/"
+  const showTypeAlarmPath = `${publicUrl}/detail-type-alarm/`
+  const addTypeAlarmPath = `${publicUrl}/add-type-alarm`
+  const editTypeAlarmPath = `${publicUrl}/edit-type-alarm/`
+  
   const [alarms, setAlarms] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);

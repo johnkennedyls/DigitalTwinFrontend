@@ -1,5 +1,7 @@
 if (typeof window !== 'undefined') {
   window.global = window;
+} else {
+  window.global = {}
 }
 import "@mui/material/styles";
 import React from "react";
@@ -13,7 +15,7 @@ import { store } from './store'
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename="/dashboard">
         <Switch>
           {routes()}
         </Switch>
