@@ -38,6 +38,7 @@ const routes = () => (
   <Switch>
     <Route exact path="/" component={WelcomeLayout} />
     <Route component={(MainLayoutRoutes)} />
+    <Route path="*" component={WelcomeLayout} />
   </Switch>
 );
 

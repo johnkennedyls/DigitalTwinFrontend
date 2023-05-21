@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 
 
 const MainPlantForm = ({ onNext }) => {
-  const [plant, setPlant] = useState({ name: '', description: '', image: null });
+  const [plant, setPlant] = useState({ name: '', plantDescription: '', image: null });
   const [src, setSrc] = useState(null);
 
   const handleChange = (e) => {
@@ -21,6 +21,7 @@ const MainPlantForm = ({ onNext }) => {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       setSrc(reader.result);
+      setPlant({ ...plant, image: reader.result });
     });
     reader.readAsDataURL(file);
   };
@@ -50,8 +51,8 @@ const MainPlantForm = ({ onNext }) => {
             />
             <TextField
               label="Descripción"
-              name="description"
-              value={plant.description}
+              name="plantDescription"
+              value={plant.plantDescription}
               onChange={handleChange}
               fullWidth
               multiline

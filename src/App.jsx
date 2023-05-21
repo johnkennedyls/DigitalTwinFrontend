@@ -2,10 +2,10 @@ import PropTypes from 'prop-types'
 import MainLayout from './layouts/main/MainLayout'
 
 import { useEffect } from 'react';
-import { StompClient } from '/src/services/utils/stompClient';
+import { StompClient } from './services/utils/stompClient';
 
-import { updateTagData } from '/src/features/plant/tagSlice'
-import { loadAllPlantsData } from './features/plant/plantSlice';
+import { updateTagData } from './reducers/plant/tagSlice'
+import { loadAllPlantsData } from './reducers/plant/plantSlice';
 import { useDispatch } from 'react-redux';
 
 import {getPlantsData} from './services/PlantService'
