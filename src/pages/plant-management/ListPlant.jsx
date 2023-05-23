@@ -11,8 +11,9 @@ import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { getPlantsData, deletePlant } from '/src/services/PlantService'
-import { loadAllPlantsData } from '/src/reducers/plant/plantSlice';
+import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '/src/reducers/plant/plantSlice';
 import { useSelector, useDispatch } from "react-redux";
+import { use } from "echarts/core";
 
 export default function ListPlant() {
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
@@ -61,7 +62,11 @@ export default function ListPlant() {
   };
 
   const handleDelete = (id) => {
-    deletePlant(id)
+
+    deletePlant(id).then(() => {
+      // setPlants(plants.filter((plant) => plant.plantId !== id));
+      dispatch(deletePlantFromRedux(id));
+    });
   };
 
   const columns = [

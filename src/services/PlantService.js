@@ -40,7 +40,7 @@ export const addPlant = (plant) => {
     });
 }
 
-export const updatePlant = (plant, plantId) => {
+export const editPlant = (plant, plantId) => {
     return new Promise((resolve, reject) => {
         axios.put(`plants/edit/${plantId}`, plant)
             .then(response => {

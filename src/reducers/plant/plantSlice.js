@@ -17,10 +17,13 @@ export const plantSlice = createSlice({
           state[plant.plantId].tags[tag.assetId] = tag.name
         });
       });
+    },
+    deletePlant: (state, action) => {
+      delete state[action.payload]
     }
   },
 })
 
-export const { loadAllPlantsData } = plantSlice.actions
+export const { loadAllPlantsData, deletePlant } = plantSlice.actions
 
 export const plantReducer = plantSlice.reducer

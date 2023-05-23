@@ -10,9 +10,11 @@ export default axios.create({
                 return `Bearer ${localStorage.getItem("access_token")}`;
             },
         },
+
     },
     validateStatus: function validateStatus(status) {
-        if (status === 401 && !localStorage.getItem("access_token")) {
+        if (status === 401) {
+            localStorage.removeItem("access_token");
             window.location.href = "/";
         }
         return status >= 200 && status < 300;
