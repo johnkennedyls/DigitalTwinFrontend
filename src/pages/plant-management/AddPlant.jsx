@@ -62,13 +62,9 @@ const AddPlant = () => {
     });
   };
 
-
-
   const handleReset = () => {
     setActiveStep(0);
   };
-
-
 
   const renderStepContent = (step) => {
     switch (step) {

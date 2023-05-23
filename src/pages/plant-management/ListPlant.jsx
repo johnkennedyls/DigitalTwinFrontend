@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 
-import { getPlantsData } from '/src/services/PlantService'
+import { getPlantsData, deletePlant } from '/src/services/PlantService'
 import { loadAllPlantsData } from '/src/reducers/plant/plantSlice';
 import { useSelector, useDispatch } from "react-redux";
 
@@ -38,7 +38,7 @@ export default function ListPlant() {
 
   useEffect(() => {
 
-    const currentPlants = [...plants]
+    const currentPlants = []
 
     Object.keys(plantState).forEach((plant) => {
       currentPlants.push({
@@ -57,12 +57,11 @@ export default function ListPlant() {
   };
 
   const handleEdit = (id) => {
-    console.log(`Editar planta con id ${id}`);
-    // Implementar la función para editar una planta
+    window.location.href = `${publicUrl}/edit-plant/${id}`;
   };
 
   const handleDelete = (id) => {
-    setPlants(plants.filter((plant) => plant.id !== id));
+    deletePlant(id)
   };
 
   const columns = [
@@ -111,9 +110,9 @@ export default function ListPlant() {
         getRowId={(row) => row.plantId}
         columns={columns}
         pageSize={10}
-        rowsPerPageOptions={[10,25,50]}
+        rowsPerPageOptions={[10, 25, 50]}
         pagination
-        autoHeight 
+        autoHeight
         disableSelectionOnClick
       />
       <Box mt={2}>

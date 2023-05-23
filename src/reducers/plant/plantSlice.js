@@ -5,7 +5,6 @@ export const plantSlice = createSlice({
   initialState: {},
   reducers: {
     loadAllPlantsData: (state, action) => {
-
       action.payload.forEach((plant) => {
         state[plant.plantId] = {
           plantId: plant.plantId,
