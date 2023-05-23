@@ -5,14 +5,15 @@ if (typeof window !== 'undefined') {
 }
 import "@mui/material/styles";
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { BrowserRouter, Switch } from "react-router-dom";
 import { Provider } from 'react-redux'
 import routes from "./routes/routes.jsx";
-
-
 import { store } from './store'
-ReactDOM.render(
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter basename="/dashboard">
@@ -21,6 +22,5 @@ ReactDOM.render(
         </Switch>
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );

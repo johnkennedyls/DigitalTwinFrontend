@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, TextField, Typography, Grid, Paper, Select, MenuItem, FormControl, InputLabel, Box } from '@mui/material';
+import { Button, TextField, Typography, Grid, Paper, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -7,8 +7,8 @@ import PropTypes from "prop-types";
 
 import './styles/TagsPlantForm.css'
 
-export default function TagsPlantForm({ onNext, onBack }) {
-    const [tags, setTags] = useState([{ name: '', description: '', state: '' }]);
+export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '' }] }) {
+    const [tags, setTags] = useState(currentTags);
     const [isValid, setIsValid] = useState(false);
     const handleChange = (e, index) => {
         const { name, value } = e.target;
@@ -17,7 +17,7 @@ export default function TagsPlantForm({ onNext, onBack }) {
     };
 
     const handleAddTag = () => {
-        setTags([...tags, { name: '', description: '', state: '' }]);
+        setTags([...tags, { name: '', description: '' }]);
     };
 
     const handleRemoveTag = (index) => {
@@ -31,7 +31,7 @@ export default function TagsPlantForm({ onNext, onBack }) {
 
     const validateForm = () => {
         tags.forEach((tag) => {
-            if (tag.name === '' || tag.state === '') {
+            if (tag.name === '' || tag.description === '') {
                 setIsValid(false);
                 return;
             }
@@ -88,6 +88,7 @@ export default function TagsPlantForm({ onNext, onBack }) {
                                                     value={tag.description}
                                                     onChange={(e) => handleChange(e, index)}
                                                     fullWidth
+                                                    required
                                                     multiline
                                                     rows={2}
                                                     variant="outlined"
@@ -124,7 +125,7 @@ export default function TagsPlantForm({ onNext, onBack }) {
                         </Button>
                         <Grid container spacing={2}>
                             <Grid item xs={12} md={6}>
-                                <Button variant="outlined" color="secondary" fullWidth onClick={onBack}>
+                                <Button variant="outlined" color="secondary" fullWidth onClick={() => { onBack({ tags: tags }) }}>
                                     Atras
                                 </Button>
                             </Grid>
@@ -144,4 +145,5 @@ export default function TagsPlantForm({ onNext, onBack }) {
 TagsPlantForm.propTypes = {
     onNext: PropTypes.func.isRequired,
     onBack: PropTypes.func.isRequired,
+    currentTags: PropTypes.arrayOf(PropTypes.object)
 };

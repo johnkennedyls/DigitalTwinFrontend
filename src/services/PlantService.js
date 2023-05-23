@@ -1,9 +1,61 @@
-import axios from 'axios';
-const API_URL = import.meta.env.VITE_API_URL;
+import axios from './utils/axios';
+// const API_URL = import.meta.env.VITE_API_URL;
 
 export const getPlantsData = () => {
     return new Promise((resolve, reject) => {
-        axios.get(API_URL + "/plants")
+        axios.get("plants")
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
+export const getPlantData = (plantId) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`plants/${plantId}`)
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
+export const addPlant = (plant) => {
+    return new Promise((resolve, reject) => {
+        axios.post("plants/add", plant)
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
+export const updatePlant = (plant, plantId) => {
+    return new Promise((resolve, reject) => {
+        axios.put(`plants/edit/${plantId}`, plant)
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
+export const deletePlant = (plantId) => {
+    return new Promise((resolve, reject) => {
+        axios.delete(`plants/delete/${plantId}`)
             .then(response => {
                 resolve(response.data);
             })

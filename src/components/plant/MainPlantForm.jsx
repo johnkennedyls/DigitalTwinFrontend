@@ -7,9 +7,8 @@ import ImageIcon from '@mui/icons-material/Image';
 import PropTypes from "prop-types";
 
 
-const MainPlantForm = ({ onNext }) => {
-  const [plant, setPlant] = useState({ name: '', plantDescription: '', image: null });
-  const [src, setSrc] = useState(null);
+const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPhoto = null }) => {
+  const [plant, setPlant] = useState({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,8 +19,7 @@ const MainPlantForm = ({ onNext }) => {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.addEventListener("load", () => {
-      setSrc(reader.result);
-      setPlant({ ...plant, image: reader.result });
+      setPlant({ ...plant, plantPhoto: reader.result });
     });
     reader.readAsDataURL(file);
   };
@@ -38,12 +36,12 @@ const MainPlantForm = ({ onNext }) => {
           <Typography variant="h6" gutterBottom>
             Agregar planta
           </Typography>
-          <Avatar src={src} variant="rounded" style={{ width: '7vw', height: '7vw', margin: '15px auto' }} />
+          <Avatar src={plant.plantPhoto} variant="rounded" style={{ width: '7vw', height: '7vw', margin: '15px auto' }} />
           <form onSubmit={handleSubmit}>
             <TextField
               label="Nombre"
-              name="name"
-              value={plant.name}
+              name="plantName"
+              value={plant.plantName}
               onChange={handleChange}
               fullWidth
               required
@@ -84,6 +82,9 @@ const MainPlantForm = ({ onNext }) => {
 
 MainPlantForm.propTypes = {
   onNext: PropTypes.func.isRequired,
+  plantName: PropTypes.string,
+  plantDescription: PropTypes.string,
+  plantPhoto: PropTypes.string,
 };
 
 export default MainPlantForm;

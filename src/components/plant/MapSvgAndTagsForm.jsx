@@ -3,8 +3,8 @@ import { Button, TextField, Typography, Grid, Paper, Select, MenuItem, FormContr
 
 import PropTypes from "prop-types";
 
-export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack }) {
-    const [mapSvgTag, setMapSvgTag] = useState(svgIds);
+export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvgTagPrev = null }) {
+    const [mapSvgTag, setMapSvgTag] = useState(mapSvgTagPrev == null ? svgIds : mapSvgTagPrev);
     const [isValid, setIsValid] = useState(false);
 
     const handleChange = (e, index) => {
@@ -15,8 +15,12 @@ export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack }) {
 
 
     const handleSubmit = (e) => {
-        onNext({ mapSvgTag: mapSvgTag })
+        onNext({ mapSvgTag: mapSvgTag }, true)
         e.preventDefault();
+    };
+
+    const handleBack = () => {
+        onBack({ mapSvgTag: mapSvgTag });
     };
 
     const validateForm = () => {
@@ -97,7 +101,7 @@ export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack }) {
                         </Box>
                         <Grid container spacing={2} style={{ marginTop: '2rem' }}>
                             <Grid item xs={12} md={6}>
-                                <Button variant="outlined" color="secondary" fullWidth onClick={onBack}>
+                                <Button variant="outlined" color="secondary" fullWidth onClick={handleBack}>
                                     Atras
                                 </Button>
                             </Grid>
@@ -120,4 +124,5 @@ MapSvgAndTagsForm.propTypes = {
     tags: PropTypes.array.isRequired,
     onNext: PropTypes.func.isRequired,
     onBack: PropTypes.func.isRequired,
+    mapSvgTagPrev: PropTypes.array,
 };

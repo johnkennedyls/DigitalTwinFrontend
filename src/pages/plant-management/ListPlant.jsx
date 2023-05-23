@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -10,24 +10,47 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 
-const initialPlants = [
-  {
-    id: 1,
-    name: "Planta 1",
-    description: "Descripción de la planta 1",
-    imageUrl: "https://www.icesi.edu.co/images/instalaciones/lab-planta-piloto-17.jpg",
-  },
-  {
-    id: 2,
-    name: "Planta 2",
-    description: "Descripción de la planta 2",
-    imageUrl: "https://www.icesi.edu.co/images/instalaciones/lab-planta-piloto-17.jpg",
-  }
-];
+import { getPlantsData } from '/src/services/PlantService'
+import { loadAllPlantsData } from '/src/reducers/plant/plantSlice';
+import { useSelector, useDispatch } from "react-redux";
 
-function ListPlant() {
+export default function ListPlant() {
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
-  const [plants, setPlants] = useState(initialPlants);
+  const [plants, setPlants] = useState([]);
+
+  const plantState = useSelector(state => state.plants)
+
+  const dispatch = useDispatch();
+
+  const loadPLantData = () => {
+    getPlantsData()
+      .then((data) => {
+        dispatch(loadAllPlantsData(data));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  useEffect(() => {
+    loadPLantData();
+  }, []);
+
+  useEffect(() => {
+
+    const currentPlants = [...plants]
+
+    Object.keys(plantState).forEach((plant) => {
+      currentPlants.push({
+        plantId: plantState[plant].plantId,
+        plantName: plantState[plant].plantName,
+        plantDescription: plantState[plant].plantDescription,
+        plantPhoto: plantState[plant].plantPhoto,
+      })
+    });
+
+    setPlants(currentPlants);
+  }, [plantState]);
 
   const handleAdd = () => {
     window.location.href = `${publicUrl}/add-plant`;
@@ -44,7 +67,7 @@ function ListPlant() {
 
   const columns = [
     {
-      field: 'imageUrl',
+      field: 'plantPhoto',
       headerName: 'Imagen',
       sortable: false,
       width: 120,
@@ -52,8 +75,8 @@ function ListPlant() {
         <Avatar src={params.value} alt={params.row.name} />
       ),
     },
-    { field: 'name', headerName: 'Nombre', width: 200 },
-    { field: 'description', headerName: 'Descripción', flex: 1 },
+    { field: 'plantName', headerName: 'Nombre', width: 200 },
+    { field: 'plantDescription', headerName: 'Descripción', flex: 1 },
     {
       field: 'actions',
       headerName: 'Acciones',
@@ -65,13 +88,13 @@ function ListPlant() {
           <div>
             <IconButton
               color="primary"
-              onClick={() => handleEdit(params.row.id)}
+              onClick={() => handleEdit(params.row.plantId)}
             >
               <EditIcon />
             </IconButton>
             <IconButton
               color="secondary"
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => handleDelete(params.row.plantId)}
             >
               <DeleteIcon />
             </IconButton>
@@ -85,10 +108,12 @@ function ListPlant() {
     <Box m={4} maxWidth={1000} mx="auto">
       <DataGrid
         rows={plants}
+        getRowId={(row) => row.plantId}
         columns={columns}
         pageSize={10}
         rowsPerPageOptions={[10,25,50]}
         pagination
+        autoHeight 
         disableSelectionOnClick
       />
       <Box mt={2}>
@@ -104,5 +129,3 @@ function ListPlant() {
     </Box>
   );
 }
-
-export default ListPlant;
