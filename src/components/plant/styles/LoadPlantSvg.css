@@ -1,4 +1,5 @@
-.svg-container > svg {
+.svg-container>svg {
+    margin: auto;
     width: 100%;
     height: 100%;
 }

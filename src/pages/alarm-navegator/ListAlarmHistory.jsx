@@ -105,7 +105,8 @@ const useStyles = makeStyles({
 const ListAlarmHistory = () => {
   const classes = useStyles();
   const [alarms, setAlarms] = useState([]);
-  const detailAlarmPath = "/detail-alarm/"
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const detailAlarmPath = `${publicUrl}/detail-alarm/`
   const history = useHistory();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
@@ -247,18 +248,13 @@ const handleChangeRowsPerPage = (event) => {
               </TableCell>
             </TableRow>
           ))}
-          {[...Array(3 - alarms.length)].map((_, index) => (
-            <TableRow key={`empty-${index}`} style={{ height: '53px' }}>
-              <TableCell colSpan={12} />
-            </TableRow>
-          ))}
         </>
       )}
     </TableBody>
     <TableFooter className={classes.stickyFooter}>
       <TableRow style={{ textAlign: 'center' }}>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+          rowsPerPageOptions={[3, 6, 10, { label: 'All', value: -1 }]}
           colSpan={8}
           count={alarms.length}
           rowsPerPage={rowsPerPage}

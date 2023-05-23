@@ -11,21 +11,20 @@ const useStyles = makeStyles({
     root: {
         width: '100%',
         backgroundColor: 'background.paper',
-        border: '1px solid #f1f1f1', // Agrega un borde alrededor de la lista
+        border: '1px solid #f1f1f1', 
         boxSizing: 'border-box',
       },
     listItem: {
       marginBottom: '8px',
       padding: '8px 10px',
       transition: '0.3s',
-      borderBottom: '1px solid #f1f1f1', // Agrega un borde inferior a los elementos de la lista
+      borderBottom: '1px solid #f1f1f1', 
     },
     usersContainer: {
-      maxHeight: (props) => props.maxHeight,
-      overflowY: 'auto',
+      height: "200px",
+      overflowY: 'scroll',
       width: '100%',
   
-      // Personaliza el estilo del scrollbar
       '&::-webkit-scrollbar': {
         width: '8px',
       },
@@ -47,8 +46,8 @@ const useStyles = makeStyles({
       },
   });
 
-  function ListAvatar({ items, maxHeight }) {
-    const classes = useStyles({ maxHeight });
+  function ListAvatar({ items }) {
+    const classes = useStyles();
   
     return (
       <div className={classes.usersContainer}>

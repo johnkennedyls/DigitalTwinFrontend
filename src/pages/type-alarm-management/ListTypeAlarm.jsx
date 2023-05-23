@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow,TextField,InputLabel,S
 import { Typography, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useHistory } from "react-router-dom";
-import AlertMessage from '../../components/global/AlertMessage';
+import AlertMessage from '../../components/messages/AlertMessage';
 import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
@@ -93,7 +93,7 @@ const ListTypeAlarm = () => {
   const plantState = useSelector(state => state.plants)
   const [plants, setPlants] = useState([])
 
-  const publicUrl = import.meta.env.VITE_BASE_URL;
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
 
   const classes = useStyles();
   const history = useHistory();
@@ -111,13 +111,10 @@ const ListTypeAlarm = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
-  const emptyRows =
-  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - alarms.length) : 0;
 
 const handleChangePage = (event, newPage) => {
   setPage(newPage);
 };
-
   
 useEffect(() => {
   const currentPlants = Object.keys(plantState)
@@ -249,49 +246,47 @@ const handleChangeRowsPerPage = (event) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {alarms.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={12} align="center" style={{ height: '198px' }}>
-                  No hay elementos disponibles.
+      {alarms.length === 0 ? (
+        <TableRow>
+          <TableCell colSpan={12} align="center" style={{ height: '198px' }}>
+            No hay elementos disponibles.
+          </TableCell>
+        </TableRow>
+      ) : (
+        <>
+          {(rowsPerPage > 0
+            ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : alarms
+          ).map((row) => (
+            <TableRow key={row.typeAlarmId}>
+              {columns.map((column) => (
+                <TableCell className={classes.centeredCell} key={`${row.typeAlarmId}-${column.field}`} width={column.width}>
+                  {row[column.field]}
                 </TableCell>
-              </TableRow>
-            ) : (
-              <>
-                {alarms.map((row) => (
-                  <TableRow key={row.typeAlarmId}>
-                    {columns.map((column) => (
-                      <TableCell className={classes.centeredCell} key={`${row.typeAlarmId}-${column.field}`} width={column.width}>
-                        {row[column.field]}
-                      </TableCell>
-                    ))}
-                    <TableCell className={classes.usersCell}>
-                      <AvatarLetter names={row.usersAssigned} />
-                    </TableCell>
-                    <TableCell className={classes.actionColumn}>
-                      <IconButton aria-label="show" onClick={() => handleShow(row)}>
-                        <Visibility />
-                      </IconButton>
-                      <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
-                        <Edit />
-                      </IconButton>
-                      <IconButton aria-label="delete" onClick={() => handleOpenDialog(row)}>
-                        <Delete />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {[...Array(3 - alarms.length)].map((_, index) => (
-                  <TableRow key={`empty-${index}`} style={{ height: '53px' }}>
-                    <TableCell colSpan={12} />
-                  </TableRow>
-                ))}
-              </>
-            )}
-          </TableBody>
+              ))}
+              <TableCell className={classes.usersCell}>
+                <AvatarLetter names={row.usersAssigned} />
+              </TableCell>
+              <TableCell className={classes.actionColumn}>
+                <IconButton aria-label="show" onClick={() => handleShow(row)}>
+                  <Visibility />
+                </IconButton>
+                <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
+                  <Edit />
+                </IconButton>
+                <IconButton aria-label="delete" onClick={() => handleOpenDialog(row)}>
+                  <Delete />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </>
+      )}
+    </TableBody>
           <TableFooter className={classes.stickyFooter}>
             <TableRow style={{ textAlign: 'center' }}>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                rowsPerPageOptions={[3, 6, 10, { label: 'All', value: -1 }]}
                 colSpan={8}
                 count={alarms.length}
                 rowsPerPage={rowsPerPage}

@@ -5,7 +5,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
-import AlertMessage from '../../components/global/AlertMessage';
+import AlertMessage from '../../components/messages/AlertMessage';
 import {createTypeAlarm,getEmails,getEvents} from '../../services/TypeAlarmService';
 import { Save,Cancel } from '@mui/icons-material';
 import validate from "validate.js";
@@ -115,7 +115,7 @@ const alarm = {
 
 function AddTypeAlarm() {
 
-  const publicUrl = import.meta.env.VITE_BASE_URL;
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
 
   const classes = useStyles();
   const history = useHistory();
@@ -280,7 +280,7 @@ function AddTypeAlarm() {
       setAlert({ show: true, message: message, severity: severity });
       setTimeout(() => {
         history.push(`${typeAlarmListPath}`);
-      }, 3000);
+      }, 2000);
     })
     .catch((error) => {
       let message = '';

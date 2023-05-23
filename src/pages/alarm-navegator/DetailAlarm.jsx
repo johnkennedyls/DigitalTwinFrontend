@@ -7,8 +7,9 @@ import {changeStateAlarm} from '../../services/StateAlarm';
 import { Select,FormControl,MenuItem,Typography,InputLabel,IconButton} from '@mui/material';
 import {formatDate} from '../../services/utils/FormatterDate';
 import Paper from '@mui/material/Paper';
+
 import {useParams} from 'react-router-dom';
-import AlertMessage from '../../components/global/AlertMessage';
+import AlertMessage from '../../components/messages/AlertMessage';
 import AlertDialog  from '../../components/alarms/AlertDialog'; 
 import { useHistory } from 'react-router-dom';
 
@@ -16,7 +17,6 @@ const useStyles = makeStyles({
   root: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
     '& > *': {
       flexDirection: 'column',
       padding: '10px 10px',
@@ -29,7 +29,6 @@ const useStyles = makeStyles({
   paperContainer: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
     marginTop:'20px'
   },
   left: {
@@ -84,7 +83,8 @@ const DetailAlarm = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
-    const navegatorAlarmListPath = "/navegator-alarm"
+    const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+    const navegatorAlarmListPath = `${publicUrl}/navegator-alarm`
     const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
 
     useEffect(() => {
@@ -190,7 +190,7 @@ const DetailAlarm = () => {
             <Typography variant="body1" gutterBottom>
             <strong> Usuarios Asignados </strong>
             </Typography>
-              <ListAvatar maxHeight={130} items={alarm.usersAssigned} />
+              <ListAvatar  items={alarm.usersAssigned} />
             </div>
           </div>
           <div className={`${classes.right} ${classes.commentsSection}`}>

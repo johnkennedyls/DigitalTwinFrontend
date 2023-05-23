@@ -1,9 +1,8 @@
-import axios from 'axios';
-const API_URL = import.meta.env.VITE_API_URL;
+import axios from './utils/axios';
 
 
 export function getTypeAlarms() {
-  return axios.get(API_URL+"/typeAlarms/")
+  return axios.get("typeAlarms/")
       .then(response => response.data)
       .catch(error => {
           console.error(error);
@@ -12,7 +11,7 @@ export function getTypeAlarms() {
 }
 
 export function getTypeAlarmsByPlant(plantid) {
-    return axios.get(`${API_URL}/typeAlarms/plant/${plantid}`)
+    return axios.get(`typeAlarms/plant/${plantid}`)
         .then(response => response.data)
         .catch(error => {
             console.error(error);
@@ -21,7 +20,7 @@ export function getTypeAlarmsByPlant(plantid) {
   }
 
 export function getTypeAlarmById(alarmid) {
-  return axios.get(`${API_URL}/typeAlarms/${alarmid}`)
+  return axios.get(`typeAlarms/${alarmid}`)
       .then(response => response.data)
       .catch(error => {
           console.error(error);
@@ -30,7 +29,7 @@ export function getTypeAlarmById(alarmid) {
 }
 
 export function deleteTypeAlarm(alarmid) {
-  return axios.delete(`${API_URL}/typeAlarms/delete/${alarmid}`)
+  return axios.delete(`typeAlarms/delete/${alarmid}`)
       .then(response => response.data)
       .catch(error => {
           console.error(error);
@@ -39,7 +38,7 @@ export function deleteTypeAlarm(alarmid) {
 }
 
 export function createTypeAlarm(alarmData) {
-  return axios.post(`${API_URL}/typeAlarms/create`, alarmData)
+  return axios.post(`typeAlarms/create`, alarmData)
       .then(response => response.data)
       .catch(error => {
           console.error(error);
@@ -48,7 +47,7 @@ export function createTypeAlarm(alarmData) {
 }
 
 export function updateTypeAlarm(alarmid,alarmData) {
-  return axios.put(`${API_URL}/typeAlarms/edit/${alarmid}`, alarmData)
+  return axios.put(`typeAlarms/edit/${alarmid}`, alarmData)
       .then(response => response.data)
       .catch(error => {
           console.error(error);
@@ -75,7 +74,7 @@ export function getTags() {
 }
 
 export function getEvents() {
-  return axios.get(API_URL+"/events/")
+  return axios.get("events/")
       .then(response => response.data)
       .catch(error => {
           console.error(error);

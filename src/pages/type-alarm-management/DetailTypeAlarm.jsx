@@ -3,7 +3,6 @@ import { makeStyles } from '@mui/styles';
 import {getTypeAlarmById} from '../../services/TypeAlarmService';
 import ListAvatar  from '../../components/alarms/ListAvatar';
 import {Typography} from '@mui/material';
-import {formatDate} from '../../services/utils/FormatterDate';
 import Paper from '@mui/material/Paper';
 import {useParams} from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
@@ -12,7 +11,6 @@ const useStyles = makeStyles({
     root: {
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center',
       '& > *': {
         flexDirection: 'column',
         padding: '10px 10px',
@@ -25,7 +23,6 @@ const useStyles = makeStyles({
     paperContainer: {
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center',
       marginTop:'20px'
     },
     left: {
@@ -39,11 +36,9 @@ const useStyles = makeStyles({
     },
     right: {
       width: '50%',
-      height: 'auto' ,
       '& > *': {
-        height: 'auto',
         flexGrow: 1,
-        margin: '10px 5px 5px 0px',
+        margin: '10px 5px 5px 0px',    
       },
     },
       firstElement: {
@@ -72,7 +67,8 @@ const DetaiTypelAlarm = () => {
     const history = useHistory();
     const [typeAlarm, setTypeAlarm] = useState([]);
     const { id } = useParams();
-    const navegatorAlarmListPath = "/navegator-alarm"
+    const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+    const navegatorAlarmListPath = `${publicUrl}/navegator-alarm `
 
     useEffect(() => {
       getInformation()
@@ -121,7 +117,7 @@ const DetaiTypelAlarm = () => {
           <Typography variant="body1" gutterBottom>
           <strong> Usuarios Asignados </strong>
             </Typography>
-            <ListAvatar  maxHeight={200} items={typeAlarm.usersAssigned} />
+            <ListAvatar items={typeAlarm.usersAssigned} />
           </div>
         </div>
         </Paper>
