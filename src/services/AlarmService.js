@@ -28,5 +28,41 @@ const API_URL = import.meta.env.VITE_API_URL;
               throw error;
           });
     }
+
+    export function getAllAlarmsClosedByPlantId(plantid) {
+        return axios.get(`${API_URL}/alarms/history${plantid}`)
+            .then(response => response.data)
+            .catch(error => {
+                console.error(error);
+                throw error;
+            });
+      }
+
+      export function getAllAlarmsActiveByPlantId(plantid) {
+        return axios.get(`${API_URL}/alarms/active${plantid}`)
+            .then(response => response.data)
+            .catch(error => {
+                console.error(error);
+                throw error;
+            });
+      }
+
+    export function getAllActionsHistoryByAlarm(alarmid) {
+        return axios.get(`${API_URL}/actionHistory/${alarmid}`)
+            .then(response => response.data)
+            .catch(error => {
+                console.error(error);
+                throw error;
+            });
+      }
+
+    export function addHistoryAction(action,alarmid) {
+        return axios.post(`${API_URL}/actionHistory/create/${alarmid}`,action)
+            .then(response => response.data)
+            .catch(error => {
+                console.error(error);
+                throw error;
+            });
+      }
   
 

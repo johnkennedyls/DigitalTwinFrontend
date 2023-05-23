@@ -6,7 +6,8 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
-import {getTypeAlarmById,updateTypeAlarm} from '../../services/TypeAlarmService';
+import AlertMessage from '../../components/global/AlertMessage';
+import {getTypeAlarmById,updateTypeAlarm,getEmails,getEvents} from '../../services/TypeAlarmService';
 import { Save,Cancel } from '@mui/icons-material';
 import validate from "validate.js";
 import Paper from '@mui/material/Paper';
@@ -120,12 +121,6 @@ const plants = [
   // ...
 ];
 
-const events = [
-  { id: 1, name: "Evento 1" },
-  { id: 2, name: "Enviar correo" },
-  { id: 3, name: "Envento 3" },
-  // ...
-];
 
 const tags = [
   { instId: 1, tagName: 'PE2' },
@@ -142,12 +137,13 @@ function EditTypeAlarm() {
   const classes = useStyles();
   const history = useHistory();
   const typeAlarmListPath = `${publicUrl}/manage-type-alarm`
+  const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
   const [loading, setLoading] = useState(true);
 
   const { id } = useParams();
 
-  //const [events, setEvents] = useState([]);
-  //const [emails, setEmails] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [emails, setEmails] = useState([]);
   const [typeAlarmData, setTypeAlarmData] = useState([]);
 
   //const [tags, setTags] = useState([]);
@@ -178,7 +174,7 @@ function EditTypeAlarm() {
         typeAlarmDescription: typeAlarmData.typeAlarmDescription || '',
         numberAlarmsMax: typeAlarmData.numberAlarmsMax || '',
         event_id: typeAlarmData.eventName ? 
-        events.find(event => event.name === typeAlarmData.eventName)?.id : '',
+        events.find(event => event.eventName === typeAlarmData.eventName)?.eventId : '',
         usersAssigned: typeAlarmData.usersAssigned || [],
       },
     });
@@ -249,22 +245,41 @@ function EditTypeAlarm() {
         },
       }));
     }
-    handleErrors(); // Llama a handleErrors para actualizar los errores
+    handleErrors(); 
   };
-  
+  useEffect(() => {
+    getEmailsSystem()
+  }, []);
+
+  const getEmailsSystem = () => {
+    getEmails()
+    .then((data) => {
+      const userEmails = data.map((item) => item.userEmail);
+      setEmails(userEmails);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
+
+  useEffect(() => {
+    getEventsDashboard()
+  }, []);
+
+  const getEventsDashboard = () => {
+    getEvents()
+    .then((data) => {
+      setEvents(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
 
   useEffect(() => {
     concatenateValues();
   }, [conditionalValues]);
 
-  const emails = [
-    "carolinapasuy@hotmail.com",
-        "laurapasuy@hotmail.com",
-        "santiaqgopasuy@hotmail.com",
-        "estebanpasuy@hotmail.com",
-        "juliopasuy@hotmail.com",
-        "tamurapasuy@hotmail.com"
-  ];
 
   const handleAutocompleteChange = (value) => {
     setDataForm((dataForm) => ({
@@ -283,9 +298,7 @@ function EditTypeAlarm() {
   useEffect(() => {
     getTypeAlarmById(id)
       .then(data => {
-        console.log("Dta",data)
         setTypeAlarmData(data);
-        console.log("tag" )
         if (data?.condition) {
           const [tag, condition, value] = data.condition.split(' ');
           setConditionalValues({
@@ -299,17 +312,34 @@ function EditTypeAlarm() {
       .catch(error => console.log(error));
   }, [id]);
 
-
+  const handleCloseAlert = () => {
+    setAlert(prevState => ({ ...prevState, show: false }));
+  }
 
   const editTypeAlarm = async (event) => {
       console.log(dataForm.values)
       updateTypeAlarm(id,dataForm.values).then((data) => {
+        let message = 'Se ha editado exitosamente el tipo de alarma';
+        let severity = 'success';
+        setAlert({ show: true, message: message, severity: severity });
         setTimeout(() => {
           history.push(`${typeAlarmListPath}`);
-        }, 2000);
+        }, 3000);
       })
       .catch((error) => {
-        console.log(error);
+        let message = '';
+        let severity = 'error';
+        if (error.response) {
+          if(error.response.data==="El nombre ya existe"){
+            console.log("YA EXISTE")
+            message = error.response.data;
+            setAlert({ show: true, message: message, severity: severity });
+          }
+        }else{
+          console.log("YA EXISTE2")
+          message = error.response.data;
+          setAlert({ show: true, message: message, severity: severity }); 
+        }
       });
   }
 
@@ -428,8 +458,8 @@ function EditTypeAlarm() {
       })}
     >
         {events.map((event) => (
-    <MenuItem key={event.id} value={event.id}>
-            {event.name}
+    <MenuItem key={event.eventId} value={event.eventId}>
+            {event.eventName}
       </MenuItem>
         ))}
     </Select>
@@ -464,6 +494,7 @@ function EditTypeAlarm() {
         value={dataForm.values.numberAlarmsMax || ""}
         id="numberAlarmsMax"
         name="numberAlarmsMax"
+        inputProps={{ min: "1" }}
       />
        <Autocomplete
         multiple
@@ -538,6 +569,14 @@ function EditTypeAlarm() {
 </div>
 </Paper>
 </div>
+<div>
+    <AlertMessage 
+        open={alert.show} 
+        message={alert.message} 
+        severity={alert.severity} 
+        handleClose={handleCloseAlert}
+      />  
+    </div>
 </>
   );
 }

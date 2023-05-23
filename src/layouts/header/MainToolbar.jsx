@@ -13,7 +13,7 @@ import logobioinc from '/src/assets/logo_bioinc.png';
 import './MainToolbar.css';
 
 export default function MainToolbar() {
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const publicUrl = import.meta.env.VITE_BASE_URL;
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -38,7 +38,7 @@ export default function MainToolbar() {
           <Button color="inherit" className="button" href={`${publicUrl}/manage-plant`}>
             Plantas
           </Button>
-          <Button color="inherit" className="button" href='/manage-type-alarm'>
+          <Button color="inherit" className="button" href={`${publicUrl}/manage-type-alarm`}>
             Tipos de Alarmas
           </Button>
           <Button color="inherit" className="button" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
@@ -52,19 +52,16 @@ export default function MainToolbar() {
             onClose={handleClose}
           >
             <MenuItem onClick={handleClose}>
-              <Button color="inherit" className="button" href='/navegator-alarm-active'>
+              <Button color="inherit" className="button" href={`${publicUrl}/navegator-alarm-active`}>
                 Alarmas Activas
               </Button>
             </MenuItem>
             <MenuItem onClick={handleClose}>
-            <Button color="inherit" className="button" href='/navegator-alarm-history'>
+            <Button color="inherit" className="button" href={`${publicUrl}/navegator-alarm-history`}>
                 Historial de Alarmas
               </Button>
             </MenuItem>
           </Menu>
-          <Button color="inherit" className="button" href={`${publicUrl}/manage-type-alarm`}>
-            Alarmas
-          </Button>
           <Button color="inherit" className="button" href={`${publicUrl}/manage-charts`}>
             Gráficas
           </Button>

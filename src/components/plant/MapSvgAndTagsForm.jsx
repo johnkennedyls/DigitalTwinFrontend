@@ -9,7 +9,6 @@ export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack }) {
 
     const handleChange = (e, index) => {
         const { name, value } = e.target;
-        console.log(name, value);
         const newTags = mapSvgTag.map((tag, i) => (i === index ? { ...tag, [name]: value } : tag));
         setMapSvgTag(newTags);
     };

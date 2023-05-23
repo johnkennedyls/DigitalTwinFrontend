@@ -57,7 +57,7 @@ export function updateTypeAlarm(alarmid,alarmData) {
 }
 
 export function getEmails() {
-  return axios.get(API_URL+"/emails")
+  return axios.get("http://xgrid103:8080/saamfiapi/public/institutions/1/systems/23/users")
       .then(response => response.data)
       .catch(error => {
           console.error(error);
@@ -75,7 +75,7 @@ export function getTags() {
 }
 
 export function getEvents() {
-  return axios.get(API_URL+"/events")
+  return axios.get(API_URL+"/events/")
       .then(response => response.data)
       .catch(error => {
           console.error(error);

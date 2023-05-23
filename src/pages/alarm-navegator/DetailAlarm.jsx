@@ -6,10 +6,10 @@ import {getAlarmById} from '../../services/AlarmService';
 import {changeStateAlarm} from '../../services/StateAlarm';
 import { Select,FormControl,MenuItem,Typography,InputLabel,IconButton} from '@mui/material';
 import {formatDate} from '../../services/utils/FormatterDate';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Paper from '@mui/material/Paper';
 import {useParams} from 'react-router-dom';
-import AlertDialog  from '../../components/alarms/AlertDialog.jsx'; 
+import AlertMessage from '../../components/global/AlertMessage';
+import AlertDialog  from '../../components/alarms/AlertDialog'; 
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
@@ -85,6 +85,7 @@ const DetailAlarm = () => {
     const [dialogMessage, setDialogMessage] = useState('');
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const navegatorAlarmListPath = "/navegator-alarm"
+    const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
 
     useEffect(() => {
       getAlarm()
@@ -107,7 +108,7 @@ const DetailAlarm = () => {
       const newState = e.target.value;
       let message = "Seguro que quieres cambiar el estado? Una vez lo hagas no podrá ser cambiado";
       if (newState === "Cerrado") {
-          message = "Si cambia el estado de la alarma a Cerrado se cambiaran todas las demas alarmas asociadas al tipo de alarma";
+          message = "Si cambia el estado de la alarma a Cerrado se cambiaran todas las demás alarmas asociadas al tipo de alarma";
       }
       setDialogMessage(message);
       setDialogOpen(true);
@@ -123,22 +124,35 @@ const DetailAlarm = () => {
     };
     changeStateAlarm(requestBody,id)
       .then((data) => {
-        console.log(data);
+        handleShowAlert('El estado fue cambiado exitosamente', 'success');
       })
       .catch((error) => {
-        console.log(error);
+        handleShowAlert('El estado no pudo ser cambiado', 'error');
       });
     setIsSelectDisabled(true);
     setDialogOpen(false);
   };
   
-  const handleBack = () => {
-    history.push(navegatorAlarmListPath);
+
+  const handleShowAlert = (message, severity) => {
+    setAlert({
+      show: true,
+      message,
+      severity
+    });
+  };
+  
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setAlert({ ...alert, show: false });
   };
 
     return (
+      <>
       <div className={classes.paperContainer}>
-        <Paper elevation={3} style={{ width: '800px', height: '520px',margin: '10px' }}>
+        <Paper elevation={3} style={{ width: '900px', height: '520px',margin: '10px' }}>
         <div className={classes.root}>
           <div className={classes.left}>
           <Typography variant="body1" gutterBottom>
@@ -183,11 +197,20 @@ const DetailAlarm = () => {
           <Typography variant="body1" gutterBottom>
           <strong> Historial de Acciones </strong>
             </Typography>
-            <CommentBox comments={alarm.actionsHistory} />
+            <CommentBox  alarmId={id}  handleShowAlert={handleShowAlert}/>
           </div>
         </div>
         </Paper>
       </div>
+        <div>
+          <AlertMessage 
+            open={alert.show} 
+            message={alert.message} 
+            severity={alert.severity} 
+            handleClose={handleCloseAlert}
+          />
+        </div>
+      </>
       );
     };
 export default DetailAlarm;

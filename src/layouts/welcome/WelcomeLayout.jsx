@@ -7,8 +7,7 @@ import icesi_logo_black from '/src/assets/images/ICESI_logo_black.png';
 import './WelcomeLayout.css';
 
 const WelcomeLayout = () => {
-  
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const saamfiUrl = import.meta.env.VITE_SAAMFI_FRONTEND_URL;
 
   const [logoWidth, setLogoWidth] = useState(null);
   const titleRef = useRef();
@@ -17,10 +16,16 @@ const WelcomeLayout = () => {
     if (titleRef.current) {
       setLogoWidth(titleRef.current.offsetWidth);
     }
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if(token){
+      localStorage.setItem('access_token', token);
+      window.location.href = '/dashboard/manage-plant';
+    }
   }, []);
 
   const handleLogin = () => {
-    window.location.href = `${publicUrl}/manage-plant`;
+    window.location.href = saamfiUrl;
   };
 
   return (

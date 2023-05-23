@@ -2,15 +2,17 @@ import PropTypes from 'prop-types'
 import MainLayout from './layouts/main/MainLayout'
 
 import { useEffect } from 'react';
-import { StompClient } from '/src/services/utils/stompClient';
+import { StompClient } from './services/utils/stompClient';
 
-import { updateTagData } from '/src/features/plant/tagSlice'
-import { loadAllPlantsData } from './features/plant/plantSlice';
+import { updateTagData } from './reducers/plant/tagSlice'
+import { loadAllPlantsData } from './reducers/plant/plantSlice';
 import { useDispatch } from 'react-redux';
 
 import {getPlantsData} from './services/PlantService'
 
 const App = ({ children }) => {
+
+  const apiUrl = import.meta.env.VITE_API_URL;
   const dispatch = useDispatch();
 
   const loadPLantData = () => {
@@ -39,7 +41,7 @@ const App = ({ children }) => {
   };
 
   const stompClient = new StompClient(
-    'http://localhost:8080/websocket',
+    `${apiUrl}/websocket`,
     onConnect,
     onDisconnect
   );

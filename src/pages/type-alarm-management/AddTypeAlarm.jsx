@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Badge,Chip,Select,MenuItem, Checkbox , FormControl , OutlinedInput,List, ListItem,Typography   } from '@mui/material';
 import { Link, useHistory } from 'react-router-dom';
-import { FormHelperText } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
-import {createTypeAlarm} from '../../services/TypeAlarmService';
+import AlertMessage from '../../components/global/AlertMessage';
+import {createTypeAlarm,getEmails,getEvents} from '../../services/TypeAlarmService';
 import { Save,Cancel } from '@mui/icons-material';
 import validate from "validate.js";
 import Paper from '@mui/material/Paper';
@@ -115,7 +115,7 @@ const alarm = {
 
 function AddTypeAlarm() {
 
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const publicUrl = import.meta.env.VITE_BASE_URL;
 
   const classes = useStyles();
   const history = useHistory();
@@ -123,9 +123,9 @@ function AddTypeAlarm() {
 
   //const [tags, setTags] = useState([]);
   const [tag, setTag] = useState([]);
-
-  //const [events, setEvents] = useState([]);
-  //const [emails, setEmails] = useState([]);
+  const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
+  const [events, setEvents] = useState([]);
+  const [emails, setEmails] = useState([]);
   const [conditionalValues, setConditionalValues] = useState({
     tag: "",
     conditional: "",
@@ -140,6 +140,34 @@ function AddTypeAlarm() {
       usersAssigned: [],
     },
   });
+  useEffect(() => {
+    getEmailsSystem()
+  }, []);
+
+  const getEmailsSystem = () => {
+    getEmails()
+    .then((data) => {
+      const userEmails = data.map((item) => item.userEmail);
+      setEmails(userEmails);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
+
+  useEffect(() => {
+    getEventsDashboard()
+  }, []);
+
+  const getEventsDashboard = () => {
+    getEvents()
+    .then((data) => {
+      setEvents(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
 
   const hasError = ((field) => {
     if (field === "typeAlarmName" || field === "typeAlarmDescription" || field === "numberAlarmsMax" || field === "event_id" || field === "usersAssigned" || field === "condition" || field === "plant_id") {
@@ -206,25 +234,16 @@ function AddTypeAlarm() {
         },
       }));
     }
-    handleErrors(); // Llama a handleErrors para actualizar los errores
+    handleErrors();
   };
   
+  const handleCloseAlert = () => {
+    setAlert(prevState => ({ ...prevState, show: false }));
+  }
 
   useEffect(() => {
     concatenateValues();
   }, [conditionalValues]);
-
-  const emails = [
-    'john.doe@example.com',
-    'pane.doe@example.com',
-    'sim.smith@example.com'
-  ];
-  const events = [
-    { id: 1, name: "Evento 1" },
-    { id: 2, name: "Evento 2" },
-    { id: 3, name: "Evento 3" },
-    // ...
-  ];
 
 
   const plants = [
@@ -256,12 +275,25 @@ function AddTypeAlarm() {
   const createNewTypeAlarm = () => {
     createTypeAlarm(dataForm.values)
     .then((data) => {
+      let message = 'Se ha creado exitosamente el tipo de alarma';
+      let severity = 'success';
+      setAlert({ show: true, message: message, severity: severity });
       setTimeout(() => {
         history.push(`${typeAlarmListPath}`);
-      }, 2000);
+      }, 3000);
     })
     .catch((error) => {
-      console.log(error);
+      let message = '';
+      let severity = 'error';
+      if (error.response) {
+        if(error.response.data==="El nombre ya existe"){
+          message = error.response.data;
+          setAlert({ show: true, message: message, severity: severity });
+        }
+      }else{
+        message = error.response.data;
+        setAlert({ show: true, message: message, severity: severity }); 
+      }
     });
   };
 
@@ -377,8 +409,8 @@ function AddTypeAlarm() {
       })}
     >
         {events.map((event) => (
-    <MenuItem key={event.id} value={event.id}>
-            {event.name}
+    <MenuItem key={event.eventId} value={event.eventId}>
+            {event.eventName}
       </MenuItem>
         ))}
     </Select>
@@ -413,6 +445,7 @@ function AddTypeAlarm() {
         value={dataForm.values.numberAlarmsMax || ""}
         id="numberAlarmsMax"
         name="numberAlarmsMax"
+        inputProps={{ min: "1" }}
       />
        <Autocomplete
         multiple
@@ -487,6 +520,14 @@ function AddTypeAlarm() {
 </div>
 </Paper>
 </div>
+<div>
+    <AlertMessage 
+        open={alert.show} 
+        message={alert.message} 
+        severity={alert.severity} 
+        handleClose={handleCloseAlert}
+      />  
+    </div>
 </>
   );
 }

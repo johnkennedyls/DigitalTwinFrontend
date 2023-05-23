@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import './styles/TagsPlantForm.css'
 
 export default function TagsPlantForm({ onNext, onBack }) {
-    const [tags, setTags] = useState([{ name: '', description: '', driver: '' }]);
+    const [tags, setTags] = useState([{ name: '', description: '', state: '' }]);
     const [isValid, setIsValid] = useState(false);
     const handleChange = (e, index) => {
         const { name, value } = e.target;
@@ -17,7 +17,7 @@ export default function TagsPlantForm({ onNext, onBack }) {
     };
 
     const handleAddTag = () => {
-        setTags([...tags, { name: '', description: '', driver: '' }]);
+        setTags([...tags, { name: '', description: '', state: '' }]);
     };
 
     const handleRemoveTag = (index) => {
@@ -25,14 +25,13 @@ export default function TagsPlantForm({ onNext, onBack }) {
     };
 
     const handleSubmit = (e) => {
-        console.log("SUMIT")
         e.preventDefault();
         onNext({ tags: tags });
     };
 
     const validateForm = () => {
         tags.forEach((tag) => {
-            if (tag.name === '' || tag.driver === '') {
+            if (tag.name === '' || tag.state === '') {
                 setIsValid(false);
                 return;
             }
@@ -82,7 +81,7 @@ export default function TagsPlantForm({ onNext, onBack }) {
                                                     style={{ height: '78px' }}
                                                 />
                                             </Grid>
-                                            <Grid item xs={12} md={5}>
+                                            <Grid item xs={12} md={7}>
                                                 <TextField
                                                     label="Descripción"
                                                     name="description"
@@ -94,24 +93,6 @@ export default function TagsPlantForm({ onNext, onBack }) {
                                                     variant="outlined"
                                                     style={{ height: '78px' }}
                                                 />
-                                            </Grid>
-                                            <Grid item xs={12} md={2}>
-                                                <FormControl fullWidth>
-                                                    <InputLabel>Driver</InputLabel>
-                                                    <Select
-                                                        label="Driver"
-                                                        name="driver"
-                                                        value={tag.driver}
-                                                        onChange={(e) => handleChange(e, index)}
-                                                        required
-                                                        style={{ height: '78px' }}
-                                                    >
-                                                        {/* Aquí puedes reemplazar los valores de MenuItem con tus propios drivers */}
-                                                        <MenuItem value="driver1">Driver 1</MenuItem>
-                                                        <MenuItem value="driver2">Driver 2</MenuItem>
-                                                        <MenuItem value="driver3">Driver 3</MenuItem>
-                                                    </Select>
-                                                </FormControl>
                                             </Grid>
                                             <Grid item xs={12} md={2}>
                                                 <Button

@@ -15,8 +15,9 @@ const AddPlant = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [plant, setPlant] = useState({
     name: '',
-    description: '',
-    image: null,
+    plantDescription: '',
+    conventions: '',
+    plantPhoto: null,
     tags: [],
     svg: null,
     mapSvgTag: [],
@@ -28,6 +29,7 @@ const AddPlant = () => {
       currentPlant[key] = currentForm[key]
     });
     setPlant(currentPlant)
+    console.log(currentPlant);
     setActiveStep((prevStep) => prevStep + 1);
   };
 
