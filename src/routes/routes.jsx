@@ -10,6 +10,7 @@ import EditTypeAlarm from '../pages/type-alarm-management/EditTypeAlarm';
 import ListTypeAlarm from '../pages/type-alarm-management/ListTypeAlarm';
 import ListAlarmGenerate from '../pages/alarm-navegator/ListAlarmGenerate';
 import DetailAlarmGenerate from '../pages/alarm-navegator/DetailAlarmGenerate';
+import MainProcessForm from '../components/process/forms/MainProcessForm';
 import TestChart from '../components/charts/TestChart';
 
 import App from '../App';
@@ -28,8 +29,8 @@ const MainLayoutRoutes = () => (
       <Route path="/manage-plant" component={ListPlant}/>
       <Route path="/manage-plant/:plantId" component={Plant} />
       <Route path="/manage-charts" component={ListTimeSeries} />
-      <Route path="/chart" component={TestChart} />
-      
+      <Route path="/chart" component={TestChart} /> {/* BORRAME */}
+      <Route path="/manage-process/add-1" component={MainProcessForm} /> 
     </Switch>
   </App>
 );

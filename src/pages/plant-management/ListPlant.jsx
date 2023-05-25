@@ -13,14 +13,12 @@ import { DataGrid } from '@mui/x-data-grid';
 import { getPlantsData, deletePlant } from '/src/services/PlantService'
 import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '/src/reducers/plant/plantSlice';
 import { useSelector, useDispatch } from "react-redux";
-import { use } from "echarts/core";
 
 export default function ListPlant() {
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const [plants, setPlants] = useState([]);
 
   const plantState = useSelector(state => state.plants)
-
   const dispatch = useDispatch();
 
   const loadPLantData = () => {
