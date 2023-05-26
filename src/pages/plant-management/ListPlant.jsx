@@ -117,6 +117,9 @@ export default function ListPlant() {
         pagination
         autoHeight
         disableSelectionOnClick
+        localeText={{
+          noRowsLabel: 'No hay elementos disponibles',
+        }}
       />
       <Box mt={2}>
         <Button

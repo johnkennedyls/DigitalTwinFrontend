@@ -26,13 +26,13 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
         e.preventDefault();
 
         const selectedPlantsAssetId = Object.keys(plantState)
-            .filter(plantId => selectedAssets.includes(plantId))
-            .map(plantId => plantId);
+            .filter(plantId => selectedAssets.includes(plantState[plantId].assetId))
+            .map(plantId => plantState[plantId].assetId);
 
         const filteredTags = [];
         Object.keys(plantState).forEach(plantId => {
             Object.keys(plantState[plantId].tags).forEach(assetId => {
-                if (selectedAssets.includes(Number(assetId)) && !selectedPlantsAssetId.includes(plantId)) {
+                if (selectedAssets.includes(Number(assetId)) && !selectedPlantsAssetId.includes(plantState[plantId].assetId)) {
                     filteredTags.push(Number(assetId));
                 }
             });
@@ -41,7 +41,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
         let finalSelectedAssets = [...new Set([...selectedPlantsAssetId, ...filteredTags])];
         finalSelectedAssets = finalSelectedAssets.map(assetId => parseInt(assetId));
 
-        console.log({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets });
+        onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets });
     };
 
     return (
@@ -80,7 +80,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                                     onClick={(event) => event.stopPropagation()}
                                 >
                                     <FormControlLabel
-                                        control={<Checkbox checked={selectedAssets.includes(plantKey)} onChange={() => handleCheck(plantKey)} />}
+                                        control={<Checkbox checked={selectedAssets.includes(plantState[plantKey].assetId)} onChange={() => handleCheck(plantState[plantKey].assetId)} />}
                                         label={plantState[plantKey].plantName}
                                     />
                                 </AccordionSummary>
@@ -88,7 +88,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                                     {Object.keys(plantState[plantKey].tags).map((assetId) => (
                                         <FormControlLabel
                                             key={assetId}
-                                            control={<Checkbox disabled={selectedAssets.includes(plantKey)} checked={selectedAssets.includes(Number(assetId))} onChange={() => handleCheck(Number(assetId))} />}
+                                            control={<Checkbox disabled={selectedAssets.includes(plantState[plantKey].assetId)} checked={selectedAssets.includes(Number(assetId))} onChange={() => handleCheck(Number(assetId))} />}
                                             label={plantState[plantKey].tags[assetId]}
                                         />
                                     ))}

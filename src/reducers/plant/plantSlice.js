@@ -8,6 +8,7 @@ export const plantSlice = createSlice({
       action.payload.forEach((plant) => {
         state[plant.plantId] = {
           plantId: plant.plantId,
+          assetId: plant.assetId,
           plantName: plant.plantName,
           plantDescription: plant.plantDescription,
           plantPhoto: plant.plantPhoto,
