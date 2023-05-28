@@ -7,7 +7,6 @@ import { Delete, Edit, Add,Visibility } from '@mui/icons-material';
 import { Table, TableBody, TableCell, TableHead, TableRow,TextField,InputLabel,Select,MenuItem, FormControl } from '@mui/material';
 import { Typography, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { useHistory } from "react-router-dom";
 import AlertMessage from '../../components/messages/AlertMessage';
 import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
@@ -92,15 +91,12 @@ const ListTypeAlarm = () => {
 
   const plantState = useSelector(state => state.plants)
   const [plants, setPlants] = useState([])
-
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
-
   const classes = useStyles();
-  const history = useHistory();
 
   const showTypeAlarmPath = `/detail-type-alarm/`
-  const addTypeAlarmPath = `${publicUrl}/add-type-alarm`
-  const editTypeAlarmPath = `${publicUrl}/edit-type-alarm/`
+  const addTypeAlarmPath = `/add-type-alarm`
+  const editTypeAlarmPath = `/edit-type-alarm/`
   
   const [alarms, setAlarms] = useState([]);
   const [open, setOpen] = useState(false);
@@ -118,6 +114,7 @@ const handleChangePage = (event, newPage) => {
   
 useEffect(() => {
   const currentPlants = Object.keys(plantState)
+  console.log("Plantas",currentPlants)
   setPlants(currentPlants)
 }, []);
 
@@ -156,11 +153,11 @@ const handleChangeRowsPerPage = (event) => {
   };
 
   const handleEdit = (row) => {
-    history.push(`${editTypeAlarmPath}${row.typeAlarmId}`);
+    window.location.href = `${publicUrl}${editTypeAlarmPath}${row.typeAlarmId}`;
   };
 
   const handleShow = (row) => {
-    history.push(`${showTypeAlarmPath}${row.typeAlarmId}`);
+    window.location.href = `${publicUrl}${showTypeAlarmPath}${row.typeAlarmId}`;
   };
 
 
@@ -315,7 +312,7 @@ const handleChangeRowsPerPage = (event) => {
       <div style={{  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
        <Button
         className={classes.button}
-        href={addTypeAlarmPath}
+        href={`${publicUrl}${addTypeAlarmPath}`}
         startIcon={<Add />}
         size="large"
         variant="contained"

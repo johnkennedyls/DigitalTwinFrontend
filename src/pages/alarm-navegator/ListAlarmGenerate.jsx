@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import {getAlarmsGenerate} from '../../services/AlarmService';
 import AvatarLetter  from '../../components/alarms/AvatarLetter.jsx'; 
-import { useHistory } from "react-router-dom";
 import {  IconButton } from '@mui/material';
 import ChipState  from '../../components/alarms/ChipState.jsx'; 
 import {Visibility } from '@mui/icons-material';
@@ -111,8 +110,7 @@ const ListAlarmGenerate = () => {
   const classes = useStyles();
   const [alarms, setAlarms] = useState([]);
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
-  const detailAlarmPath = `${publicUrl}/detail-alarm/`
-  const history = useHistory();
+  const detailAlarmPath = `/detail-alarm/`
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
   const plantState = useSelector(state => state.plants)
@@ -149,7 +147,7 @@ const handleChangeRowsPerPage = (event) => {
   ];
 
   const handleShowDetail = (row) => {
-    history.push(`${detailAlarmPath}${row.alarmId}`);
+    window.location.href = `${publicUrl}${detailAlarmPath}${row.alarmId}`;
   };
   useEffect(() => {
     if (selectedPlant !== null) {
@@ -171,6 +169,7 @@ const handleChangeRowsPerPage = (event) => {
     getAlarmsGenerate()
     .then((data) => {
       setAlarms(data);
+      console.log("PREUBAxd",data)
     })
     .catch((error) => {
       console.log(error);
@@ -219,17 +218,17 @@ const handleChangeRowsPerPage = (event) => {
   ) : (
     <>
       {alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-        <TableRow key={row.alarmid}>
+        <TableRow key={row.alarmId}>
           {columns.map((column) => {
             if (column.field === 'activationDate') {
               return (
-                <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
+                <TableCell className={classes.centeredCell} key={`${row.alarmId}-${column.field}`} width={column.width}>
                   {formatDate(row[column.field])}
                 </TableCell>
               );
             }
             return (
-              <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
+              <TableCell className={classes.centeredCell} key={`${row.alarmId}-${column.field}`} width={column.width}>
                 {row[column.field]}
               </TableCell>
             );

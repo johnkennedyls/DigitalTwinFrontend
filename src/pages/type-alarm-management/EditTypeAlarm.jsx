@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button,Badge, Select,MenuItem, Checkbox , FormControl ,Chip,OutlinedInput,List, ListItem,Typography   } from '@mui/material';
-import { Link, useHistory ,useParams} from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 import { FormHelperText } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -131,17 +131,13 @@ const tags = [
 
 function EditTypeAlarm() {
 
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
-
-
   const classes = useStyles();
-  const history = useHistory();
-  const typeAlarmListPath = `${publicUrl}/manage-type-alarm`
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const typeAlarmListPath = `/manage-type-alarm`
   const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
   const [loading, setLoading] = useState(true);
 
   const { id } = useParams();
-
   const [events, setEvents] = useState([]);
   const [emails, setEmails] = useState([]);
   const [typeAlarmData, setTypeAlarmData] = useState([]);
@@ -322,23 +318,19 @@ function EditTypeAlarm() {
         let message = 'Se ha editado exitosamente el tipo de alarma';
         let severity = 'success';
         setAlert({ show: true, message: message, severity: severity });
-        setTimeout(() => {
-          history.push(`${typeAlarmListPath}`);
-        }, 2000);
+        window.location.href = `${publicUrl}${typeAlarmListPath}`;
       })
       .catch((error) => {
         let message = '';
         let severity = 'error';
         if (error.response) {
-          if(error.response.data==="El nombre ya existe"){
-            console.log("YA EXISTE")
+          if(error.response.data==="El nombre del tipo de alarma ya existe"){
             message = error.response.data;
             setAlert({ show: true, message: message, severity: severity });
+          }else{
+            message = error.response.data;
+            setAlert({ show: true, message: message, severity: severity }); 
           }
-        }else{
-          console.log("YA EXISTE2")
-          message = error.response.data;
-          setAlert({ show: true, message: message, severity: severity }); 
         }
       });
   }
@@ -558,7 +550,7 @@ function EditTypeAlarm() {
   </Button>
   <Button
     className={classes.createButton}
-    href={typeAlarmListPath}
+    href={`${publicUrl}${typeAlarmListPath}`}
     xs
     variant="contained"
     color="primary"

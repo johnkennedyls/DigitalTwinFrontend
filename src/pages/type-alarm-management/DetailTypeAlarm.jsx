@@ -67,8 +67,6 @@ const DetaiTypelAlarm = () => {
     const history = useHistory();
     const [typeAlarm, setTypeAlarm] = useState([]);
     const { id } = useParams();
-    const publicUrl = import.meta.env.VITE_PUBLIC_URL;
-    const navegatorAlarmListPath = `${publicUrl}/navegator-alarm `
 
     useEffect(() => {
       getInformation()
@@ -85,9 +83,6 @@ const DetaiTypelAlarm = () => {
       });
     };
   
-  const handleBack = () => {
-    history.push(navegatorAlarmListPath);
-  };
 
     return (
         <div className={classes.paperContainer}>

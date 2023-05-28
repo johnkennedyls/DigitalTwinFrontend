@@ -13,7 +13,7 @@ import logobioinc from '/src/assets/logo_bioinc.png';
 import './MainToolbar.css';
 
 export default function MainToolbar() {
-  const publicUrl = import.meta.env.VITE_BASE_URL;
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {

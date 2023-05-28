@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import {getAlarmsHistory} from '../../services/AlarmService';
 import AvatarLetter  from '../../components/alarms/AvatarLetter.jsx'; 
-import { useHistory } from "react-router-dom";
 import {  IconButton } from '@mui/material';
 import ChipState  from '../../components/alarms/ChipState.jsx'; 
 import {Visibility } from '@mui/icons-material';
@@ -106,8 +105,7 @@ const ListAlarmHistory = () => {
   const classes = useStyles();
   const [alarms, setAlarms] = useState([]);
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
-  const detailAlarmPath = `${publicUrl}/detail-alarm/`
-  const history = useHistory();
+  const detailAlarmPath = `/detail-alarm/`
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
   const plantState = useSelector(state => state.plants)
@@ -147,7 +145,7 @@ const handleChangeRowsPerPage = (event) => {
   ];
 
   const handleShowDetail = (row) => {
-    history.push(`${detailAlarmPath}${row.alarmId}`);
+    window.location.href = `${publicUrl}${detailAlarmPath}${row.alarmid}`;
   };
   useEffect(() => {
     if (selectedPlant !== null) {

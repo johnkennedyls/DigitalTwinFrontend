@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Badge,Chip,Select,MenuItem, Checkbox , FormControl , OutlinedInput,List, ListItem,Typography   } from '@mui/material';
-import { Link, useHistory } from 'react-router-dom';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import InputLabel from '@mui/material/InputLabel';
@@ -115,11 +114,9 @@ const alarm = {
 
 function AddTypeAlarm() {
 
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
-
   const classes = useStyles();
-  const history = useHistory();
-  const typeAlarmListPath = `${publicUrl}/manage-type-alarm`
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const typeAlarmListPath = `/manage-type-alarm`
 
   //const [tags, setTags] = useState([]);
   const [tag, setTag] = useState([]);
@@ -278,9 +275,7 @@ function AddTypeAlarm() {
       let message = 'Se ha creado exitosamente el tipo de alarma';
       let severity = 'success';
       setAlert({ show: true, message: message, severity: severity });
-      setTimeout(() => {
-        history.push(`${typeAlarmListPath}`);
-      }, 2000);
+        window.location.href = `${publicUrl}${typeAlarmListPath}`;
     })
     .catch((error) => {
       let message = '';
@@ -509,7 +504,7 @@ function AddTypeAlarm() {
   </Button>
   <Button
     className={classes.createButton}
-    href={typeAlarmListPath}
+    href={`${publicUrl}${typeAlarmListPath}`}
     xs
     variant="contained"
     color="primary"
