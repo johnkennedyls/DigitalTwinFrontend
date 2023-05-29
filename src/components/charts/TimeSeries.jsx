@@ -45,6 +45,10 @@ export default function TimeSeries() {
   const [plant, setPlant] = useState("");
   const [plants, setPlants] = useState([])
 
+  // MIN AND MAX VALUES OF TAGS
+  const [minValues, setMinValues] = useState([]);
+  const [maxValues, setMaxValues] = useState([]);
+
   useEffect(() => {
     const currentPlants = Object.keys(plantState)
     setPlants(currentPlants)
@@ -81,6 +85,10 @@ export default function TimeSeries() {
 
     option.xAxis[0].data = tagsState.date
 
+    const minValues = [];
+    const maxValues = [];
+
+
     for (let i = 0; i < selectedTags.length; i++) {
       const tag = selectedTags[i]
       const tagName = plantState[plant]['tags'][tag]
@@ -97,7 +105,33 @@ export default function TimeSeries() {
         currentSeries['yAxisIndex'] = i
       }
       option.series.push(currentSeries)
+
+      const min = Math.min(...currentSeries.data);
+      const max = Math.max(...currentSeries.data);
+
+      minValues.push(min);
+      maxValues.push(max);
+
+      option.series.push({
+        type: 'line',
+        markLine: {
+          data: [
+            { yAxis: min, label: { formatter: `${tagName} - Valor mínimo: ${min}` } },
+          ],
+        },
+      });
+
+      option.series.push({
+        type: 'line',
+        markLine: {
+          data: [
+            { yAxis: max, label: { formatter: `${tagName} - Valor máximo: ${max}` } },
+          ],
+        },
+      });
     }
+    setMinValues(minValues);
+    setMaxValues(maxValues);
 
     currentOption = option
     return option;
