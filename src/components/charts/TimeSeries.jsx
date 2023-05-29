@@ -141,7 +141,7 @@ export default function TimeSeries() {
           <Select value={plant} onChange={handlePlantChange} label="Planta">
             {plants.map((currentPlant) => (
               <MenuItem key={currentPlant} value={currentPlant}>
-                { plantState[currentPlant]['name']}
+                { plantState[currentPlant]['plantName']}
               </MenuItem>
             ))}
           </Select>
@@ -192,11 +192,13 @@ export default function TimeSeries() {
       {(showGraphic() && showTags()) && (
         <Box>
           <ReactECharts key={selectedTags.length} option={getOption()} style={{ height: 400 }} />
-          <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <IconButton onClick={handlePlayPause}>
-              {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-            </IconButton>
-          </Box>
+          {mode == 'realtime' && (
+            <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <IconButton onClick={handlePlayPause}>
+                {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+              </IconButton>
+            </Box>
+          )}
         </Box>
       )}
       {showTags() && isPlaying && (

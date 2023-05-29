@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { getPlantsData, deletePlant } from '/src/services/PlantService'
-import { loadAllPlantsData } from '/src/reducers/plant/plantSlice';
+import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '/src/reducers/plant/plantSlice';
 import { useSelector, useDispatch } from "react-redux";
 
 export default function ListPlant() {
@@ -19,7 +19,6 @@ export default function ListPlant() {
   const [plants, setPlants] = useState([]);
 
   const plantState = useSelector(state => state.plants)
-
   const dispatch = useDispatch();
 
   const loadPLantData = () => {
@@ -61,7 +60,11 @@ export default function ListPlant() {
   };
 
   const handleDelete = (id) => {
-    deletePlant(id)
+
+    deletePlant(id).then(() => {
+      // setPlants(plants.filter((plant) => plant.plantId !== id));
+      dispatch(deletePlantFromRedux(id));
+    });
   };
 
   const columns = [
@@ -114,6 +117,9 @@ export default function ListPlant() {
         pagination
         autoHeight
         disableSelectionOnClick
+        localeText={{
+          noRowsLabel: 'No hay elementos disponibles',
+        }}
       />
       <Box mt={2}>
         <Button

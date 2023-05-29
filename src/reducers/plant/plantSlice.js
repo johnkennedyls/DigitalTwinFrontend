@@ -8,6 +8,7 @@ export const plantSlice = createSlice({
       action.payload.forEach((plant) => {
         state[plant.plantId] = {
           plantId: plant.plantId,
+          assetId: plant.assetId,
           plantName: plant.plantName,
           plantDescription: plant.plantDescription,
           plantPhoto: plant.plantPhoto,
@@ -17,10 +18,13 @@ export const plantSlice = createSlice({
           state[plant.plantId].tags[tag.assetId] = tag.name
         });
       });
+    },
+    deletePlant: (state, action) => {
+      delete state[action.payload]
     }
   },
 })
 
-export const { loadAllPlantsData } = plantSlice.actions
+export const { loadAllPlantsData, deletePlant } = plantSlice.actions
 
 export const plantReducer = plantSlice.reducer

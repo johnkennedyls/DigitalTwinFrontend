@@ -9,6 +9,7 @@ import {createTypeAlarm,getEmails,getEvents} from '../../services/TypeAlarmServi
 import { Save,Cancel } from '@mui/icons-material';
 import validate from "validate.js";
 import Paper from '@mui/material/Paper';
+import { useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
@@ -117,9 +118,10 @@ function AddTypeAlarm() {
   const classes = useStyles();
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const typeAlarmListPath = `/manage-type-alarm`
+  const plantState = useSelector(state => state.plants)
 
-  //const [tags, setTags] = useState([]);
-  const [tag, setTag] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [plants, setPlants] = useState([]);
   const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
   const [events, setEvents] = useState([]);
   const [emails, setEmails] = useState([]);
@@ -243,17 +245,12 @@ function AddTypeAlarm() {
   }, [conditionalValues]);
 
 
-  const plants = [
-    { id: 1, name: "OBQ1" },
-    { id: 2, name: "vof" },
-    { id: 3, name: "Pal24" },
-    // ...
-  ];
+  useEffect(() => {
+    const currentPlants = Object.values(plantState)
+    setPlants(currentPlants)
+  }, []);
 
-  const tags = [
-    { instId: 1, tagid: 'tag1', tagName: 'Tag1' },
-    { instId: 2, tagid: 'tag2', tagName: 'Tag2' }
-  ]
+
 
   const handleAutocompleteChange = (value) => {
     setDataForm((dataForm) => ({
@@ -292,8 +289,6 @@ function AddTypeAlarm() {
     });
   };
 
-
-
   return (
     <>
     <div className={classes.paperContainer}>
@@ -310,17 +305,21 @@ function AddTypeAlarm() {
       value={dataForm.values.plant_id || ''}
       error={hasError("condition")}
       helperText={hasError("condition") ? dataForm.errors.condition : null}
-      onChange={(event) => setDataForm({
-        ...dataForm,
-        values: {
-          ...dataForm.values,
-          plant_id: event.target.value,
-        },
-      })}
+      onChange={(event) => {
+        setDataForm({
+            ...dataForm,
+            values: {
+                ...dataForm.values,
+                plant_id: event.target.value,
+            },
+        });
+        const selectedPlant = plants.find(plant => plant.plantId === event.target.value);
+        setTags(selectedPlant ? selectedPlant.tags : []);
+    }}
     >
         {plants.map((plant) => (
-    <MenuItem key={plant.id} value={plant.id}>
-            {plant.name}
+    <MenuItem key={plant.plantId} value={plant.plantId}>
+            {plant.plantName}
       </MenuItem>
         ))}
     </Select>
@@ -352,11 +351,11 @@ function AddTypeAlarm() {
       }}
       className={classes.selectTag}
     >
-        {tags.map((tag) => (
-    <MenuItem key={tag.instId} value={tag.tagid}>
-            {tag.tagName}
-      </MenuItem>
-        ))}
+       {Object.entries(tags).map(([key, value]) => (
+    <MenuItem key={key} value={value}>
+        {value}
+    </MenuItem>
+))}
     </Select>
       </FormControl>
       <FormControl >

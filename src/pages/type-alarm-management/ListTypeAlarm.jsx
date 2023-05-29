@@ -113,8 +113,7 @@ const handleChangePage = (event, newPage) => {
 };
   
 useEffect(() => {
-  const currentPlants = Object.keys(plantState)
-  console.log("Plantas",currentPlants)
+  const currentPlants = Object.values(plantState)
   setPlants(currentPlants)
 }, []);
 

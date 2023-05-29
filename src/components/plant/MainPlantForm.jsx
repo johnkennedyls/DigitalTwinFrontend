@@ -34,7 +34,7 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
       <Grid item xs={12} sm={6} md={6}>
         <Paper elevation={3} sx={{ p: 4, my: 4 }}>
           <Typography variant="h6" gutterBottom>
-            Agregar planta
+            Agregar proceso
           </Typography>
           <Avatar src={plant.plantPhoto} variant="rounded" style={{ width: '7vw', height: '7vw', margin: '15px auto' }} />
           <form onSubmit={handleSubmit}>
@@ -71,7 +71,7 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
             </label>
 
             <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
-              Siguiente
+              Agregar proceso
             </Button>
           </form>
         </Paper>

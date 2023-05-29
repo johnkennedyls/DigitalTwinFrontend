@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button,Badge, Select,MenuItem, Checkbox , FormControl ,Chip,OutlinedInput,List, ListItem,Typography   } from '@mui/material';
 import { useParams} from 'react-router-dom';
-import { FormHelperText } from '@mui/material';
+import { useSelector } from 'react-redux';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import InputLabel from '@mui/material/InputLabel';
@@ -114,20 +114,6 @@ const alarm = {
   },
 };
 
-const plants = [
-  { id: 1, name: "IBQF1" },
-  { id: 2, name: "vof" },
-  { id: 3, name: "Pal24" },
-  // ...
-];
-
-
-const tags = [
-  { instId: 1, tagName: 'PE2' },
-  { instId: 2, tagName: 'Tag 2' },
-  { instId: 3, tagName: 'Tag 3' },
-  // ...otros tags...
-];
 
 function EditTypeAlarm() {
 
@@ -135,14 +121,14 @@ function EditTypeAlarm() {
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const typeAlarmListPath = `/manage-type-alarm`
   const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
-  const [loading, setLoading] = useState(true);
 
+  const plantState = useSelector(state => state.plants)
   const { id } = useParams();
   const [events, setEvents] = useState([]);
   const [emails, setEmails] = useState([]);
   const [typeAlarmData, setTypeAlarmData] = useState([]);
-
-  //const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [plants, setPlants] = useState([]);
 
   const [conditionalValues, setConditionalValues] = useState({
     tag: "",
@@ -165,7 +151,7 @@ function EditTypeAlarm() {
       values: {
         ...dataForm.values,
         plant_id: typeAlarmData.plantName ? 
-        plants.find(plant => plant.name === typeAlarmData.plantName)?.id : '',
+        plants.find(plant => plant.plantName === typeAlarmData.plantName)?.plantId : '',
         typeAlarmName: typeAlarmData.typeAlarmName || '',
         typeAlarmDescription: typeAlarmData.typeAlarmDescription || '',
         numberAlarmsMax: typeAlarmData.numberAlarmsMax || '',
@@ -175,6 +161,14 @@ function EditTypeAlarm() {
       },
     });
   }, [typeAlarmData]);
+
+  useEffect(() => {
+    if (dataForm.values.plant_id) {
+      const selectedPlant = plants.find(plant => plant.plantName === typeAlarmData.plantName);
+      const selectedPlantTags = selectedPlant ? selectedPlant.tags : [];
+      setTags(selectedPlantTags);
+    }
+  }, [dataForm.values.plant_id, typeAlarmData.plantName]);
 
   const hasError = ((field) => {
     if (field === "typeAlarmName" || field === "typeAlarmDescription" || field === "numberAlarmsMax" || field === "event_id" || field === "usersAssigned" || field === "condition" || field === "plant_id") {
@@ -221,6 +215,11 @@ function EditTypeAlarm() {
     }));
   };
   
+  useEffect(() => {
+    const currentPlants = Object.values(plantState)
+    setPlants(currentPlants)
+  }, []);
+
 
   const concatenateValues = () => {
     if (conditionalValues.tag && conditionalValues.condition && conditionalValues.value) {
@@ -302,7 +301,6 @@ function EditTypeAlarm() {
             condition: condition,
             value: value,
           });
-          console.log(conditionalValues.tag)
         }
       })
       .catch(error => console.log(error));
@@ -352,19 +350,20 @@ function EditTypeAlarm() {
     error={hasError("plant_id")}
     helperText={hasError("plant_id") ? dataForm.errors.plant_id : null}
     onChange={(event) => {
-      const plantNameSelected = plants.find((plant) => plant.id === event.target.value).name;
       setDataForm({
-        ...dataForm,
-        values: {
-          ...dataForm.values,
-          plant_id: event.target.value,
-        },
+          ...dataForm,
+          values: {
+              ...dataForm.values,
+              plant_id: event.target.value,
+          },
       });
-    }}
+      const selectedPlant = plants.find(plant => plant.plantId === event.target.value);
+      setTags(selectedPlant ? selectedPlant.tags : []);
+  }}
   >
     {plants.map((plant) => (
-      <MenuItem key={plant.id} value={plant.id}>
-        {plant.name}
+      <MenuItem key={plant.plantId} value={plant.plantId}>
+        {plant.plantName}
       </MenuItem>
     ))}
   </Select>
@@ -397,11 +396,11 @@ function EditTypeAlarm() {
       }}
       className={classes.selectTag}
     >
-        {tags.map((tag) => (
-    <MenuItem key={tag.instId} value={tag.tagName}>
-            {tag.tagName}
-      </MenuItem>
-        ))}
+       {Object.entries(tags).map(([key, value]) => (
+    <MenuItem key={key} value={value}>
+        {value}
+    </MenuItem>
+))}
     </Select>
       </FormControl>
       <FormControl >

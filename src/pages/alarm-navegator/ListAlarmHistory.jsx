@@ -113,7 +113,7 @@ const ListAlarmHistory = () => {
   const [selectedPlant, setSelectedPlant] = useState(null);
 
   useEffect(() => {
-    const currentPlants = Object.keys(plantState)
+    const currentPlants = Object.values(plantState)
     setPlants(currentPlants)
   }, []);
 

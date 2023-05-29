@@ -12,6 +12,8 @@ import ListTypeAlarm from '../pages/type-alarm-management/ListTypeAlarm';
 import ListAlarmGenerate from '../pages/alarm-navegator/ListAlarmGenerate';
 import ListAlarmHistory from '../pages/alarm-navegator/ListAlarmHistory';
 import DetailAlarm from '../pages/alarm-navegator/DetailAlarm';
+import ListProcess from '../pages/process-management/ListProcess';
+import AddProcess from '../pages/process-management/AddProcess';
 import TestChart from '../components/charts/TestChart';
 
 import App from '../App';
@@ -32,8 +34,10 @@ const MainLayoutRoutes = () => (
       <Route path="/manage-plant" component={ListPlant}/>
       <Route path="/manage-plant/:plantId" component={Plant} />
       <Route path="/manage-charts" component={ListTimeSeries} />
-      <Route path="/chart" component={TestChart} />
-      
+      <Route path="/manage-process" component={ListProcess} />
+      <Route path="/add-process" component={AddProcess} /> 
+      {/* <Route path="/edit-process/:id" component={EditProcess} /> */}
+      <Route path="/chart" component={TestChart} /> {/* BORRAME */}
     </Switch>
   </App>
 );

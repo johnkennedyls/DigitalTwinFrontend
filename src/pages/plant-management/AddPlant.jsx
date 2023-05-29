@@ -55,7 +55,7 @@ const AddPlant = () => {
 
   const handleSubmit = (currentPlant) => {
     console.log("SUBMIT", currentPlant)
-    addPlant(currentPlant).then((response) => {
+    addPlant(currentPlant).then(() => {
       window.location.href = '/dashboard/manage-plant';
     }).catch((error) => {
       console.error(error);

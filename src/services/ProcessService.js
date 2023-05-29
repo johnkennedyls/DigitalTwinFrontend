@@ -1,9 +1,8 @@
-import axios from './utils/axios';
-// const API_URL = import.meta.env.VITE_API_URL;
+import axios from './utils/axios'
 
-export const getPlantsData = () => {
+export const getProcessesData = () => {
     return new Promise((resolve, reject) => {
-        axios.get("plants")
+        axios.get("processes")
             .then(response => {
                 resolve(response.data);
             })
@@ -14,9 +13,9 @@ export const getPlantsData = () => {
     });
 }
 
-export const getPlantData = (plantId) => {
+export const getProcessData = (id) => {
     return new Promise((resolve, reject) => {
-        axios.get(`plants/${plantId}`)
+        axios.get(`processes/${id}`)
             .then(response => {
                 resolve(response.data);
             })
@@ -27,9 +26,9 @@ export const getPlantData = (plantId) => {
     });
 }
 
-export const addPlant = (plant) => {
+export const addProcess = (process) => {
     return new Promise((resolve, reject) => {
-        axios.post("plants/add", plant)
+        axios.post("processes/add", process)
             .then(response => {
                 resolve(response.data);
             })
@@ -40,9 +39,9 @@ export const addPlant = (plant) => {
     });
 }
 
-export const editPlant = (plant, plantId) => {
+export const editProcess = (process) => {
     return new Promise((resolve, reject) => {
-        axios.put(`plants/edit/${plantId}`, plant)
+        axios.put(`processes/edit/${process.id}`, process)
             .then(response => {
                 resolve(response.data);
             })
@@ -53,9 +52,9 @@ export const editPlant = (plant, plantId) => {
     });
 }
 
-export const deletePlant = (plantId) => {
+export const deleteProcess = (id) => {
     return new Promise((resolve, reject) => {
-        axios.delete(`plants/delete/${plantId}`)
+        axios.delete(`processes/delete/${id}`)
             .then(response => {
                 resolve(response.data);
             })
@@ -65,4 +64,3 @@ export const deletePlant = (plantId) => {
             });
     });
 }
-
