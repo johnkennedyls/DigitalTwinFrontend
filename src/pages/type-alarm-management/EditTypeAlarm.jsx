@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button,Badge, Select,MenuItem, Checkbox , FormControl ,Chip,OutlinedInput,List, ListItem,Typography   } from '@mui/material';
-import { Link, useHistory ,useParams} from 'react-router-dom';
-import { FormHelperText } from '@mui/material';
+import { useParams} from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
-import {getTypeAlarmById,updateTypeAlarm} from '../../services/TypeAlarmService';
+import AlertMessage from '../../components/messages/AlertMessage';
+import {getTypeAlarmById,updateTypeAlarm,getEmails,getEvents} from '../../services/TypeAlarmService';
 import { Save,Cancel } from '@mui/icons-material';
 import validate from "validate.js";
 import Paper from '@mui/material/Paper';
@@ -32,8 +33,7 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100vw',
-    height: '100vh',
+    marginTop:'40px'
   },
   left: {
     width: '50%',
@@ -114,44 +114,21 @@ const alarm = {
   },
 };
 
-const plants = [
-  { id: 1, name: "IBQF1" },
-  { id: 2, name: "vof" },
-  { id: 3, name: "Pal24" },
-  // ...
-];
-
-const events = [
-  { id: 1, name: "Evento 1" },
-  { id: 2, name: "Enviar correo" },
-  { id: 3, name: "Envento 3" },
-  // ...
-];
-
-const tags = [
-  { instId: 1, tagName: 'PE2' },
-  { instId: 2, tagName: 'Tag 2' },
-  { instId: 3, tagName: 'Tag 3' },
-  // ...otros tags...
-];
 
 function EditTypeAlarm() {
 
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
-
-
   const classes = useStyles();
-  const history = useHistory();
-  const typeAlarmListPath = `${publicUrl}/manage-type-alarm`
-  const [loading, setLoading] = useState(true);
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const typeAlarmListPath = `/manage-type-alarm`
+  const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
 
+  const plantState = useSelector(state => state.plants)
   const { id } = useParams();
-
-  //const [events, setEvents] = useState([]);
-  //const [emails, setEmails] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [emails, setEmails] = useState([]);
   const [typeAlarmData, setTypeAlarmData] = useState([]);
-
-  //const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [plants, setPlants] = useState([]);
 
   const [conditionalValues, setConditionalValues] = useState({
     tag: "",
@@ -174,16 +151,24 @@ function EditTypeAlarm() {
       values: {
         ...dataForm.values,
         plant_id: typeAlarmData.plantName ? 
-        plants.find(plant => plant.name === typeAlarmData.plantName)?.id : '',
+        plants.find(plant => plant.plantName === typeAlarmData.plantName)?.plantId : '',
         typeAlarmName: typeAlarmData.typeAlarmName || '',
         typeAlarmDescription: typeAlarmData.typeAlarmDescription || '',
         numberAlarmsMax: typeAlarmData.numberAlarmsMax || '',
         event_id: typeAlarmData.eventName ? 
-        events.find(event => event.name === typeAlarmData.eventName)?.id : '',
+        events.find(event => event.eventName === typeAlarmData.eventName)?.eventId : '',
         usersAssigned: typeAlarmData.usersAssigned || [],
       },
     });
   }, [typeAlarmData]);
+
+  useEffect(() => {
+    if (dataForm.values.plant_id) {
+      const selectedPlant = plants.find(plant => plant.plantName === typeAlarmData.plantName);
+      const selectedPlantTags = selectedPlant ? selectedPlant.tags : [];
+      setTags(selectedPlantTags);
+    }
+  }, [dataForm.values.plant_id, typeAlarmData.plantName]);
 
   const hasError = ((field) => {
     if (field === "typeAlarmName" || field === "typeAlarmDescription" || field === "numberAlarmsMax" || field === "event_id" || field === "usersAssigned" || field === "condition" || field === "plant_id") {
@@ -230,6 +215,11 @@ function EditTypeAlarm() {
     }));
   };
   
+  useEffect(() => {
+    const currentPlants = Object.values(plantState)
+    setPlants(currentPlants)
+  }, []);
+
 
   const concatenateValues = () => {
     if (conditionalValues.tag && conditionalValues.condition && conditionalValues.value) {
@@ -250,22 +240,41 @@ function EditTypeAlarm() {
         },
       }));
     }
-    handleErrors(); // Llama a handleErrors para actualizar los errores
+    handleErrors(); 
   };
-  
+  useEffect(() => {
+    getEmailsSystem()
+  }, []);
+
+  const getEmailsSystem = () => {
+    getEmails()
+    .then((data) => {
+      const userEmails = data.map((item) => item.userEmail);
+      setEmails(userEmails);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
+
+  useEffect(() => {
+    getEventsDashboard()
+  }, []);
+
+  const getEventsDashboard = () => {
+    getEvents()
+    .then((data) => {
+      setEvents(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
 
   useEffect(() => {
     concatenateValues();
   }, [conditionalValues]);
 
-  const emails = [
-    "carolinapasuy@hotmail.com",
-        "laurapasuy@hotmail.com",
-        "santiaqgopasuy@hotmail.com",
-        "estebanpasuy@hotmail.com",
-        "juliopasuy@hotmail.com",
-        "tamurapasuy@hotmail.com"
-  ];
 
   const handleAutocompleteChange = (value) => {
     setDataForm((dataForm) => ({
@@ -284,9 +293,7 @@ function EditTypeAlarm() {
   useEffect(() => {
     getTypeAlarmById(id)
       .then(data => {
-        console.log("Dta",data)
         setTypeAlarmData(data);
-        console.log("tag" )
         if (data?.condition) {
           const [tag, condition, value] = data.condition.split(' ');
           setConditionalValues({
@@ -294,23 +301,35 @@ function EditTypeAlarm() {
             condition: condition,
             value: value,
           });
-          console.log(conditionalValues.tag)
         }
       })
       .catch(error => console.log(error));
   }, [id]);
 
-
+  const handleCloseAlert = () => {
+    setAlert(prevState => ({ ...prevState, show: false }));
+  }
 
   const editTypeAlarm = async (event) => {
       console.log(dataForm.values)
       updateTypeAlarm(id,dataForm.values).then((data) => {
-        setTimeout(() => {
-          history.push(`${typeAlarmListPath}`);
-        }, 2000);
+        let message = 'Se ha editado exitosamente el tipo de alarma';
+        let severity = 'success';
+        setAlert({ show: true, message: message, severity: severity });
+        window.location.href = `${publicUrl}${typeAlarmListPath}`;
       })
       .catch((error) => {
-        console.log(error);
+        let message = '';
+        let severity = 'error';
+        if (error.response) {
+          if(error.response.data==="El nombre del tipo de alarma ya existe"){
+            message = error.response.data;
+            setAlert({ show: true, message: message, severity: severity });
+          }else{
+            message = error.response.data;
+            setAlert({ show: true, message: message, severity: severity }); 
+          }
+        }
       });
   }
 
@@ -331,19 +350,20 @@ function EditTypeAlarm() {
     error={hasError("plant_id")}
     helperText={hasError("plant_id") ? dataForm.errors.plant_id : null}
     onChange={(event) => {
-      const plantNameSelected = plants.find((plant) => plant.id === event.target.value).name;
       setDataForm({
-        ...dataForm,
-        values: {
-          ...dataForm.values,
-          plant_id: event.target.value,
-        },
+          ...dataForm,
+          values: {
+              ...dataForm.values,
+              plant_id: event.target.value,
+          },
       });
-    }}
+      const selectedPlant = plants.find(plant => plant.plantId === event.target.value);
+      setTags(selectedPlant ? selectedPlant.tags : []);
+  }}
   >
     {plants.map((plant) => (
-      <MenuItem key={plant.id} value={plant.id}>
-        {plant.name}
+      <MenuItem key={plant.plantId} value={plant.plantId}>
+        {plant.plantName}
       </MenuItem>
     ))}
   </Select>
@@ -376,11 +396,11 @@ function EditTypeAlarm() {
       }}
       className={classes.selectTag}
     >
-        {tags.map((tag) => (
-    <MenuItem key={tag.instId} value={tag.tagName}>
-            {tag.tagName}
-      </MenuItem>
-        ))}
+       {Object.entries(tags).map(([key, value]) => (
+    <MenuItem key={key} value={value}>
+        {value}
+    </MenuItem>
+))}
     </Select>
       </FormControl>
       <FormControl >
@@ -429,8 +449,8 @@ function EditTypeAlarm() {
       })}
     >
         {events.map((event) => (
-    <MenuItem key={event.id} value={event.id}>
-            {event.name}
+    <MenuItem key={event.eventId} value={event.eventId}>
+            {event.eventName}
       </MenuItem>
         ))}
     </Select>
@@ -465,6 +485,7 @@ function EditTypeAlarm() {
         value={dataForm.values.numberAlarmsMax || ""}
         id="numberAlarmsMax"
         name="numberAlarmsMax"
+        inputProps={{ min: "1" }}
       />
        <Autocomplete
         multiple
@@ -528,7 +549,7 @@ function EditTypeAlarm() {
   </Button>
   <Button
     className={classes.createButton}
-    href={typeAlarmListPath}
+    href={`${publicUrl}${typeAlarmListPath}`}
     xs
     variant="contained"
     color="primary"
@@ -539,6 +560,14 @@ function EditTypeAlarm() {
 </div>
 </Paper>
 </div>
+<div>
+    <AlertMessage 
+        open={alert.show} 
+        message={alert.message} 
+        severity={alert.severity} 
+        handleClose={handleCloseAlert}
+      />  
+    </div>
 </>
   );
 }

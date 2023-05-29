@@ -12,10 +12,11 @@ import Button from '@mui/material/Button';
 import { Add } from '@mui/icons-material';
 import getAvatarColor from '../../services/utils/ColorsAvatar';
 import {formatDate} from '../../services/utils/FormatterDate';
+import {addHistoryAction,getAllActionsHistoryByAlarm} from '../../services/AlarmService';
 
 const useStyles = makeStyles({
     commentContainer: {
-      maxHeight: 400,
+      height: 'auto',
       overflowY: 'auto',
       width: '100%',
       maxWidth: 'none',
@@ -39,6 +40,7 @@ const useStyles = makeStyles({
       margin: '0 -16px',
       border: '1px solid #f1f1f1', 
       height: 230,
+      width: 460,
     },
     comment: {
       marginBottom: 16,
@@ -71,30 +73,49 @@ const useStyles = makeStyles({
   });
   
     
-  function CommentBox({ comments }) {
+  function CommentBox({ alarmId , handleShowAlert }) {
       const classes = useStyles();
 
       const [currentComment, setCurrentComment] = useState('');
-      const [commentList, setCommentList] = useState(comments || []); 
+      const [commentList, setCommentList]  = useState([]);
+      const [isButtonEnabled, setIsButtonEnabled] = useState(false);
 
       const handleCommentChange = (event) => {
-        setCurrentComment(event.target.value);
+        const value = event.target.value;
+        setCurrentComment(value);
+        setIsButtonEnabled(value !== '');
       };
 
       useEffect(() => {
-        setCommentList(comments || []);
-      }, [comments]);
+        getHistoryActions()
+      }, []);
+    
+      const getHistoryActions = () => {
+        getAllActionsHistoryByAlarm(alarmId)
+        .then((data) => {
+          setCommentList(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      };
+    
 
       const handleAddComment = () => {
         if (currentComment !== '') {
           const newComment = {
-            id: commentList.length + 1,
-            title: '',
-            author: 'Guest',
-            comment: currentComment,
+            actionHistoryDescription: currentComment,
           };
-          setCommentList([...commentList, newComment]);
-          setCurrentComment('');
+          addHistoryAction(newComment, alarmId)
+          .then(response => {
+            handleShowAlert('Comentario agregado con éxito', 'success');
+            setCurrentComment('');
+            setIsButtonEnabled(false);
+            getHistoryActions();
+          })
+          .catch(error => {
+            handleShowAlert('Error al agregar el comentario', 'error');
+          });
         }
       };
 
@@ -106,7 +127,7 @@ const useStyles = makeStyles({
                 <Typography variant="body1" className={classes.emptyCommentMessage}><em>Aún no hay acciones</em></Typography>
               ) : (
                 commentList.map((comment) => (
-                  <React.Fragment key={comment.id}>
+                  <React.Fragment key={comment.actionHistoryId}>
                     <ListItem alignItems="flex-start" className={classes.comment}>
                       <ListItemAvatar>
                         <Avatar
@@ -161,6 +182,7 @@ const useStyles = makeStyles({
               variant="contained"
               color="primary"
               onClick={handleAddComment}
+              disabled={!isButtonEnabled}
             >
               Añadir acción
             </Button>

@@ -6,20 +6,35 @@ import {
 } from '@mui/material';
 // import EditIcon from '@mui/icons-material/Edit';
 // import DeleteIcon from '@mui/icons-material/Delete';
-import { PlayCircleFilled /*PauseCircleFilled*/ } from '@mui/icons-material';
+import { PlayCircleFilled, PauseCircleFilled, StopRounded } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 
-import { getProcessesData } from '/src/services/ProcessService';
+import { getProcessesData, startProcess, pauseProcess, stopProcess } from '/src/services/ProcessService';
+
+const PROCESS_STATE = {
+  STOPPED: 0,
+  RUNNING: 1,
+  PAUSED: 2,
+}
 
 export default function ListProcess() {
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const [processes, setProcesses] = useState([]);
+  const [processState, setProcessState] = useState([]);
 
   const loadProcessData = () => {
     getProcessesData()
       .then((data) => {
         setProcesses(data);
+        data.forEach((process) => {
+          setProcessState((prevState) => {
+            return {
+              ...prevState,
+              [process.id]: process.state,
+            }
+          })
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -36,21 +51,49 @@ export default function ListProcess() {
 
   const handlePlay = (id) => {
     console.log(id)
+    startProcess(id).then(() => {
+      setProcessState((prevState) => {
+        return {
+          ...prevState,
+          [id]: PROCESS_STATE.RUNNING,
+        }
+      })
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
-  // const handleEdit = (id) => {
-  //   window.location.href = `${publicUrl}/edit-process/${id}`;
-  // };
+  useEffect(() => {
+    console.log(processState)
+  }, [processState])
 
-  // const handleDelete = (id) => {
-  //   deleteProcess(id)
-  //     .then(() => {
-  //       setProcesses(processes.filter((process) => process.id !== id));
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
+  const handlePause = (id) => {
+    console.log(id)
+    pauseProcess(id).then(() => {
+      setProcessState((prevState) => {
+        return {
+          ...prevState,
+          [id]: PROCESS_STATE.PAUSED,
+        }
+      })
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
+  const handleStop = (id) => {
+    console.log(id)
+    stopProcess(id).then(() => {
+      setProcessState((prevState) => {
+        return {
+          ...prevState,
+          [id]: PROCESS_STATE.STOPPED,
+        }
+      })
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
 
   const columns = [
     { field: 'name', headerName: 'Nombre', width: 200 },
@@ -66,10 +109,23 @@ export default function ListProcess() {
           <div>
             <IconButton
               color="primary"
-              onClick={() => handlePlay(params.row.id)}
+              onClick={() => processState[params.row.id] === PROCESS_STATE.RUNNING ? handlePause(params.row.id) : handlePlay(params.row.id)}
             >
-              <PlayCircleFilled sx={{ fontSize: '100%', borderRadius: '50%' }}/>
+              {processState[params.row.id] === PROCESS_STATE.STOPPED && <PlayCircleFilled sx={{ fontSize: '100%', borderRadius: '50%' }} />}
+              {processState[params.row.id] === PROCESS_STATE.PAUSED && <PlayCircleFilled sx={{ fontSize: '100%', borderRadius: '50%' }} />}
+              {processState[params.row.id] === PROCESS_STATE.RUNNING && <PauseCircleFilled sx={{ fontSize: '100%', borderRadius: '50%' }} />}
+
             </IconButton>
+
+            {(processState[params.row.id] === PROCESS_STATE.PAUSED || processState[params.row.id] === PROCESS_STATE.RUNNING) &&
+              (
+                <IconButton
+                  color="primary"
+                  onClick={() => handleStop(params.row.id)}
+                >
+                  <StopRounded sx={{ fontSize: '100%', borderRadius: '50%' }} />
+                </IconButton>
+              )}
           </div>
         );
       },

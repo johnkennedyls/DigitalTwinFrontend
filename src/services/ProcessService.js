@@ -64,3 +64,42 @@ export const deleteProcess = (id) => {
             });
     });
 }
+
+export const startProcess = (id) => {
+    return new Promise((resolve, reject) => {
+        axios.post(`processes/start/${id}`)
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
+export const pauseProcess = (id) => {
+    return new Promise((resolve, reject) => {
+        axios.post(`processes/pause/${id}`)
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
+export const stopProcess = (id) => {
+    return new Promise((resolve, reject) => {
+        axios.post(`processes/stop/${id}`)
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
