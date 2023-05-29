@@ -31,7 +31,11 @@ const App = ({ children }) => {
   //   headers: header
   // });
   // let stompClient = Stomp.over(ws);
-
+  useEffect(() => {
+    if (!token) {
+      window.location.href = "/";
+    }
+  }, []);
 
   const onDisconnect = () => {
     console.log('Disconnected from WebSocket server');

@@ -11,6 +11,8 @@ import icesi_logo from '/src/assets/images/ICESI_logo.png';
 import logobioinc from '/src/assets/logo_bioinc.png';
 import './MainToolbar.css';
 
+import { hasAnyRole } from "/src/services/utils/funtions";
+
 export default function MainToolbar() {
 
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
