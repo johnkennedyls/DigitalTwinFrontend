@@ -80,12 +80,6 @@ const useStyles = makeStyles({
   },
 });
 
-const plants = [
-  { id: 1, name: "IBQF1" },
-  { id: 2, name: "vof" },
-  { id: 3, name: "Pal24" },
-  // ...
-];
 
 const ListTypeAlarm = () => {
 
@@ -173,7 +167,7 @@ const handleChangeRowsPerPage = (event) => {
     .catch((error) => {
       let message = '';
       let severity = 'error';
-      message = error.response.data;
+      message = error.response;
       setAlert({ show: true, message: message, severity: severity });
     })
     }
