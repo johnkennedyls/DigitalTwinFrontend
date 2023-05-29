@@ -46,6 +46,7 @@ export default function TimeSeries() {
   const [plants, setPlants] = useState([])
 
   // MIN AND MAX VALUES OF TAGS
+  const LINE_TYPES = ['solid', 'dashed', 'dotted'];
   const [minValues, setMinValues] = useState([]);
   const [maxValues, setMaxValues] = useState([]);
 
@@ -77,17 +78,18 @@ export default function TimeSeries() {
     }
     const option = deepCopy(DEFAULT_TIME_SERIES_OPTION)
     option.legend.data = []
-    selectedTags.forEach((tag) => {
+    selectedTags.forEach((tag, index) => {
       option.legend.data.push(plantState[plant]['tags'][tag])
+      const tagData = tagsState[tag];
+      const minVal = Math.min(...tagData);
+      const maxVal = Math.max(...tagData);
+  
+      minValues[index] = minVal;
+      maxValues[index] = maxVal;
     })
-
     option.grid['left'] = `${OFFSET * selectedTags.length}px`
 
     option.xAxis[0].data = tagsState.date
-
-    const minValues = [];
-    const maxValues = [];
-
 
     for (let i = 0; i < selectedTags.length; i++) {
       const tag = selectedTags[i]
@@ -101,37 +103,32 @@ export default function TimeSeries() {
       currentSeries.name = tagName
       currentSeries.data = tagsState[tag]
       currentSeries.symbol = SYMBOLS[i%SYMBOLS.length]
+      currentSeries.markLine = {
+        data: [
+          {
+            type: 'min', 
+            name: 'Mínimo',
+            lineStyle: {
+              width: 2,
+              type: 'solid'
+            }
+          },
+          {
+            type: 'max', 
+            name: 'Máximo',
+            lineStyle: {
+              width: 2,
+              type: 'dashed'
+            }
+          }
+        ]
+      };
       if (i != 0) {
         currentSeries['yAxisIndex'] = i
       }
       option.series.push(currentSeries)
 
-      const min = Math.min(...currentSeries.data);
-      const max = Math.max(...currentSeries.data);
-
-      minValues.push(min);
-      maxValues.push(max);
-
-      option.series.push({
-        type: 'line',
-        markLine: {
-          data: [
-            { yAxis: min, label: { formatter: `${tagName} - Valor mínimo: ${min}` } },
-          ],
-        },
-      });
-
-      option.series.push({
-        type: 'line',
-        markLine: {
-          data: [
-            { yAxis: max, label: { formatter: `${tagName} - Valor máximo: ${max}` } },
-          ],
-        },
-      });
     }
-    setMinValues(minValues);
-    setMaxValues(maxValues);
 
     currentOption = option
     return option;
