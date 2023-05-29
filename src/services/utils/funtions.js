@@ -7,7 +7,7 @@ export function generateRandomColor() {
   return color;
 }
 
-export function generateRandomDarkColor(){
+export function generateRandomDarkColor() {
   const letters = '0123456789ABCDEF';
   let color = '#';
   for (let i = 0; i < 6; i++) {
@@ -30,6 +30,21 @@ export function generateRandomDarkColorsArray(numColors) {
   return colorsArray;
 }
 
-export function deepCopy(oldObject){
-    return JSON.parse(JSON.stringify(oldObject));
+export function deepCopy(oldObject) {
+  return JSON.parse(JSON.stringify(oldObject));
+}
+
+import jwtDecode from 'jwt-decode';
+export function hasAnyRole(rolesToCheck) {
+  const token = localStorage.getItem('access_token');
+  if (!token) return false;
+
+  const decodedToken = jwtDecode(token);
+  const userRoles = decodedToken.role.split(',');
+
+  // Elimina "ROLE_" y convierte los roles a minúsculas para ignorar el case
+  const lowerCaseUserRoles = userRoles.map(role => role.replace('ROLE_', '').toLowerCase());
+
+  // Verifica si al menos uno de los roles buscados está en la lista de roles
+  return rolesToCheck.some(roleToCheck => lowerCaseUserRoles.includes(roleToCheck.toLowerCase()));
 }

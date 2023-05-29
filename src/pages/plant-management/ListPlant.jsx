@@ -13,6 +13,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { getPlantsData, deletePlant } from '/src/services/PlantService'
 import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '/src/reducers/plant/plantSlice';
 import { useSelector, useDispatch } from "react-redux";
+import { hasAnyRole } from "/src/services/utils/funtions";
 
 export default function ListPlant() {
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
@@ -89,12 +90,14 @@ export default function ListPlant() {
         return (
           <div>
             <IconButton
+              disabled={!hasAnyRole(['Admin-plant', 'Edit-plant'])}
               color="primary"
               onClick={() => handleEdit(params.row.plantId)}
             >
               <EditIcon />
             </IconButton>
             <IconButton
+              disabled={!hasAnyRole(['Admin-plant', 'Delete-plant'])}
               color="secondary"
               onClick={() => handleDelete(params.row.plantId)}
             >
@@ -123,6 +126,7 @@ export default function ListPlant() {
       />
       <Box mt={2}>
         <Button
+          disabled={!hasAnyRole(['Admin-plant', 'Add-plant'])}
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}

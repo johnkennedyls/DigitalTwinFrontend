@@ -1,5 +1,6 @@
 import * as ECharts from "echarts/core";
 import ReactECharts from 'echarts-for-react';
+import moment from 'moment';
 import { ToolboxComponent, DataZoomComponent, AxisPointerComponent, SingleAxisComponent } from 'echarts/components';
 import { LineChart } from 'echarts/charts';
 import { useState, useEffect } from "react";
@@ -21,6 +22,8 @@ import { Autocomplete } from '@mui/material'
 import { useSelector } from 'react-redux';
 import { deepCopy } from '../../services/utils/funtions';
 
+import { getDelimitedData } from '../../services/PlantService';
+
 import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, SYMBOLS } from '../../services/utils/constants';
 
 ECharts.use([
@@ -36,6 +39,9 @@ export default function TimeSeries() {
   // REDUX DATA
   const plantState = useSelector(state => state.plants)
   const tagsState = useSelector(state => state.tags)
+
+  // AXIOS DATA
+  const [delimitedData, setDelimitedData] = useState({ date: [] })
 
   // FORMS
   const [mode, setMode] = useState('');
@@ -73,7 +79,7 @@ export default function TimeSeries() {
 
   const getOption = () => {
     const OFFSET = 60
-    if(!isPlaying){
+    if (!isPlaying) {
       return currentOption
     }
     const option = deepCopy(DEFAULT_TIME_SERIES_OPTION)
@@ -89,7 +95,7 @@ export default function TimeSeries() {
     })
     option.grid['left'] = `${OFFSET * selectedTags.length}px`
 
-    option.xAxis[0].data = tagsState.date
+    option.xAxis[0].data = mode === 'realtime' ? tagsState.date : delimitedData.date
 
     for (let i = 0; i < selectedTags.length; i++) {
       const tag = selectedTags[i]
@@ -123,6 +129,8 @@ export default function TimeSeries() {
           }
         ]
       };
+      currentSeries.data = mode === 'realtime' ? tagsState[tag] : delimitedData[tag]
+      currentSeries.symbol = SYMBOLS[i % SYMBOLS.length]
       if (i != 0) {
         currentSeries['yAxisIndex'] = i
       }
@@ -133,7 +141,7 @@ export default function TimeSeries() {
     currentOption = option
     return option;
   }
-  
+
   const [isPlaying, setIsPlaying] = useState(true);
 
   const handlePlayPause = () => {
@@ -154,6 +162,36 @@ export default function TimeSeries() {
 
   const handleDateChange = (field, value) => {
     setDateRange((prev) => ({ ...prev, [field]: value }));
+    setTimeout(() => {
+      if (mode == 'realtime') {
+        return
+      }
+
+      const startDateLong = new Date(dateRange.start).getTime()
+      const endDateLong = new Date(dateRange.end).getTime()
+      if (startDateLong > endDateLong) {
+        return
+      }
+      console.log(plant, startDateLong, endDateLong)
+      getDelimitedData(plant, startDateLong, endDateLong)
+        .then((data) => {
+          const currentData = delimitedData
+          data.forEach((current) => {
+            const tag = current.assetId
+            if (currentData[tag] == undefined) {
+              currentData[tag] = []
+            }
+            const currentDate = moment(new Date(current.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
+            currentData.date.push(currentDate)
+            currentData[tag].push([currentDate, current.value])
+          })
+          console.log(currentData)
+          setDelimitedData(currentData)
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }, 100)
   };
 
   const showTags = () => {
@@ -172,7 +210,7 @@ export default function TimeSeries() {
           <Select value={plant} onChange={handlePlantChange} label="Planta">
             {plants.map((currentPlant) => (
               <MenuItem key={currentPlant} value={currentPlant}>
-                { plantState[currentPlant]['plantName']}
+                {plantState[currentPlant]['plantName']}
               </MenuItem>
             ))}
           </Select>
@@ -184,7 +222,7 @@ export default function TimeSeries() {
           justifyContent="space-between"
           alignItems="center"
         >
-          <FormControl variant="outlined" margin="normal" sx={mode=='range'?{flexGrow: 1, mr:1}:{flexGrow: 1, mr:0}}>
+          <FormControl variant="outlined" margin="normal" sx={mode == 'range' ? { flexGrow: 1, mr: 1 } : { flexGrow: 1, mr: 0 }}>
             <InputLabel>Modo</InputLabel>
             <Select value={mode} onChange={handleModeChange} label="Modo">
               <MenuItem value="realtime">Tiempo real</MenuItem>
