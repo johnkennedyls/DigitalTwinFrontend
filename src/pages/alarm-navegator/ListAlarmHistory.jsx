@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import {getAlarmsGenerate} from '../../services/AlarmService';
+import {getAlarmsHistory} from '../../services/AlarmService';
 import AvatarLetter  from '../../components/alarms/AvatarLetter.jsx'; 
 import {  IconButton } from '@mui/material';
 import ChipState  from '../../components/alarms/ChipState.jsx'; 
@@ -9,21 +9,21 @@ import { Table, TableBody, TableCell, TableHead, TableRow,TableContainer,TableFo
 import { makeStyles } from '@mui/styles';
 import {formatDate} from '../../services/utils/FormatterDate';
 import { useSelector } from 'react-redux';
-import {getAllAlarmsActiveByPlantId} from '../../services/AlarmService';
+import {getAllAlarmsClosedByPlantId} from '../../services/AlarmService';
 
 const useStyles = makeStyles({
   tableContainer: {
     display: 'flex',
-    flexDirection: 'column', // Agrega una dirección de columna para colocar los elementos en una columna
+    flexDirection: 'column', 
     alignItems: 'center',
     marginTop: '50px',
     marginBottom: '50px', 
   },
   button: {
-    marginTop: '70px', // Agrega un margen superior para separar el botón de la tabla
+    marginTop: '70px', 
   },
   actionCell: {
-    width: '120px', // ajuste el ancho de la celda aquí
+    width: '120px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -97,16 +97,11 @@ const useStyles = makeStyles({
   conditionColumn: {
     width: '150px', 
     textAlign: 'center !important',
-  },    
-  stickyFooter: {
-    position: 'sticky',
-    bottom: 0,
-    backgroundColor: 'white'
-  }
+  },
 });
 
 
-const ListAlarmGenerate = () => {
+const ListAlarmHistory = () => {
   const classes = useStyles();
   const [alarms, setAlarms] = useState([]);
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
@@ -121,6 +116,9 @@ const ListAlarmGenerate = () => {
     const currentPlants = Object.values(plantState)
     setPlants(currentPlants)
   }, []);
+
+  const emptyRows =
+  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - alarms.length) : 0;
 
 const handleChangePage = (event, newPage) => {
   setPage(newPage);
@@ -147,11 +145,11 @@ const handleChangeRowsPerPage = (event) => {
   ];
 
   const handleShowDetail = (row) => {
-    window.location.href = `${publicUrl}${detailAlarmPath}${row.alarmId}`;
+    window.location.href = `${publicUrl}${detailAlarmPath}${row.alarmid}`;
   };
   useEffect(() => {
     if (selectedPlant !== null) {
-      getAllAlarmsActiveByPlantId(selectedPlant)
+      getAllAlarmsClosedByPlantId(selectedPlant)
         .then((response) => {
           setAlarms(response);
         })
@@ -166,10 +164,9 @@ const handleChangeRowsPerPage = (event) => {
   }, []);
 
   const getAlarms = () => {
-    getAlarmsGenerate()
+    getAlarmsHistory()
     .then((data) => {
       setAlarms(data);
-      console.log("PREUBAxd",data)
     })
     .catch((error) => {
       console.log(error);
@@ -194,7 +191,7 @@ const handleChangeRowsPerPage = (event) => {
           ))}
         </Select>
       </FormControl>
-     <TableContainer component={Paper} style={{ width: '800px', height: 'auto', overflow: 'visible' }}>
+      <TableContainer component={Paper} style={{ width: '800px', height: 'auto', overflow: 'visible' }}>
   <Table className={classes.table} aria-label="custom pagination table">
     <TableHead>
       <TableRow>
@@ -204,51 +201,54 @@ const handleChangeRowsPerPage = (event) => {
           </TableCell>
         ))}
         <TableCell width={100} className={`${classes.centeredCell} ${classes.titleCell}`}>Estado</TableCell>
-        <TableCell width={100} className={`${classes.centeredCell} ${classes.titleCell}`}>Usuarios Asignados</TableCell>
+        <TableCell width={100} className={`${classes.centeredCell} ${classes.titleCell}`}>Usuarios Asignados</TableCell> 
         <TableCell width={100} className={`${classes.centeredCell} ${classes.titleCell}`}>Acciones</TableCell>
       </TableRow>
     </TableHead>
     <TableBody>
-  {alarms.length === 0 ? (
-    <TableRow>
-      <TableCell colSpan={12} align="center" style={{ height: '200px' }}>
-        No hay elementos disponibles.
-      </TableCell>
-    </TableRow>
-  ) : (
-    <>
-      {alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-        <TableRow key={row.alarmId}>
-          {columns.map((column) => {
-            if (column.field === 'activationDate') {
-              return (
-                <TableCell className={classes.centeredCell} key={`${row.alarmId}-${column.field}`} width={column.width}>
-                  {formatDate(row[column.field])}
-                </TableCell>
-              );
-            }
-            return (
-              <TableCell className={classes.centeredCell} key={`${row.alarmId}-${column.field}`} width={column.width}>
-                {row[column.field]}
-              </TableCell>
-            );
-          })}
-          <TableCell className={classes.centeredCell}>
-            <ChipState state={row.stateAlarmName} />
-          </TableCell>
-          <TableCell className={classes.centeredCell}>
-            <AvatarLetter names={row.usersAssigned} />
-          </TableCell>
-          <TableCell className={classes.centeredCell}>
-            <IconButton aria-label="show" onClick={() => handleShowDetail(row)}>
-              <Visibility />
-            </IconButton>
+      {alarms.length === 0 ? (
+        <TableRow>
+          <TableCell colSpan={12} align="center" style={{ height: '200px' }}>
+            No hay elementos disponibles.
           </TableCell>
         </TableRow>
-      ))}
-    </>
-  )}
-</TableBody>
+      ) : (
+        <>
+          {(rowsPerPage > 0
+            ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : alarms
+          ).map((row) => (
+            <TableRow key={row.alarmid}>
+              {columns.map((column) => {
+                if (column.field === 'activationDate') {
+                  return (
+                    <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
+                      {formatDate(row[column.field])}
+                    </TableCell>
+                  );
+                }
+                return (
+                  <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
+                    {row[column.field]}
+                  </TableCell>
+                );
+              })}
+              <TableCell className={classes.centeredCell}>
+                <ChipState state={row.stateAlarmName} />
+              </TableCell>
+              <TableCell className={classes.centeredCell}>
+                <AvatarLetter names={row.usersAssigned} />
+              </TableCell>
+              <TableCell className={classes.centeredCell}>
+                <IconButton aria-label="show" onClick={() => handleShowDetail(row)}>
+                  <Visibility />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </>
+      )}
+    </TableBody>
     <TableFooter className={classes.stickyFooter}>
       <TableRow style={{ textAlign: 'center' }}>
         <TablePagination
@@ -270,8 +270,9 @@ const handleChangeRowsPerPage = (event) => {
     </TableFooter>
   </Table>
 </TableContainer>
+
     </div>
   )
 }
 
-export default ListAlarmGenerate;
+export default ListAlarmHistory;

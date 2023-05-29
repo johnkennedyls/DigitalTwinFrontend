@@ -4,17 +4,19 @@ import CommentBox  from '../../components/alarms/CommentBox';
 import ListAvatar  from '../../components/alarms/ListAvatar';
 import {getAlarmById} from '../../services/AlarmService';
 import {changeStateAlarm} from '../../services/StateAlarm';
-import { Select,FormControl,MenuItem,Typography,InputLabel} from '@mui/material';
+import { Select,FormControl,MenuItem,Typography,InputLabel,IconButton} from '@mui/material';
 import {formatDate} from '../../services/utils/FormatterDate';
 import Paper from '@mui/material/Paper';
+
 import {useParams} from 'react-router-dom';
-import AlertDialog  from '../../components/alarms/AlertDialog.jsx'; 
+import AlertMessage from '../../components/messages/AlertMessage';
+import AlertDialog  from '../../components/alarms/AlertDialog'; 
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
     '& > *': {
       flexDirection: 'column',
       padding: '10px 10px',
@@ -27,12 +29,11 @@ const useStyles = makeStyles({
   paperContainer: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
-    width: '100vw',
-    height: '100vh',
+    marginTop:'20px'
   },
   left: {
     width: '40%',
+    height: 'auto',
     '& > *': {
       height: 'auto',
       flexGrow: 1,
@@ -41,14 +42,15 @@ const useStyles = makeStyles({
   },
   right: {
     width: '60%',
-    height: '70%',
+    height: 'auto',
     '& > *': {
       height: 'auto',
       flexGrow: 1,
+      margin: '10px 5px 5px 0px',
     },
   },
     commentsSection: {
-      height: '70%'
+      overflow: 'visible' 
     },
     firstElement: {
       width: '100%',
@@ -67,18 +69,23 @@ const useStyles = makeStyles({
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis'
-      }
+      },
+
   });
 
 
-const DetailAlarmGenerate = () => {
+const DetailAlarm = () => {
     const classes = useStyles();
+    const history = useHistory();
     const [alarm, setAlarm] = useState([]);
     const { id } = useParams();
     const [selectedState, setSelectedState] = useState("");
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
+    const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+    const navegatorAlarmListPath = `${publicUrl}/navegator-alarm`
+    const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
 
     useEffect(() => {
       getAlarm()
@@ -101,7 +108,7 @@ const DetailAlarmGenerate = () => {
       const newState = e.target.value;
       let message = "Seguro que quieres cambiar el estado? Una vez lo hagas no podrá ser cambiado";
       if (newState === "Cerrado") {
-          message = "Si cambia el estado de la alarma a Cerrado se cambiaran todas las demas alarmas asociadas al tipo de alarma";
+          message = "Si cambia el estado de la alarma a Cerrado se cambiaran todas las demás alarmas asociadas al tipo de alarma";
       }
       setDialogMessage(message);
       setDialogOpen(true);
@@ -117,18 +124,35 @@ const DetailAlarmGenerate = () => {
     };
     changeStateAlarm(requestBody,id)
       .then((data) => {
-        console.log(data);
+        handleShowAlert('El estado fue cambiado exitosamente', 'success');
       })
       .catch((error) => {
-        console.log(error);
+        handleShowAlert('El estado no pudo ser cambiado', 'error');
       });
     setIsSelectDisabled(true);
     setDialogOpen(false);
   };
   
+
+  const handleShowAlert = (message, severity) => {
+    setAlert({
+      show: true,
+      message,
+      severity
+    });
+  };
+  
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setAlert({ ...alert, show: false });
+  };
+
     return (
+      <>
       <div className={classes.paperContainer}>
-        <Paper elevation={3} style={{ width: '800px', height: '470px',margin: '10px' }}>
+        <Paper elevation={3} style={{ width: '900px', height: '520px',margin: '10px' }}>
         <div className={classes.root}>
           <div className={classes.left}>
           <Typography variant="body1" gutterBottom>
@@ -144,6 +168,9 @@ const DetailAlarmGenerate = () => {
             </Typography>
             <Typography variant="body1" gutterBottom>
             <strong>Valor del Tag:</strong> {alarm.tagValue}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+            <strong>Estado:</strong> 
             </Typography>
             <FormControl>
                 <InputLabel>{alarm.stateAlarmName}</InputLabel>
@@ -163,18 +190,27 @@ const DetailAlarmGenerate = () => {
             <Typography variant="body1" gutterBottom>
             <strong> Usuarios Asignados </strong>
             </Typography>
-              <ListAvatar items={alarm.usersAssigned} />
+              <ListAvatar  items={alarm.usersAssigned} />
             </div>
           </div>
           <div className={`${classes.right} ${classes.commentsSection}`}>
           <Typography variant="body1" gutterBottom>
           <strong> Historial de Acciones </strong>
             </Typography>
-            <CommentBox comments={alarm.actionsHistory} />
+            <CommentBox  alarmId={id}  handleShowAlert={handleShowAlert}/>
           </div>
         </div>
         </Paper>
       </div>
+        <div>
+          <AlertMessage 
+            open={alert.show} 
+            message={alert.message} 
+            severity={alert.severity} 
+            handleClose={handleCloseAlert}
+          />
+        </div>
+      </>
       );
     };
-export default DetailAlarmGenerate;
+export default DetailAlarm;
