@@ -4,7 +4,7 @@ import AddPlant from '../pages/plant-management/AddPlant';
 import EditPlant from '../pages/plant-management/EditPlant';
 import ListPlant from '../pages/plant-management/ListPlant';
 import ListTimeSeries from '../pages/charts-management/ListTimeSeries';
-import Plant from '../pages/plant-management/Plant';  
+import Plant from '../pages/plant-management/Plant';
 import AddTypeAlarm from '../pages/type-alarm-management/AddTypeAlarm';
 import EditTypeAlarm from '../pages/type-alarm-management/EditTypeAlarm';
 import ListTypeAlarm from '../pages/type-alarm-management/ListTypeAlarm';
@@ -25,13 +25,13 @@ const MainLayoutRoutes = () => (
       <Route path="/manage-type-alarm" component={ListTypeAlarm} />
       <Route path="/navegator-alarm" component={ListAlarmGenerate} />
       <Route path="/detail-alarm/:id" component={DetailAlarmGenerate} />
-      <Route path="/add-plant" component={AddPlant}/>
-      <Route path="/edit-plant/:plantId" component={EditPlant}/>
-      <Route path="/manage-plant" component={ListPlant}/>
-      <Route path="/manage-plant/:plantId" component={Plant} />
+      <Route path="/add-plant" component={AddPlant} />
+      <Route path="/edit-plant/:plantId" component={EditPlant} />
+      <Route path="/manage-plant" component={ListPlant} />
+      <Route path="/detail-plant/:plantId" component={Plant} />
       <Route path="/manage-charts" component={ListTimeSeries} />
       <Route path="/manage-process" component={ListProcess} />
-      <Route path="/add-process" component={AddProcess} /> 
+      <Route path="/add-process" component={AddProcess} />
       {/* <Route path="/edit-process/:id" component={EditProcess} /> */}
       <Route path="/chart" component={TestChart} /> {/* BORRAME */}
     </Switch>

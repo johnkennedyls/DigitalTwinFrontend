@@ -16,9 +16,8 @@ export class StompClient {
     if (this.connected) {
       return;
     }
-
     this.socket = new SockJS(this.url);
-    this.client = webstomp.over(this.socket, {debug: false});
+    this.client = webstomp.over(this.socket, { debug: false });
     this.client.connect(
       headers,
       () => {

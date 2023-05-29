@@ -12,7 +12,7 @@ import logobioinc from '/src/assets/logo_bioinc.png';
 import './MainToolbar.css';
 
 export default function MainToolbar() {
-  
+
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
 
   return (
@@ -29,6 +29,9 @@ export default function MainToolbar() {
         <Box className="buttonBox">
           <Button color="inherit" className="button" href={`${publicUrl}/manage-plant`}>
             Plantas
+          </Button>
+          <Button color="inherit" className="button" href={`${publicUrl}/manage-process`}>
+            Procesos
           </Button>
           <Button color="inherit" className="button" href={`${publicUrl}/manage-type-alarm`}>
             Alarmas
