@@ -51,6 +51,11 @@ export default function TimeSeries() {
   const [plant, setPlant] = useState("");
   const [plants, setPlants] = useState([])
 
+  // MIN AND MAX VALUES OF TAGS
+  const LINE_TYPES = ['solid', 'dashed', 'dotted'];
+  const [minValues, setMinValues] = useState([]);
+  const [maxValues, setMaxValues] = useState([]);
+
   useEffect(() => {
     const currentPlants = Object.keys(plantState)
     setPlants(currentPlants)
@@ -79,10 +84,15 @@ export default function TimeSeries() {
     }
     const option = deepCopy(DEFAULT_TIME_SERIES_OPTION)
     option.legend.data = []
-    selectedTags.forEach((tag) => {
+    selectedTags.forEach((tag, index) => {
       option.legend.data.push(plantState[plant]['tags'][tag])
+      const tagData = tagsState[tag];
+      const minVal = Math.min(...tagData);
+      const maxVal = Math.max(...tagData);
+  
+      minValues[index] = minVal;
+      maxValues[index] = maxVal;
     })
-
     option.grid['left'] = `${OFFSET * selectedTags.length}px`
 
     option.xAxis[0].data = mode === 'realtime' ? tagsState.date : delimitedData.date
@@ -97,12 +107,35 @@ export default function TimeSeries() {
 
       const currentSeries = deepCopy(DEFAULT_SERIES_FORMAT)
       currentSeries.name = tagName
+      currentSeries.data = tagsState[tag]
+      currentSeries.symbol = SYMBOLS[i%SYMBOLS.length]
+      currentSeries.markLine = {
+        data: [
+          {
+            type: 'min', 
+            name: 'Mínimo',
+            lineStyle: {
+              width: 2,
+              type: 'solid'
+            }
+          },
+          {
+            type: 'max', 
+            name: 'Máximo',
+            lineStyle: {
+              width: 2,
+              type: 'dashed'
+            }
+          }
+        ]
+      };
       currentSeries.data = mode === 'realtime' ? tagsState[tag] : delimitedData[tag]
       currentSeries.symbol = SYMBOLS[i % SYMBOLS.length]
       if (i != 0) {
         currentSeries['yAxisIndex'] = i
       }
       option.series.push(currentSeries)
+
     }
 
     currentOption = option
