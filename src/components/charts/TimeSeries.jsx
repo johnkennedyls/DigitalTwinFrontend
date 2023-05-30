@@ -52,7 +52,6 @@ export default function TimeSeries() {
   const [plants, setPlants] = useState([])
 
   // MIN AND MAX VALUES OF TAGS
-  const LINE_TYPES = ['solid', 'dashed', 'dotted'];
   const [minValues, setMinValues] = useState([]);
   const [maxValues, setMaxValues] = useState([]);
 
