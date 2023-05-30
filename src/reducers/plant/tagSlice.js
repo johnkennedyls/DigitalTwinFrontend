@@ -16,21 +16,26 @@ export const tagSlice = createSlice({
         }
 
         const currentDate = moment(new Date(tag.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
-        state[tag.assetId].push([currentDate,tag.value])
+        state[tag.assetId].push([currentDate, tag.value])
         state.date.push(currentDate)
         if (state[tag.assetId].length > LIMIT_STORED_DATA) {
           state[tag.assetId].shift()
           state.date.shift()
         }
       });
-      
-      if(state.date.length > LIMIT_STORED_DATA) {
+
+      if (state.date.length > LIMIT_STORED_DATA) {
         state.date.shift()
+      }
+    },
+    clearTags: (state, action) => {
+      state = {
+        date: []
       }
     }
   },
 })
 
-export const { updateTagData } = tagSlice.actions
+export const { updateTagData, clearTags } = tagSlice.actions
 
 export const tagReducer = tagSlice.reducer

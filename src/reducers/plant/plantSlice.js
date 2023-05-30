@@ -5,8 +5,10 @@ export const plantSlice = createSlice({
   initialState: {},
   reducers: {
     loadAllPlantsData: (state, action) => {
+      let newState = {};
+
       action.payload.forEach((plant) => {
-        state[plant.plantId] = {
+        newState[plant.plantId] = {
           plantId: plant.plantId,
           assetId: plant.assetId,
           plantName: plant.plantName,
@@ -15,9 +17,11 @@ export const plantSlice = createSlice({
           tags: {},
         }
         plant.tags.forEach((tag) => {
-          state[plant.plantId].tags[tag.assetId] = tag.name
+          newState[plant.plantId].tags[tag.assetId] = tag.name
         });
       });
+
+      return newState;
     },
     deletePlant: (state, action) => {
       delete state[action.payload]

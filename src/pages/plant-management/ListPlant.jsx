@@ -39,7 +39,7 @@ export default function ListPlant() {
   useEffect(() => {
 
     const currentPlants = []
-
+    console.log(plantState)
     Object.keys(plantState).forEach((plant) => {
       currentPlants.push({
         plantId: plantState[plant].plantId,
