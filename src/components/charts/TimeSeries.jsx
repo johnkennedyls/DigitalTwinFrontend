@@ -54,7 +54,7 @@ export default function TimeSeries() {
   useEffect(() => {
     const currentPlants = Object.keys(plantState)
     setPlants(currentPlants)
-  }, []);
+  }, [plantState]);
 
   useEffect(() => {
     if (plant === "") {
@@ -64,7 +64,7 @@ export default function TimeSeries() {
     const currentTags = Object.keys(data)
     setSelectedTags([])
     setTags(currentTags)
-  }, [plant]);
+  }, [plant, plantState]);
 
   // TAGS
   const [selectedTags, setSelectedTags] = useState([]);
@@ -143,14 +143,16 @@ export default function TimeSeries() {
       getDelimitedData(plant, startDateLong, endDateLong)
         .then((data) => {
           const currentData = delimitedData
-          data.forEach((current) => {
-            const tag = current.assetId
+          data.forEach((currentMeasures) => {
+            const tag = currentMeasures.assetId
             if (currentData[tag] == undefined) {
               currentData[tag] = []
             }
-            const currentDate = moment(new Date(current.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
-            currentData.date.push(currentDate)
-            currentData[tag].push([currentDate, current.value])
+            currentMeasures.measures.forEach((current) => {
+              const currentDate = moment(new Date(current.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
+              currentData.date.push(currentDate)
+              currentData[tag].push([currentDate, current.value])
+            })
           })
           console.log(currentData)
           setDelimitedData(currentData)
