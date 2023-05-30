@@ -51,15 +51,10 @@ export default function TimeSeries() {
   const [plant, setPlant] = useState("");
   const [plants, setPlants] = useState([])
 
-  // MIN AND MAX VALUES OF TAGS
-  const LINE_TYPES = ['solid', 'dashed', 'dotted'];
-  const [minValues, setMinValues] = useState([]);
-  const [maxValues, setMaxValues] = useState([]);
-
   useEffect(() => {
     const currentPlants = Object.keys(plantState)
     setPlants(currentPlants)
-  }, []);
+  }, [plantState]);
 
   useEffect(() => {
     if (plant === "") {
@@ -69,7 +64,7 @@ export default function TimeSeries() {
     const currentTags = Object.keys(data)
     setSelectedTags([])
     setTags(currentTags)
-  }, [plant]);
+  }, [plant, plantState]);
 
   // TAGS
   const [selectedTags, setSelectedTags] = useState([]);
@@ -84,14 +79,8 @@ export default function TimeSeries() {
     }
     const option = deepCopy(DEFAULT_TIME_SERIES_OPTION)
     option.legend.data = []
-    selectedTags.forEach((tag, index) => {
+    selectedTags.forEach((tag) => {
       option.legend.data.push(plantState[plant]['tags'][tag])
-      const tagData = tagsState[tag];
-      const minVal = Math.min(...tagData);
-      const maxVal = Math.max(...tagData);
-  
-      minValues[index] = minVal;
-      maxValues[index] = maxVal;
     })
     option.grid['left'] = `${OFFSET * selectedTags.length}px`
 
@@ -108,19 +97,19 @@ export default function TimeSeries() {
       const currentSeries = deepCopy(DEFAULT_SERIES_FORMAT)
       currentSeries.name = tagName
       currentSeries.data = tagsState[tag]
-      currentSeries.symbol = SYMBOLS[i%SYMBOLS.length]
+      currentSeries.symbol = SYMBOLS[i % SYMBOLS.length]
       currentSeries.markLine = {
         data: [
           {
-            type: 'min', 
+            type: 'min',
             name: 'Mínimo',
             lineStyle: {
               width: 2,
-              type: 'solid'
+              type: 'dotted'
             }
           },
           {
-            type: 'max', 
+            type: 'max',
             name: 'Máximo',
             lineStyle: {
               width: 2,
@@ -163,12 +152,13 @@ export default function TimeSeries() {
   const handleDateChange = (field, value) => {
     setDateRange((prev) => ({ ...prev, [field]: value }));
     setTimeout(() => {
-      if (mode == 'realtime') {
+      if (mode == 'realtime' || plant == '' || dateRange.start == '' || dateRange.end == '') {
         return
       }
 
       const startDateLong = new Date(dateRange.start).getTime()
       const endDateLong = new Date(dateRange.end).getTime()
+
       if (startDateLong > endDateLong) {
         return
       }
@@ -176,22 +166,23 @@ export default function TimeSeries() {
       getDelimitedData(plant, startDateLong, endDateLong)
         .then((data) => {
           const currentData = delimitedData
-          data.forEach((current) => {
-            const tag = current.assetId
+          data.forEach((currentMeasures) => {
+            const tag = currentMeasures.assetId
             if (currentData[tag] == undefined) {
               currentData[tag] = []
             }
-            const currentDate = moment(new Date(current.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
-            currentData.date.push(currentDate)
-            currentData[tag].push([currentDate, current.value])
+            currentMeasures.measures.forEach((current) => {
+              const currentDate = moment(new Date(current.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
+              currentData.date.push(currentDate)
+              currentData[tag].push([currentDate, current.value])
+            })
           })
-          console.log(currentData)
           setDelimitedData(currentData)
         })
         .catch((error) => {
           console.error(error);
         });
-    }, 100)
+    }, 500)
   };
 
   const showTags = () => {
