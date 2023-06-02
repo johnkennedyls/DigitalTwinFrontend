@@ -295,11 +295,11 @@ function EditTypeAlarm() {
       .then(data => {
         setTypeAlarmData(data);
         if (data?.condition) {
-          const [tag, condition, value] = data.condition.split(' ');
+          const parts = data.condition.split(/(>=|<=|>|<|=)/);
           setConditionalValues({
-            tag: tag,
-            condition: condition,
-            value: value,
+            tag: parts[0].trim(),
+            condition: parts[1].trim(),
+            value: parts[2].trim(),
           });
         }
       })
