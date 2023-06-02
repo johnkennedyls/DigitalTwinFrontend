@@ -28,6 +28,8 @@ const EditPlant = () => {
     tags: [{ name: '', descroption: '' }],
     svgImage: null,
     mapSvgTag: [],
+    plantIp: '',
+    plantSlot: ''
   });
 
   useEffect(() => {
@@ -54,6 +56,9 @@ const EditPlant = () => {
     const currentPlant = { ...plant }
     console.log("RECEIVED ", currentForm)
     Object.keys(currentForm).forEach((key) => {
+      if(key==='mapSvgTag'){
+
+      }
       currentPlant[key] = currentForm[key]
     });
     setPlant(currentPlant)

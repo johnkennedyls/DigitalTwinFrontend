@@ -3,9 +3,8 @@ import { Button, TextField, Typography, Grid, Paper, Select, MenuItem, FormContr
 
 import PropTypes from "prop-types";
 
-export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvgTagPrev = null }) {
+export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvgTagPrev = null, processLabel='add' }) {
     const [mapSvgTag, setMapSvgTag] = useState(mapSvgTagPrev == null ? svgIds : mapSvgTagPrev);
-    const [isValid, setIsValid] = useState(false);
 
     const handleChange = (e, index) => {
         const { name, value } = e.target;
@@ -23,27 +22,13 @@ export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvg
         onBack({ mapSvgTag: mapSvgTag });
     };
 
-    const validateForm = () => {
-        mapSvgTag.forEach((map) => {
-            if (map.tagName === '') {
-                setIsValid(false);
-                return;
-            }
-            setIsValid(true);
-        });
-    }
-
-    useEffect(() => {
-        validateForm();
-    }, [mapSvgTag]);
-
     return (
         <Grid container justifyContent="center">
             <Grid item xs={12} sm={10} md={6}>
                 <form onSubmit={handleSubmit}>
                     <Paper elevation={3} sx={{ p: 4, my: 4 }}>
                         <Typography variant="h6" gutterBottom>
-                            Agregar tags a la planta
+                            {processLabel==='add'?'Agregar tags a la planta':'Editar tags de la planta'}
                         </Typography>
                         <Box
                             sx={{
@@ -106,8 +91,8 @@ export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvg
                                 </Button>
                             </Grid>
                             <Grid item xs={12} md={6}>
-                                <Button disabled={!isValid} type="submit" color="success" variant="contained" fullWidth>
-                                    Agregar Planta
+                                <Button type="submit" color="success" variant="contained" fullWidth>
+                                    {processLabel==='add' ? 'Agregar Planta' : 'Editar Planta'}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -124,5 +109,6 @@ MapSvgAndTagsForm.propTypes = {
     tags: PropTypes.array.isRequired,
     onNext: PropTypes.func.isRequired,
     onBack: PropTypes.func.isRequired,
+    processLabel: PropTypes.string,
     mapSvgTagPrev: PropTypes.array,
 };
