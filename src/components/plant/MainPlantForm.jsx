@@ -7,12 +7,13 @@ import ImageIcon from '@mui/icons-material/Image';
 import PropTypes from "prop-types";
 
 
-const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPhoto = null }) => {
-  const [plant, setPlant] = useState({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto });
+const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPhoto = null, plantIp = '', plantSlot = '' }) => {
+  const [plant, setPlant] = useState({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto, plantIp: plantIp, plantSlot: plantSlot });
 
   useEffect(() => {
-    setPlant({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto })
-  }, [plantName, plantDescription, plantPhoto])
+    setPlant({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto, plantIp: plantIp, plantSlot: plantSlot })
+  }, [plantName, plantDescription, plantPhoto, plantIp, plantSlot])
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPlant({ ...plant, [name]: value });
@@ -60,6 +61,24 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
               rows={4}
               sx={{ mb: 2 }}
             />
+            <TextField
+              label="IP"
+              name="plantIp"
+              required
+              value={plant.plantIp}
+              onChange={handleChange}
+              fullWidth
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="SLOT"
+              name="plantSlot"
+              required
+              value={plant.plantSlot}
+              onChange={handleChange}
+              fullWidth
+              sx={{ mb: 2 }}
+            />
             <input
               accept="image/*"
               id="image-upload"
@@ -67,7 +86,7 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
               onChange={handleFileChange}
               style={{ display: 'none' }}
             />
-            <label htmlFor="image-upload"> {/* Añadir etiqueta y vincularla al input */}
+            <label htmlFor="image-upload">
               <Button variant="outlined" component="span" startIcon={<ImageIcon />}>
                 Cargar imagen
               </Button>
@@ -88,6 +107,8 @@ MainPlantForm.propTypes = {
   plantName: PropTypes.string,
   plantDescription: PropTypes.string,
   plantPhoto: PropTypes.string,
+  plantIp: PropTypes.string,
+  plantSlot: PropTypes.string,
 };
 
 export default MainPlantForm;

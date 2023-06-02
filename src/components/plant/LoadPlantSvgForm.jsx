@@ -3,11 +3,9 @@ import { Button, Typography, Grid, Paper, Box } from '@mui/material';
 import PropTypes from "prop-types";
 import ReactMde from "react-mde";
 import ReactMarkdown from "react-markdown";
-// import { UnControlled as CodeMirror } from 'react-codemirror2';
-// import 'codemirror/lib/codemirror.css';
-// import 'codemirror/theme/material.css';
-// import 'codemirror/mode/gfm/gfm';
-// import 'codemirror/mode/markdown/markdown';
+
+import { isValidSVG } from '/src/services/utils/funtions';
+
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import './styles/LoadPlantSvg.css'
@@ -22,6 +20,10 @@ export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, c
         if (file && file.type === 'image/svg+xml') {
             const reader = new FileReader();
             reader.onload = (e) => {
+                if (!isValidSVG(e.target.result)) {
+                    alert('El archivo no es un SVG válido');
+                    return;
+                }
                 setPreviewUrl(e.target.result);
                 parseTextIds();
             };
