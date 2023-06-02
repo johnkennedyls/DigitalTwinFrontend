@@ -4,10 +4,9 @@ import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const PlantSVG = ({ mapSvgTag, updateInterval }) => {
+const PlantSVG = ({ mapSvgTag, updateInterval, svgImage }) => {
     const [svgContent, setSvgContent] = useState(null);
 
-    // Selecciona el estado 'tags' desde Redux
     const tags = useSelector(state => state.tags);
 
     const updateValues = () => {
@@ -17,32 +16,25 @@ const PlantSVG = ({ mapSvgTag, updateInterval }) => {
 
             const assetStates = tags[idAsset];
             if (!assetStates || assetStates.length === 0) return;
-
-            const newValue = assetStates[assetStates.length - 1]; // Obtiene el último valor del array
+            const x = assetStates[assetStates.length - 1][1];
+            const newValue = Number.parseFloat(x).toFixed(2);
             element.textContent = newValue;
             element.setAttribute('text-anchor', 'middle');
         });
     };
 
     useEffect(() => {
-        const interval = setInterval(updateValues, updateInterval);
+        const parser = new DOMParser();
+        const svgDoc = parser.parseFromString(svgImage, 'image/svg+xml');
+        const svgElement = svgDoc.querySelector('svg');
+        svgElement.setAttribute('id', 'bioreactor-svg');
+        setSvgContent(svgElement.outerHTML);
 
+        const interval = setInterval(updateValues, updateInterval);
         return () => {
             clearInterval(interval);
         };
-    }, [mapSvgTag, tags, updateInterval]);
-
-    useEffect(() => {
-        fetch('/src/assets/Biorreactor40L.svg')
-            .then((response) => response.text())
-            .then((svgText) => {
-                const parser = new DOMParser();
-                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                const svgElement = svgDoc.querySelector('svg');
-                svgElement.setAttribute('id', 'bioreactor-svg');
-                setSvgContent(svgElement.outerHTML);
-            });
-    }, []);
+    }, [mapSvgTag, tags, updateInterval, svgImage]);
 
     useEffect(() => {
         if (svgContent) {
@@ -67,6 +59,7 @@ PlantSVG.propTypes = {
         tagName: PropTypes.string.isRequired,
     })).isRequired,
     updateInterval: PropTypes.number.isRequired,
+    svgImage: PropTypes.string.isRequired,
 };
 
 export default PlantSVG;

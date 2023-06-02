@@ -15,6 +15,8 @@ import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '/src/red
 import { useSelector, useDispatch } from "react-redux";
 import { hasAnyRole } from "/src/services/utils/funtions";
 
+import './styles/PlantStyles.css';
+
 export default function ListPlant() {
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const [plants, setPlants] = useState([]);
@@ -109,6 +111,16 @@ export default function ListPlant() {
     },
   ];
 
+  const handleRowClick = (param, event) => {
+    // No redirigir si se hace clic en la columna de acciones.
+    if (event.target.closest('[role="cell"]').dataset.field === "actions") {
+      return;
+    }
+
+    // Redirige a la página de detalles.
+    window.location.href = `${publicUrl}/detail-plant/${param.row.plantId}`;
+  };
+
   return (
     <Box m={4} maxWidth={1000} mx="auto">
       <DataGrid
@@ -123,6 +135,8 @@ export default function ListPlant() {
         localeText={{
           noRowsLabel: 'No hay elementos disponibles',
         }}
+        className="clickable-row"
+        onRowClick={handleRowClick}
       />
       <Box mt={2}>
         <Button
