@@ -14,7 +14,7 @@ export default axios.create({
     validateStatus: function validateStatus(status) {
         if (status === 401) {
             localStorage.removeItem("access_token");
-            window.location.href = "/";
+            window.location.href = "/dashboard";
         }
         return status >= 200 && status < 300;
     },

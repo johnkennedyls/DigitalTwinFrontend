@@ -54,7 +54,7 @@ export default function TimeSeries() {
   useEffect(() => {
     const currentPlants = Object.keys(plantState)
     setPlants(currentPlants)
-  }, []);
+  }, [plantState]);
 
   useEffect(() => {
     if (plant === "") {
@@ -64,7 +64,7 @@ export default function TimeSeries() {
     const currentTags = Object.keys(data)
     setSelectedTags([])
     setTags(currentTags)
-  }, [plant]);
+  }, [plant, plantState]);
 
   // TAGS
   const [selectedTags, setSelectedTags] = useState([]);
@@ -82,7 +82,6 @@ export default function TimeSeries() {
     selectedTags.forEach((tag) => {
       option.legend.data.push(plantState[plant]['tags'][tag])
     })
-
     option.grid['left'] = `${OFFSET * selectedTags.length}px`
 
     option.xAxis[0].data = mode === 'realtime' ? tagsState.date : delimitedData.date
@@ -97,12 +96,35 @@ export default function TimeSeries() {
 
       const currentSeries = deepCopy(DEFAULT_SERIES_FORMAT)
       currentSeries.name = tagName
+      currentSeries.data = tagsState[tag]
+      currentSeries.symbol = SYMBOLS[i % SYMBOLS.length]
+      currentSeries.markLine = {
+        data: [
+          {
+            type: 'min',
+            name: 'Mínimo',
+            lineStyle: {
+              width: 2,
+              type: 'dotted'
+            }
+          },
+          {
+            type: 'max',
+            name: 'Máximo',
+            lineStyle: {
+              width: 2,
+              type: 'dashed'
+            }
+          }
+        ]
+      };
       currentSeries.data = mode === 'realtime' ? tagsState[tag] : delimitedData[tag]
       currentSeries.symbol = SYMBOLS[i % SYMBOLS.length]
       if (i != 0) {
         currentSeries['yAxisIndex'] = i
       }
       option.series.push(currentSeries)
+
     }
 
     currentOption = option
@@ -130,12 +152,13 @@ export default function TimeSeries() {
   const handleDateChange = (field, value) => {
     setDateRange((prev) => ({ ...prev, [field]: value }));
     setTimeout(() => {
-      if (mode == 'realtime') {
+      if (mode == 'realtime' || plant == '' || dateRange.start == '' || dateRange.end == '') {
         return
       }
 
       const startDateLong = new Date(dateRange.start).getTime()
       const endDateLong = new Date(dateRange.end).getTime()
+
       if (startDateLong > endDateLong) {
         return
       }
@@ -143,22 +166,23 @@ export default function TimeSeries() {
       getDelimitedData(plant, startDateLong, endDateLong)
         .then((data) => {
           const currentData = delimitedData
-          data.forEach((current) => {
-            const tag = current.assetId
+          data.forEach((currentMeasures) => {
+            const tag = currentMeasures.assetId
             if (currentData[tag] == undefined) {
               currentData[tag] = []
             }
-            const currentDate = moment(new Date(current.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
-            currentData.date.push(currentDate)
-            currentData[tag].push([currentDate, current.value])
+            currentMeasures.measures.forEach((current) => {
+              const currentDate = moment(new Date(current.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
+              currentData.date.push(currentDate)
+              currentData[tag].push([currentDate, current.value])
+            })
           })
-          console.log(currentData)
           setDelimitedData(currentData)
         })
         .catch((error) => {
           console.error(error);
         });
-    }, 100)
+    }, 500)
   };
 
   const showTags = () => {

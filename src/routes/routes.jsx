@@ -29,10 +29,10 @@ const MainLayoutRoutes = () => (
       <Route path="/navegator-alarm-active" component={ListAlarmGenerate} />
       <Route path="/navegator-alarm-history" component={ListAlarmHistory} />
       <Route path="/detail-alarm/:id" component={DetailAlarm} />
-      <Route path="/add-plant" component={AddPlant}/>
-      <Route path="/edit-plant/:plantId" component={EditPlant}/>
-      <Route path="/manage-plant" component={ListPlant}/>
-      <Route path="/manage-plant/:plantId" component={Plant} />
+      <Route path="/add-plant" component={AddPlant} />
+      <Route path="/edit-plant/:plantId" component={EditPlant} />
+      <Route path="/manage-plant" component={ListPlant} />
+      <Route path="/detail-plant/:plantId" component={Plant} />
       <Route path="/manage-charts" component={ListTimeSeries} />
       <Route path="/manage-process" component={ListProcess} />
       <Route path="/add-process" component={AddProcess} />

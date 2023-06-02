@@ -1,5 +1,6 @@
 import axios from './utils/axios';
-
+const system_id = import.meta.env.SAAMFI_SYSTEM_DASHBOARD_ID;
+const inst_id = import.meta.env.SAAMFI_INST_DASHBOARD_ID;
 
 export function getTypeAlarms() {
   return axios.get("typeAlarms/")
@@ -56,16 +57,7 @@ export function updateTypeAlarm(alarmid,alarmData) {
 }
 
 export function getEmails() {
-  return axios.get("http://xgrid103:8080/saamfiapi/public/institutions/1/systems/23/users")
-      .then(response => response.data)
-      .catch(error => {
-          console.error(error);
-          throw error;
-      });
-}
-
-export function getTags() {
-  return axios.get(API_URL+"/tags")
+  return axios.get("typeAlarms/emails")
       .then(response => response.data)
       .catch(error => {
           console.error(error);
@@ -74,7 +66,7 @@ export function getTags() {
 }
 
 export function getEvents() {
-  return axios.get("events/")
+  return axios.get("/events/")
       .then(response => response.data)
       .catch(error => {
           console.error(error);

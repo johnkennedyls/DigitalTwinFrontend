@@ -48,3 +48,26 @@ export function hasAnyRole(rolesToCheck) {
   // Verifica si al menos uno de los roles buscados está en la lista de roles
   return rolesToCheck.some(roleToCheck => lowerCaseUserRoles.includes(roleToCheck.toLowerCase()));
 }
+
+export function isValidSVG(svgText) {
+  try {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(svgText, "image/svg+xml");
+
+    // Verificamos si se ha producido algún error de análisis
+    if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
+      throw new Error('Error de análisis SVG');
+    }
+
+    // Comprueba si el primer elemento es un SVG
+    if (xmlDoc.documentElement.nodeName.toLowerCase() !== 'svg') {
+      throw new Error('No es un archivo SVG válido');
+    }
+
+    // Si llegamos hasta aquí, es probable que sea un SVG válido
+    return true;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+}
