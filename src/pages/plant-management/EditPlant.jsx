@@ -83,6 +83,10 @@ const EditPlant = () => {
     });
   };
 
+  const handleCloseAlert = () => {
+    setAlert(prevState => ({ ...prevState, show: false }));
+  }
+  
   const handleReset = () => {
     setActiveStep(0);
   };
