@@ -23,6 +23,8 @@ const AddPlant = () => {
     tags: [{ name: '', descroption: '' }],
     svgImage: null,
     mapSvgTag: [],
+    plantIp: '',
+    plantSlot: '',
   });
 
   const handleBack = (currentForm = undefined) => {
