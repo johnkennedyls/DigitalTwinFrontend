@@ -272,7 +272,9 @@ function AddTypeAlarm() {
       let message = 'Se ha creado exitosamente el tipo de alarma';
       let severity = 'success';
       setAlert({ show: true, message: message, severity: severity });
+      setTimeout(() => {
         window.location.href = `${publicUrl}${typeAlarmListPath}`;
+      }, 2000);
     })
     .catch((error) => {
       let message = '';

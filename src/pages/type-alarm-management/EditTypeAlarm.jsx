@@ -311,12 +311,13 @@ function EditTypeAlarm() {
   }
 
   const editTypeAlarm = async (event) => {
-      console.log(dataForm.values)
       updateTypeAlarm(id,dataForm.values).then((data) => {
         let message = 'Se ha editado exitosamente el tipo de alarma';
         let severity = 'success';
         setAlert({ show: true, message: message, severity: severity });
-        window.location.href = `${publicUrl}${typeAlarmListPath}`;
+        setTimeout(() => {
+          window.location.href = `${publicUrl}${typeAlarmListPath}`;
+        }, 2000);
       })
       .catch((error) => {
         let message = '';

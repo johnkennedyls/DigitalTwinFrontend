@@ -4,6 +4,7 @@ import MainPlantForm from '/src/components/plant/MainPlantForm';
 import TagsPlantForm from '/src/components/plant/TagsPlantForm';
 import LoadPlantSvgForm from '/src/components/plant/LoadPlantSvgForm';
 import MapSvgAndTagsForm from '/src/components/plant/MapSvgAndTagsForm';
+import AlertMessage from '../../components/messages/AlertMessage';
 
 import { addPlant } from '/src/services/PlantService'
 
@@ -14,6 +15,7 @@ const steps = [
   'RELACIÓN',
 ];
 const AddPlant = () => {
+  const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
   const [activeStep, setActiveStep] = useState(0);
   const [plant, setPlant] = useState({
     plantName: '',
@@ -56,9 +58,17 @@ const AddPlant = () => {
   const handleSubmit = (currentPlant) => {
     console.log("SUBMIT", currentPlant)
     addPlant(currentPlant).then(() => {
-      window.location.href = '/dashboard/manage-plant';
+      let message = 'Se ha creado exitosamente la planta';
+      let severity = 'success';
+      setAlert({ show: true, message: message, severity: severity });
+      setTimeout(() => {
+        window.location.href = '/dashboard/manage-plant';
+      }, 2000);
     }).catch((error) => {
       console.error(error);
+      let message = 'Ha ocurrido un error. No se ha podido crear la planta';
+      let severity = 'error';
+      setAlert({ show: true, message: message, severity: severity });
     });
   };
 
@@ -90,6 +100,7 @@ const AddPlant = () => {
   };
 
   return (
+    <>
     <Container style={{ marginTop: '5rem' }}>
       <Stepper activeStep={activeStep}>
         {steps.map((label) => (
@@ -100,6 +111,15 @@ const AddPlant = () => {
       </Stepper>
       {renderStepContent(activeStep)}
     </Container>
+     <div>
+      <AlertMessage 
+          open={alert.show} 
+          message={alert.message} 
+          severity={alert.severity} 
+          handleClose={handleCloseAlert}
+        />  
+      </div>
+   </>
   );
 };
 

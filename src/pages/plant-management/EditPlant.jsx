@@ -5,6 +5,7 @@ import MainPlantForm from '/src/components/plant/MainPlantForm';
 import TagsPlantForm from '/src/components/plant/TagsPlantForm';
 import LoadPlantSvgForm from '/src/components/plant/LoadPlantSvgForm';
 import MapSvgAndTagsForm from '/src/components/plant/MapSvgAndTagsForm';
+import AlertMessage from '../../components/messages/AlertMessage';
 
 import { editPlant, getPlantData } from '/src/services/PlantService'
 
@@ -17,7 +18,7 @@ const steps = [
 const EditPlant = () => {
   const [activeStep, setActiveStep] = useState(0);
   const { plantId } = useParams();
-
+  const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
 
 
   const [plant, setPlant] = useState({
@@ -68,9 +69,17 @@ const EditPlant = () => {
   const handleSubmit = (currentPlant) => {
     console.log("SUBMIT", currentPlant)
     editPlant(currentPlant, plantId).then((response) => {
-      window.location.href = '/dashboard/manage-plant';
+      let message = 'Se ha editado exitosamente la planta';
+      let severity = 'success';
+      setAlert({ show: true, message: message, severity: severity });
+      setTimeout(() => {
+        window.location.href = '/dashboard/manage-plant';
+      }, 2000);
     }).catch((error) => {
       console.error(error);
+      let message = 'Ha ocurrido un error. No se ha podido editar la planta';
+      let severity = 'error';
+      setAlert({ show: true, message: message, severity: severity });
     });
   };
 
@@ -102,6 +111,7 @@ const EditPlant = () => {
   };
 
   return (
+    <>
     <Container style={{ marginTop: '5rem' }}>
       <Stepper activeStep={activeStep}>
         {steps.map((label) => (
@@ -112,6 +122,15 @@ const EditPlant = () => {
       </Stepper>
       {renderStepContent(activeStep)}
     </Container>
+        <div>
+          <AlertMessage 
+              open={alert.show} 
+              message={alert.message} 
+              severity={alert.severity} 
+              handleClose={handleCloseAlert}
+            />  
+        </div>
+    </>
   );
 };
 
