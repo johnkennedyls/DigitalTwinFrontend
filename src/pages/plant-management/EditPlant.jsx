@@ -15,19 +15,20 @@ const steps = [
   'RELACIÓN',
 ];
 const EditPlant = () => {
-  const [activeStep, setActiveStep] = useState(0);
   const { plantId } = useParams();
 
-
-
+  const [activeStep, setActiveStep] = useState(0);
   const [plant, setPlant] = useState({
     plantName: '',
     plantDescription: '',
     conventions: '',
     plantPhoto: null,
     tags: [{ name: '', descroption: '' }],
+    removedTags: [],
     svgImage: null,
     mapSvgTag: [],
+    plantIp: '',
+    plantSlot: ''
   });
 
   useEffect(() => {
@@ -56,6 +57,7 @@ const EditPlant = () => {
     Object.keys(currentForm).forEach((key) => {
       currentPlant[key] = currentForm[key]
     });
+    console.log("CURRENT PLANT", currentPlant)
     setPlant(currentPlant)
 
     if (!submit) {
@@ -66,8 +68,9 @@ const EditPlant = () => {
   };
 
   const handleSubmit = (currentPlant) => {
+    currentPlant.tags = [...currentPlant.tags, ...currentPlant.removedTags]
     console.log("SUBMIT", currentPlant)
-    editPlant(currentPlant, plantId).then((response) => {
+    editPlant(currentPlant, plantId).then(() => {
       window.location.href = '/dashboard/manage-plant';
     }).catch((error) => {
       console.error(error);
@@ -81,14 +84,15 @@ const EditPlant = () => {
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        return <MainPlantForm onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} />;
+        return <MainPlantForm processLabel='edit' onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} plantIp={plant.plantIp} plantSlot={plant.plantSlot} />;
       case 1:
-        return <TagsPlantForm onNext={handleNext} onBack={handleBack} currentTags={plant.tags} />;
+        return <TagsPlantForm processLabel='edit' onNext={handleNext} onBack={handleBack} currentTags={plant.tags} />;
       case 2:
-        return <LoadPlantSvgForm onNext={handleNext} onBack={handleBack} svgImageUrl={plant.svgImage} conventions={plant.conventions} />;
+        return <LoadPlantSvgForm processLabel='edit' onNext={handleNext} onBack={handleBack} svgImageUrl={plant.svgImage} conventions={plant.conventions} />;
       case 3:
         return (
           <MapSvgAndTagsForm
+            processLabel='edit'
             svgIds={plant.mapSvgTag}
             tags={plant.tags}
             onNext={handleNext}

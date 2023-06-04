@@ -6,9 +6,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PropTypes from "prop-types";
 
 import './styles/TagsPlantForm.css'
+import CsvLoader from '../utils/CsvLoader';
 
 export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '' }] }) {
     const [tags, setTags] = useState(currentTags);
+    const [removedTags, setRemovedTags] = useState([]);
     const [isValid, setIsValid] = useState(false);
     const handleChange = (e, index) => {
         const { name, value } = e.target;
@@ -21,15 +23,20 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
     };
 
     const handleRemoveTag = (index) => {
+        if (tags[index].assetId !== undefined) {
+            tags[index].state = 'R';
+            setRemovedTags([...removedTags, tags[index]]);
+        }
         setTags(tags.filter((_, i) => i !== index));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onNext({ tags: tags });
+        onNext({ tags: tags, removedTags: removedTags });
     };
 
     const validateForm = () => {
+        if(tags.length === 0) setIsValid(false);
         tags.forEach((tag) => {
             if (tag.name === '' || tag.description === '') {
                 setIsValid(false);
@@ -37,6 +44,11 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
             }
             setIsValid(true);
         });
+    }
+
+    const onFileTagsImport = (importedTags, importedDescriptions) => {
+        const newTags = importedTags.map((tag, index) => ({ name: tag, description: importedDescriptions[index] ? importedDescriptions[index] : '' }));
+        setTags([...tags, ...newTags]);
     }
 
     useEffect(() => {
@@ -102,7 +114,6 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                                                     color="secondary"
                                                     startIcon={<DeleteIcon />}
                                                     onClick={() => handleRemoveTag(index)}
-                                                    disabled={tags.length === 1}
                                                 >
                                                 </Button>
                                             </Grid>
@@ -111,18 +122,32 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                                 ))}
                             </Grid>
                         </Box>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            startIcon={<AddIcon />}
-                            onClick={handleAddTag}
-                            sx={{
-                                mt: 2,
-                                mb: 4,
-                            }}
-                        >
-                            Agregar tag
-                        </Button>
+                        <Grid container spacing={2} style={{ marginTop: '2em', marginBottom: '2em' }} >
+                            <Grid item xs={12} md={6}>
+
+                                <Button
+                                    variant="outlined"
+                                    color="primary"
+                                    startIcon={<AddIcon />}
+                                    onClick={handleAddTag}
+                                >
+                                    Agregar tag
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} md={6}
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                }}
+
+                            >
+                                <CsvLoader
+                                    onConfirmDataImport={onFileTagsImport}
+                                    
+                                />
+                            </Grid>
+                        </Grid>
+
                         <Grid container spacing={2}>
                             <Grid item xs={12} md={6}>
                                 <Button variant="outlined" color="secondary" fullWidth onClick={() => { onBack({ tags: tags }) }}>

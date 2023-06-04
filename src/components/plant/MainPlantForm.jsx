@@ -7,7 +7,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import PropTypes from "prop-types";
 
 
-const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPhoto = null, plantIp = '', plantSlot = '' }) => {
+const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPhoto = null, plantIp = '', plantSlot = '', processLabel = 'add' }) => {
   const [plant, setPlant] = useState({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto, plantIp: plantIp, plantSlot: plantSlot });
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
       <Grid item xs={12} sm={6} md={6}>
         <Paper elevation={3} sx={{ p: 4, my: 4 }}>
           <Typography variant="h6" gutterBottom>
-            Agregar planta
+            {processLabel === 'add' ? 'Agregar planta' : 'Editar planta'}
           </Typography>
           <Avatar src={plant.plantPhoto} variant="rounded" style={{ width: '7vw', height: '7vw', margin: '15px auto' }} />
           <form onSubmit={handleSubmit}>
@@ -58,6 +58,7 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
               onChange={handleChange}
               fullWidth
               multiline
+              required
               rows={4}
               sx={{ mb: 2 }}
             />
@@ -109,6 +110,7 @@ MainPlantForm.propTypes = {
   plantPhoto: PropTypes.string,
   plantIp: PropTypes.string,
   plantSlot: PropTypes.string,
+  processLabel: PropTypes.string
 };
 
 export default MainPlantForm;

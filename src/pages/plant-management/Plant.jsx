@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Grid, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
-import PlantSVG from "/src/components/svg/SVGRender";
+import PlantSVG from "/src/components/utils/SVGRender";
 import { getPlantData } from "/src/services/PlantService";
 import ReactMarkdown from 'react-markdown';
 

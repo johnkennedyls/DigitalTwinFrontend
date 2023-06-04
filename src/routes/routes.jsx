@@ -14,11 +14,11 @@ import ListAlarmHistory from '../pages/alarm-navegator/ListAlarmHistory';
 import DetailAlarm from '../pages/alarm-navegator/DetailAlarm';
 import ListProcess from '../pages/process-management/ListProcess';
 import AddProcess from '../pages/process-management/AddProcess';
-import TestChart from '../components/charts/TestChart';
 
 import App from '../App';
 
 
+// eslint-disable-next-line react-refresh/only-export-components
 const MainLayoutRoutes = () => (
   <App>
     <Switch>
@@ -36,8 +36,6 @@ const MainLayoutRoutes = () => (
       <Route path="/manage-charts" component={ListTimeSeries} />
       <Route path="/manage-process" component={ListProcess} />
       <Route path="/add-process" component={AddProcess} />
-      {/* <Route path="/edit-process/:id" component={EditProcess} /> */}
-      <Route path="/chart" component={TestChart} /> {/* BORRAME */}
     </Switch>
   </App>
 );
