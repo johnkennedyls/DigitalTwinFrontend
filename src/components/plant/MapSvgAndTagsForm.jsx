@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, TextField, Typography, Grid, Paper, Select, MenuItem, FormControl, InputLabel, Box } from '@mui/material';
 
 import PropTypes from "prop-types";
 
-export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvgTagPrev = null, processLabel='add' }) {
+export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvgTagPrev = null, processLabel = 'add' }) {
     const [mapSvgTag, setMapSvgTag] = useState(mapSvgTagPrev == null ? svgIds : mapSvgTagPrev);
 
     const handleChange = (e, index) => {
@@ -11,7 +11,6 @@ export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvg
         const newTags = mapSvgTag.map((tag, i) => (i === index ? { ...tag, [name]: value } : tag));
         setMapSvgTag(newTags);
     };
-
 
     const handleSubmit = (e) => {
         onNext({ mapSvgTag: mapSvgTag }, true)
@@ -28,7 +27,7 @@ export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvg
                 <form onSubmit={handleSubmit}>
                     <Paper elevation={3} sx={{ p: 4, my: 4 }}>
                         <Typography variant="h6" gutterBottom>
-                            {processLabel==='add'?'Agregar tags a la planta':'Editar tags de la planta'}
+                            {processLabel === 'add' ? 'Agregar tags a la planta' : 'Editar tags de la planta'}
                         </Typography>
                         <Box
                             sx={{
@@ -68,12 +67,13 @@ export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvg
                                                         name="tagName"
                                                         value={svgIdTag.tagName}
                                                         onChange={(e) => handleChange(e, index)}
-                                                        required
                                                     >
                                                         {tags && tags.map((tag) => (
+                                                            tag.state != 'R' &&
                                                             <MenuItem key={tag.name} value={tag.name}>
                                                                 {tag.name}
                                                             </MenuItem>
+
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -92,7 +92,7 @@ export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvg
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <Button type="submit" color="success" variant="contained" fullWidth>
-                                    {processLabel==='add' ? 'Agregar Planta' : 'Editar Planta'}
+                                    {processLabel === 'add' ? 'Agregar Planta' : 'Editar Planta'}
                                 </Button>
                             </Grid>
                         </Grid>

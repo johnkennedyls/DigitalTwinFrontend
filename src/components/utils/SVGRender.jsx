@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './SVGRender.css';
+import './styles/SVGRender.css';
 import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';

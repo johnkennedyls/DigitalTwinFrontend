@@ -10,7 +10,7 @@ import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import './styles/LoadPlantSvg.css'
 
-export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, conventions = "", prevMapSvgTag={}}) {
+export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, conventions = "", prevMapSvgTag = {} }) {
     const [previewUrl, setPreviewUrl] = useState(svgImageUrl);
     const [value, setValue] = useState(conventions);
     const [selectedTab, setSelectedTab] = useState("write");
@@ -47,7 +47,7 @@ export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, c
         const textElements = document.querySelectorAll('text[id^="text_"]');
         const ids = Array.from(textElements).map((textElement) => {
             let id = textElement.getAttribute('id');
-            if(prevMapSvgTag[id]){
+            if (prevMapSvgTag[id]) {
                 return { svgId: id, tagName: prevMapSvgTag[id].tagName }
             }
             return { svgId: id, tagName: '' };
@@ -123,5 +123,6 @@ LoadPlantSvgForm.propTypes = {
     onBack: PropTypes.func.isRequired,
     svgImageUrl: PropTypes.string,
     conventions: PropTypes.string,
-    processLabel: PropTypes.string
+    processLabel: PropTypes.string,
+    prevMapSvgTag: PropTypes.object
 };
