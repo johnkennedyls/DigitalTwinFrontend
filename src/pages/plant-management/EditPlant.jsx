@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Container, Stepper, Step, StepLabel } from '@mui/material';
 import MainPlantForm from '/src/components/plant/MainPlantForm';
 import TagsPlantForm from '/src/components/plant/TagsPlantForm';
 import LoadPlantSvgForm from '/src/components/plant/LoadPlantSvgForm';
 import MapSvgAndTagsForm from '/src/components/plant/MapSvgAndTagsForm';
+
+import { useMessage } from '/src/providers/MessageContext';
 
 import { editPlant, getPlantData } from '/src/services/PlantService'
 
@@ -30,6 +32,9 @@ const EditPlant = () => {
     plantIp: '',
     plantSlot: ''
   });
+
+  const { showMessage } = useMessage();
+  const history = useHistory();
 
   useEffect(() => {
     getPlantData(plantId).then((data) => {
@@ -71,9 +76,11 @@ const EditPlant = () => {
     currentPlant.tags = [...currentPlant.tags, ...currentPlant.removedTags]
     console.log("SUBMIT", currentPlant)
     editPlant(currentPlant, plantId).then(() => {
-      window.location.href = '/dashboard/manage-plant';
+      showMessage("Editado correctamente");
+      // window.location.href = '/dashboard/manage-plant';
+      history.push('/dashboard/manage-plant');
     }).catch((error) => {
-      console.error(error);
+      showMessage(error.message, 'error');
     });
   };
 

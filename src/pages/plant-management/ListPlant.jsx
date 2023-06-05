@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Box,
   Button,
@@ -23,6 +24,8 @@ export default function ListPlant() {
 
   const plantState = useSelector(state => state.plants)
   const dispatch = useDispatch();
+
+  const history = useHistory();
 
   const loadPLantData = () => {
     getPlantsData()
@@ -55,11 +58,13 @@ export default function ListPlant() {
   }, [plantState]);
 
   const handleAdd = () => {
-    window.location.href = `${publicUrl}/add-plant`;
+    // window.location.href = `${publicUrl}/add-plant`;
+    history.push('/add-plant');
   };
 
   const handleEdit = (id) => {
-    window.location.href = `${publicUrl}/edit-plant/${id}`;
+    // window.location.href = `${publicUrl}/edit-plant/${id}`;
+    history.push(`/edit-plant/${id}`);
   };
 
   const handleDelete = (id) => {

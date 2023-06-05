@@ -10,6 +10,8 @@ import { BrowserRouter, Switch } from "react-router-dom";
 import { Provider } from 'react-redux'
 import routes from "./routes/routes.jsx";
 
+import { MessageProvider } from '/src/providers/MessageContext';
+
 import { configureStore } from '@reduxjs/toolkit';
 import {
   persistStore,
@@ -47,17 +49,18 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate  loading={null} persistor={persistor}>
-        <BrowserRouter basename="/dashboard">
-          <Switch>
-            {routes()}
-          </Switch>
-        </BrowserRouter>
-      </PersistGate>
+      <MessageProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <BrowserRouter basename="/dashboard">
+            <Switch>
+              {routes()}
+            </Switch>
+          </BrowserRouter>
+        </PersistGate>
+      </MessageProvider>
     </Provider>
   </React.StrictMode>
 );
