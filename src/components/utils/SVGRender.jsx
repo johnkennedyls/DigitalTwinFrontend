@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const PlantSVG = ({ mapSvgTag, updateInterval, svgImage }) => {
+const PlantSVG = ({ mapSvgTag, svgImage }) => {
     const [svgContent, setSvgContent] = useState(null);
 
     const tags = useSelector(state => state.tags);
@@ -24,17 +24,16 @@ const PlantSVG = ({ mapSvgTag, updateInterval, svgImage }) => {
     };
 
     useEffect(() => {
+        updateValues();
+    }, [tags]);
+
+    useEffect(() => {
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(svgImage, 'image/svg+xml');
         const svgElement = svgDoc.querySelector('svg');
         svgElement.setAttribute('id', 'bioreactor-svg');
         setSvgContent(svgElement.outerHTML);
-
-        const interval = setInterval(updateValues, updateInterval);
-        return () => {
-            clearInterval(interval);
-        };
-    }, [mapSvgTag, tags, updateInterval, svgImage]);
+    }, [mapSvgTag, tags, svgImage]);
 
     useEffect(() => {
         if (svgContent) {

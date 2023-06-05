@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Grid, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import PlantSVG from "/src/components/utils/SVGRender";
 import { getPlantData } from "/src/services/PlantService";
 import ReactMarkdown from 'react-markdown';
@@ -8,12 +8,10 @@ import ReactMarkdown from 'react-markdown';
 export default function Plant() {
   const { plantId } = useParams();
   const [plant, setPlant] = useState(null);
-  const [updateInterval, setUpdateInterval] = useState(1000); // Intervalo de actualización inicial
 
   useEffect(() => {
     getPlantData(plantId)
       .then((data) => {
-        console.log("PLANT:", data);
         setPlant(data);
       })
       .catch((error) => {
@@ -22,35 +20,16 @@ export default function Plant() {
       });
   }, [plantId]);
 
-  // Genera los posibles intervalos de actualización
-  const updateIntervals = [1000, 3000, 5000, 10000, 15000, 30000, 60000]
-
-  const handleSelectChange = (event) => {
-    setUpdateInterval(event.target.value);
-  };
-
   return (
     <>
       {plant === null ? <h1>No se puede visualizar la planta en este momento</h1> :
         <>
-          <Box display="flex" justifyContent="center" paddingTop={2}>
-            <FormControl variant="standard" style={{ width: '15rem' }}>
-              <InputLabel>Tasa de actualización</InputLabel>
-              <Select value={updateInterval} onChange={handleSelectChange}>
-                {updateIntervals.map((interval) => (
-                  <MenuItem key={interval} value={interval}>
-                    {interval / 1000} {interval === 1000 ? 'segundo' : 'segundos'}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box >
 
           <Grid container>
-            <Grid item xs={12} sm={plant.conventions ? 8 : 12}>
-              <PlantSVG mapSvgTag={plant.mapSvgTag} updateInterval={updateInterval} svgImage={plant.svgImage} />
+            <Grid item xs={12} sm={plant.conventions != '' ? 8 : 12}>
+              <PlantSVG mapSvgTag={plant.mapSvgTag} svgImage={plant.svgImage} />
             </Grid>
-            <Grid item xs={12} sm={plant.conventions ? 4 : 0}>
+            <Grid item xs={12} sm={plant.conventions != '' ? 4 : 0} style={plant.conventions === '' ? {display:'None'}: {display:'initial'}}>
               <Box overflow="auto" textAlign={'center'} >
                 <h2>Convenciones</h2>
                 <ReactMarkdown>{plant.conventions || ""}</ReactMarkdown>
