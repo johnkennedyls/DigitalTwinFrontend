@@ -29,13 +29,13 @@ export const MessageProvider = ({ children }) => {
 
     return (
         <MessageContext.Provider value={contextValue}>
-            {children}
             {open && 
                 <Alert severity={type}>
                     <AlertTitle>{type}</AlertTitle>
                     {message}
                 </Alert>
             }
+            {children}
         </MessageContext.Provider>
     );
 }

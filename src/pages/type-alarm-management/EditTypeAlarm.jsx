@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { TextField, Button,Badge, Select,MenuItem, Checkbox , FormControl ,Chip,OutlinedInput,List, ListItem,Typography   } from '@mui/material';
 import { useParams} from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -12,6 +13,7 @@ import { Save,Cancel } from '@mui/icons-material';
 import validate from "validate.js";
 import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
+import { hi } from 'date-fns/locale';
 
 const useStyles = makeStyles({
   
@@ -116,6 +118,7 @@ const alarm = {
 
 
 function EditTypeAlarm() {
+  const history = useHistory();
 
   const classes = useStyles();
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
@@ -316,7 +319,8 @@ function EditTypeAlarm() {
         let message = 'Se ha editado exitosamente el tipo de alarma';
         let severity = 'success';
         setAlert({ show: true, message: message, severity: severity });
-        window.location.href = `${publicUrl}${typeAlarmListPath}`;
+        // window.location.href = `${publicUrl}${typeAlarmListPath}`;
+        history.push(typeAlarmListPath);
       })
       .catch((error) => {
         let message = '';

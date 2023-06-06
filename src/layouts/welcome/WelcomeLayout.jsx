@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -11,6 +12,8 @@ const WelcomeLayout = () => {
 
   const [logoWidth, setLogoWidth] = useState(null);
   const titleRef = useRef();
+
+  const history = useHistory();
   
   useEffect(() => {
     if (titleRef.current) {
@@ -20,7 +23,7 @@ const WelcomeLayout = () => {
     const token = params.get('token');
     if(token){
       localStorage.setItem('access_token', token);
-      window.location.href = '/dashboard/manage-plant';
+      history.push('manage-plant');
     }
   }, []);
 

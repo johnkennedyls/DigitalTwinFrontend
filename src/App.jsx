@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import MainLayout from './layouts/main/MainLayout'
 
 import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { StompClient } from './services/utils/stompClient';
 // import * as Stomp from "stompjs";
 // import * as SockJS from "sockjs-client";
@@ -25,15 +26,12 @@ const App = ({ children }) => {
   const dispatch = useDispatch();
 
   const token = localStorage.getItem('access_token');
-  // var header = { 'Authorization': 'Bearer ' + token };
 
-  // let ws = new SockJS(`${apiUrl}/public/websocket`, {
-  //   headers: header
-  // });
-  // let stompClient = Stomp.over(ws);
+  const history = useHistory();
+
   useEffect(() => {
     if (!token) {
-      window.location.href = "/";
+      history.push('/');
     }
   }, []);
 
@@ -57,29 +55,7 @@ const App = ({ children }) => {
     onDisconnect
   );
 
-  // const openGlobalSocket = () => {
-  //   const token = localStorage.getItem('access_token');
-  //   var header = { 'Authorization': 'Bearer ' + token };
-  //   stompClient.subscribe(
-  //     '/app/realtime',
-  //     (message) => {
-  //       const parsedMessage = JSON.parse(message.body);
-  //       dispatch(updateTagData(parsedMessage));
-  //     },
-  //     {
-  //       headers: header
-  //     }
-  //   )
-  // }
-
-
-
   useEffect(() => {
-    // console.log('Connecting to WebSocket server')
-    // console.log('Header: ', header)
-    // stompClient.connect({ headers: header }, () => {
-    //   openGlobalSocket();
-    // });
     stompClient.connect({
       'Authorization': 'Bearer ' + token
     });

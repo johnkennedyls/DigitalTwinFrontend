@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Box,
   Button,
@@ -23,6 +24,8 @@ export default function ListProcess() {
   const [processes, setProcesses] = useState([]);
   const [processState, setProcessState] = useState([]);
 
+  const history = useHistory();
+
   const loadProcessData = () => {
     getProcessesData()
       .then((data) => {
@@ -46,7 +49,8 @@ export default function ListProcess() {
   }, []);
 
   const handleAdd = () => {
-    window.location.href = `${publicUrl}/add-process`;
+    // window.location.href = `${publicUrl}/add-process`;
+    history.go("add-process");
   };
 
   const handlePlay = (id) => {

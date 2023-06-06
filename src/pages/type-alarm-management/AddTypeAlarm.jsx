@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { TextField, Button, Badge,Chip,Select,MenuItem, Checkbox , FormControl , OutlinedInput,List, ListItem,Typography   } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -114,6 +115,8 @@ const alarm = {
 };
 
 function AddTypeAlarm() {
+
+  const history = useHistory();
 
   const classes = useStyles();
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
@@ -272,7 +275,8 @@ function AddTypeAlarm() {
       let message = 'Se ha creado exitosamente el tipo de alarma';
       let severity = 'success';
       setAlert({ show: true, message: message, severity: severity });
-        window.location.href = `${publicUrl}${typeAlarmListPath}`;
+        // window.location.href = `${publicUrl}${typeAlarmListPath}`;
+        history.push(typeAlarmListPath);
     })
     .catch((error) => {
       let message = '';

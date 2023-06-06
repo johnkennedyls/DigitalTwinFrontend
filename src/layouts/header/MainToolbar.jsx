@@ -37,13 +37,13 @@ export default function MainToolbar() {
           <img src={logobioinc} alt="Otro Logo" className="logo" />
         </Box>
         <Box className="buttonBox">
-          <Button color="inherit" className="button" href={`${publicUrl}/manage-plant`}>
+          <Button color="inherit" className="button" href={`manage-plant`}>
             Plantas
           </Button>
-          <Button color="inherit" className="button" href={`${publicUrl}/manage-process`}>
+          <Button color="inherit" className="button" href={`manage-process`}>
             Procesos
           </Button>
-          <Button color="inherit" className="button" href={`${publicUrl}/manage-type-alarm`}>
+          <Button color="inherit" className="button" href={`manage-type-alarm`}>
             Tipos de Alarmas
           </Button>
           <Button color="inherit" className="button" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
@@ -57,17 +57,17 @@ export default function MainToolbar() {
             onClose={handleClose}
           >
             <MenuItem onClick={handleClose}>
-              <Button color="inherit" className="button" href={`${publicUrl}/navegator-alarm-active`}>
+              <Button color="inherit" className="button" href={`navegator-alarm-active`}>
                 Alarmas Activas
               </Button>
             </MenuItem>
             <MenuItem onClick={handleClose}>
-            <Button color="inherit" className="button" href={`${publicUrl}/navegator-alarm-history`}>
+            <Button color="inherit" className="button" href={`navegator-alarm-history`}>
                 Historial de Alarmas
               </Button>
             </MenuItem>
           </Menu>
-          <Button color="inherit" className="button" href={`${publicUrl}/manage-charts`}>
+          <Button color="inherit" className="button" href={`manage-charts`}>
             Gráficas
           </Button>
         </Box>

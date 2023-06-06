@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {getTypeAlarms,deleteTypeAlarm,getTypeAlarmsByPlant} from '../../services/TypeAlarmService';
 import AvatarLetter  from '../../components/alarms/AvatarLetter.jsx'; 
 import { IconButton } from '@mui/material';
@@ -83,6 +84,8 @@ const useStyles = makeStyles({
 
 const ListTypeAlarm = () => {
 
+  const history = useHistory();
+
   const plantState = useSelector(state => state.plants)
   const [plants, setPlants] = useState([])
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
@@ -146,11 +149,13 @@ const handleChangeRowsPerPage = (event) => {
   };
 
   const handleEdit = (row) => {
-    window.location.href = `${publicUrl}${editTypeAlarmPath}${row.typeAlarmId}`;
+    // window.location.href = `${publicUrl}${editTypeAlarmPath}${row.typeAlarmId}`;
+    history.push(`edit-type-alarm/${row.typeAlarmId}`);
   };
 
   const handleShow = (row) => {
-    window.location.href = `${publicUrl}${showTypeAlarmPath}${row.typeAlarmId}`;
+    // window.location.href = `${publicUrl}${showTypeAlarmPath}${row.typeAlarmId}`;
+    history.push(`detail-type-alarm/${row.typeAlarmId}`);
   };
 
 

@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {getAlarmsHistory} from '../../services/AlarmService';
 import AvatarLetter  from '../../components/alarms/AvatarLetter.jsx'; 
 import {  IconButton } from '@mui/material';
@@ -112,6 +113,8 @@ const ListAlarmHistory = () => {
   const [plants, setPlants] = useState([])
   const [selectedPlant, setSelectedPlant] = useState(null);
 
+  const history = useHistory();
+
   useEffect(() => {
     const currentPlants = Object.values(plantState)
     setPlants(currentPlants)
@@ -145,7 +148,8 @@ const handleChangeRowsPerPage = (event) => {
   ];
 
   const handleShowDetail = (row) => {
-    window.location.href = `${publicUrl}${detailAlarmPath}${row.alarmid}`;
+    // window.location.href = `${publicUrl}${detailAlarmPath}${row.alarmid}`;
+    history.push(`${detailAlarmPath}${row.alarmid}`);
   };
   useEffect(() => {
     if (selectedPlant !== null) {

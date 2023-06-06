@@ -16,6 +16,8 @@ import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '/src/red
 import { useSelector, useDispatch } from "react-redux";
 import { hasAnyRole } from "/src/services/utils/funtions";
 
+import { useMessage } from '/src/providers/MessageContext';
+
 import './styles/PlantStyles.css';
 
 export default function ListPlant() {
@@ -26,6 +28,7 @@ export default function ListPlant() {
   const dispatch = useDispatch();
 
   const history = useHistory();
+  const { showMessage } = useMessage();
 
   const loadPLantData = () => {
     getPlantsData()
@@ -34,6 +37,7 @@ export default function ListPlant() {
       })
       .catch((error) => {
         console.error(error);
+        showMessage("Algo salio mal, por favor intente mas tarde", 'error')
       });
   }
 
@@ -123,7 +127,8 @@ export default function ListPlant() {
     }
 
     // Redirige a la página de detalles.
-    window.location.href = `${publicUrl}/detail-plant/${param.row.plantId}`;
+    // window.location.href = `${publicUrl}/detail-plant/${param.row.plantId}`;
+    history.push(`/detail-plant/${param.row.plantId}`);
   };
 
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { Box, Grid } from "@mui/material";
 import PlantSVG from "/src/components/utils/SVGRender";
 import { getPlantData } from "/src/services/PlantService";
@@ -9,6 +9,8 @@ export default function Plant() {
   const { plantId } = useParams();
   const [plant, setPlant] = useState(null);
 
+  const history = useHistory();
+
   useEffect(() => {
     getPlantData(plantId)
       .then((data) => {
@@ -16,7 +18,8 @@ export default function Plant() {
       })
       .catch((error) => {
         console.error(error);
-        window.location.href = "/dashboard/manage-plant";
+        // window.location.href = "/dashboard/manage-plant";
+        history.push("manage-plant");
       });
   }, [plantId]);
 

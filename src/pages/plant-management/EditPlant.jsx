@@ -78,7 +78,7 @@ const EditPlant = () => {
     editPlant(currentPlant, plantId).then(() => {
       showMessage("Editado correctamente");
       // window.location.href = '/dashboard/manage-plant';
-      history.push('/dashboard/manage-plant');
+      history.push('manage-plant');
     }).catch((error) => {
       showMessage(error.message, 'error');
     });

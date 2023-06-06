@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {getAlarmsGenerate} from '../../services/AlarmService';
 import AvatarLetter  from '../../components/alarms/AvatarLetter.jsx'; 
 import {  IconButton } from '@mui/material';
@@ -107,6 +108,9 @@ const useStyles = makeStyles({
 
 
 const ListAlarmGenerate = () => {
+
+  const history = useHistory();
+
   const classes = useStyles();
   const [alarms, setAlarms] = useState([]);
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
@@ -116,6 +120,8 @@ const ListAlarmGenerate = () => {
   const plantState = useSelector(state => state.plants)
   const [plants, setPlants] = useState([])
   const [selectedPlant, setSelectedPlant] = useState(null);
+
+  
 
   useEffect(() => {
     const currentPlants = Object.values(plantState)
@@ -147,7 +153,7 @@ const handleChangeRowsPerPage = (event) => {
   ];
 
   const handleShowDetail = (row) => {
-    window.location.href = `${publicUrl}${detailAlarmPath}${row.alarmId}`;
+    history.push(`${detailAlarmPath}${row.alarmId}`);
   };
   useEffect(() => {
     if (selectedPlant !== null) {
