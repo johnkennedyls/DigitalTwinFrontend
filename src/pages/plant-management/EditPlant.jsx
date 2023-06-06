@@ -39,6 +39,7 @@ const EditPlant = () => {
 
   const { showMessage } = useMessage();
   const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   useEffect(() => {
     getPlantData(plantId).then((data) => {
@@ -79,13 +80,9 @@ const EditPlant = () => {
   const handleSubmit = (currentPlant) => {
     currentPlant.tags = [...currentPlant.tags, ...currentPlant.removedTags]
     console.log("SUBMIT", currentPlant)
-    editPlant(currentPlant, plantId).then((response) => {
-      let message = 'Se ha editado exitosamente la planta';
-      let severity = 'success';
-      setAlert({ show: true, message: message, severity: severity });
-      setTimeout(() => {
-        history.push('manage-plant');
-      }, 2000);
+    editPlant(currentPlant, plantId).then(() => {
+      showMessage("Editado correctamente");
+      history.push(`/manage-plant`);
     }).catch((error) => {
       console.error(error);
       let message = 'Ha ocurrido un error. No se ha podido editar la planta';

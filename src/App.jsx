@@ -16,6 +16,7 @@ import { esES } from '@mui/x-date-pickers/locales';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import { MessageProvider } from '/src/providers/MessageContext';
 
 const theme = createTheme({}, esES);
 
@@ -23,6 +24,7 @@ const theme = createTheme({}, esES);
 
 const App = ({ children }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
   const dispatch = useDispatch();
 
   const token = localStorage.getItem('access_token');
@@ -31,7 +33,7 @@ const App = ({ children }) => {
 
   useEffect(() => {
     if (!token) {
-      history.push('/');
+      history.push(``);
     }
   }, []);
 
@@ -66,11 +68,13 @@ const App = ({ children }) => {
 
   return (
     <MainLayout>
-      <LocalizationProvider dateAdapter={AdapterDateFns} locale={es}>
-        <ThemeProvider theme={theme}>
-          {children}
-        </ThemeProvider>
-      </LocalizationProvider>
+      <MessageProvider>
+        <LocalizationProvider dateAdapter={AdapterDateFns} locale={es}>
+          <ThemeProvider theme={theme}>
+            {children}
+          </ThemeProvider>
+        </LocalizationProvider>
+      </MessageProvider>
     </MainLayout>
   )
 }

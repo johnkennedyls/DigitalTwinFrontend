@@ -31,6 +31,7 @@ const AddPlant = () => {
   });
 
   const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   const handleBack = (currentForm = undefined) => {
 
@@ -63,13 +64,7 @@ const AddPlant = () => {
   const handleSubmit = (currentPlant) => {
     console.log("SUBMIT", currentPlant)
     addPlant(currentPlant).then(() => {
-
-      let message = 'Se ha creado exitosamente la planta';
-      let severity = 'success';
-      setAlert({ show: true, message: message, severity: severity });
-      setTimeout(() => {
-        history.push('manage-plant');
-      }, 2000);
+      history.push(`/manage-plant`);
     }).catch((error) => {
       console.error(error);
       let message = 'Ha ocurrido un error. No se ha podido crear la planta';

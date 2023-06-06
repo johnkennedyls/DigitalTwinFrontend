@@ -50,7 +50,7 @@ export default function ListProcess() {
 
   const handleAdd = () => {
     // window.location.href = `${publicUrl}/add-process`;
-    history.go("add-process");
+    history.push("add-process");
   };
 
   const handlePlay = (id) => {
