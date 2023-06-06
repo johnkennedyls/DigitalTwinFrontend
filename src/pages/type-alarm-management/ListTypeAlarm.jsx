@@ -170,9 +170,8 @@ const handleChangeRowsPerPage = (event) => {
       setAlarms(newAlarms);
     })
     .catch((error) => {
-      let message = '';
+      let message = 'No se ha podido eliminar la alarma';
       let severity = 'error';
-      message = error.response;
       setAlert({ show: true, message: message, severity: severity });
     })
     }

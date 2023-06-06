@@ -13,8 +13,6 @@ import { Save,Cancel } from '@mui/icons-material';
 import validate from "validate.js";
 import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
-import { hi } from 'date-fns/locale';
-
 const useStyles = makeStyles({
   
   root: {
@@ -314,7 +312,6 @@ function EditTypeAlarm() {
   }
 
   const editTypeAlarm = async (event) => {
-      console.log(dataForm.values)
       updateTypeAlarm(id,dataForm.values).then((data) => {
         let message = 'Se ha editado exitosamente el tipo de alarma';
         let severity = 'success';
