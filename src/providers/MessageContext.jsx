@@ -29,9 +29,9 @@ export const MessageProvider = ({ children }) => {
 
     return (
         <MessageContext.Provider value={contextValue}>
-            {open && 
-                <Alert severity={type}>
-                    <AlertTitle>{type}</AlertTitle>
+            {open &&
+                <Alert severity={type} style={{ width: '20%', margin: '1em auto' }}>
+                    <AlertTitle>{type.charAt(0).toUpperCase() + type.slice(1)}</AlertTitle>
                     {message}
                 </Alert>
             }

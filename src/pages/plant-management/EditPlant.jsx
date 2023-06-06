@@ -35,6 +35,7 @@ const EditPlant = () => {
 
   const { showMessage } = useMessage();
   const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   useEffect(() => {
     getPlantData(plantId).then((data) => {
@@ -78,7 +79,7 @@ const EditPlant = () => {
     editPlant(currentPlant, plantId).then(() => {
       showMessage("Editado correctamente");
       // window.location.href = '/dashboard/manage-plant';
-      history.push('manage-plant');
+      history.push(`/manage-plant`);
     }).catch((error) => {
       showMessage(error.message, 'error');
     });

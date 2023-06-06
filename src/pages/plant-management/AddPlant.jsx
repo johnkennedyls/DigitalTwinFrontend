@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Container, Stepper, Step, StepLabel } from '@mui/material';
 import MainPlantForm from '/src/components/plant/MainPlantForm';
 import TagsPlantForm from '/src/components/plant/TagsPlantForm';
@@ -29,6 +29,7 @@ const AddPlant = () => {
   });
 
   const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   const handleBack = (currentForm = undefined) => {
 
@@ -61,7 +62,7 @@ const AddPlant = () => {
   const handleSubmit = (currentPlant) => {
     console.log("SUBMIT", currentPlant)
     addPlant(currentPlant).then(() => {
-      history.push('manage-plant');
+      history.push(`/manage-plant`);
     }).catch((error) => {
       console.error(error);
     });

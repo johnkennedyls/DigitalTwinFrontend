@@ -21,7 +21,7 @@ import { useMessage } from '/src/providers/MessageContext';
 import './styles/PlantStyles.css';
 
 export default function ListPlant() {
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
   const [plants, setPlants] = useState([]);
 
   const plantState = useSelector(state => state.plants)
@@ -63,7 +63,7 @@ export default function ListPlant() {
 
   const handleAdd = () => {
     // window.location.href = `${publicUrl}/add-plant`;
-    history.push('/add-plant');
+    history.push(`/add-plant`);
   };
 
   const handleEdit = (id) => {

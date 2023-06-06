@@ -9,6 +9,7 @@ import './WelcomeLayout.css';
 
 const WelcomeLayout = () => {
   const saamfiUrl = import.meta.env.VITE_SAAMFI_FRONTEND_URL;
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   const [logoWidth, setLogoWidth] = useState(null);
   const titleRef = useRef();
@@ -23,7 +24,7 @@ const WelcomeLayout = () => {
     const token = params.get('token');
     if(token){
       localStorage.setItem('access_token', token);
-      history.push('manage-plant');
+      history.push(`/manage-plant`);
     }
   }, []);
 

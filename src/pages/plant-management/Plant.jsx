@@ -10,6 +10,7 @@ export default function Plant() {
   const [plant, setPlant] = useState(null);
 
   const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   useEffect(() => {
     getPlantData(plantId)
@@ -19,7 +20,7 @@ export default function Plant() {
       .catch((error) => {
         console.error(error);
         // window.location.href = "/dashboard/manage-plant";
-        history.push("manage-plant");
+        history.push(`/manage-plant`);
       });
   }, [plantId]);
 
@@ -32,7 +33,7 @@ export default function Plant() {
             <Grid item xs={12} sm={plant.conventions != '' ? 8 : 12}>
               <PlantSVG mapSvgTag={plant.mapSvgTag} svgImage={plant.svgImage} />
             </Grid>
-            <Grid item xs={12} sm={plant.conventions != '' ? 4 : 0} style={plant.conventions === '' ? {display:'None'}: {display:'initial'}}>
+            <Grid item xs={12} sm={plant.conventions != '' ? 4 : 0} style={plant.conventions === '' ? { display: 'None' } : { display: 'initial' }}>
               <Box overflow="auto" textAlign={'center'} >
                 <h2>Convenciones</h2>
                 <ReactMarkdown>{plant.conventions || ""}</ReactMarkdown>
