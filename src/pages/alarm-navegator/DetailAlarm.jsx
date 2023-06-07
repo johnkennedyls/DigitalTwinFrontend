@@ -84,7 +84,8 @@ const DetailAlarm = () => {
     const [dialogMessage, setDialogMessage] = useState('');
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const publicUrl = import.meta.env.VITE_PUBLIC_URL;
-    const navegatorAlarmListPath = `${publicUrl}/navegator-alarm`
+    const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
+    const navegatorAlarmListPath = `${basePath}/navegator-alarm`
     const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
 
     useEffect(() => {

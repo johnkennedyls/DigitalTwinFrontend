@@ -9,19 +9,24 @@ export const tagSlice = createSlice({
   },
   reducers: {
     updateTagData: (state, action) => {
+      console.log("updateTagData", action.payload)
       action.payload.forEach((tag) => {
-
-        if (!state[tag.assetId]) {
-          state[tag.assetId] = [];
+        try{
+          if (!state[tag.assetId]) {
+            state[tag.assetId] = [];
+          }
+  
+          const currentDate = moment(new Date(tag.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
+          state[tag.assetId].push([currentDate, tag.value])
+          state.date.push(currentDate)
+          if (state[tag.assetId].length > LIMIT_STORED_DATA) {
+            state[tag.assetId].shift()
+            state.date.shift()
+          }
+        }catch(err){
+          console.log(err)
         }
-
-        const currentDate = moment(new Date(tag.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
-        state[tag.assetId].push([currentDate, tag.value])
-        state.date.push(currentDate)
-        if (state[tag.assetId].length > LIMIT_STORED_DATA) {
-          state[tag.assetId].shift()
-          state.date.shift()
-        }
+        
       });
 
       if (state.date.length > LIMIT_STORED_DATA) {
@@ -29,9 +34,7 @@ export const tagSlice = createSlice({
       }
     },
     clearTags: (state, action) => {
-      state = {
-        date: []
-      }
+      
     }
   },
 })

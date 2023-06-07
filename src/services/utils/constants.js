@@ -43,13 +43,15 @@ export const DEFAULT_TIME_SERIES_OPTION = {
   },
   dataZoom: [
     {
-      show: true,
-      realtime: true,
+      type: 'slider',
+      xAxisIndex: 0,
+      filterMode: 'none'
     },
     {
-      type: 'inside',
-      realtime: true,
-    }
+      type: 'slider',
+      yAxisIndex: 1,
+      filterMode: 'none'
+    },
   ],
   xAxis: [
     {

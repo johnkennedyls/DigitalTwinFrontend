@@ -508,7 +508,7 @@ function AddTypeAlarm() {
             </Button>
             <Button
               className={classes.createButton}
-              href={`${publicUrl}${typeAlarmListPath}`}
+              href={`${basePath}${typeAlarmListPath}`}
               xs
               variant="contained"
               color="primary"
