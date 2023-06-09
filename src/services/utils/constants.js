@@ -30,7 +30,7 @@ export const DEFAULT_TIME_SERIES_OPTION = {
     }
   },
   grid: {
-    bottom: '40%',
+    bottom: '20%',
   },
   toolbox: {
     feature: {
@@ -49,9 +49,14 @@ export const DEFAULT_TIME_SERIES_OPTION = {
     },
     {
       type: 'slider',
-      yAxisIndex: 1,
+      yAxisIndex: 0,
       filterMode: 'none'
     },
+    {
+      type: 'inside',
+      yAxisIndex: 0,
+      filterMode: 'none'
+    }
   ],
   xAxis: [
     {
@@ -59,7 +64,7 @@ export const DEFAULT_TIME_SERIES_OPTION = {
       axisLabel: {
         rotate: 45,
         align: 'right',
-        formatter: '{yyyy}-{mm}-{dd}  \n{hh}:{mm}:{ss}  '
+        formatter: '{yyyy}-{MM}-{dd}  \n{hh}:{mm}:{ss}  '
       },
       axisTick: {
         alignWithLabel: true

@@ -60,9 +60,13 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
             <Grid item xs={12} sm={10} md={12}>
 
                 <form onSubmit={handleSubmit}>
+                    
                     <Paper elevation={3} sx={{ p: 4, my: 4 }}>
                         <Typography variant="h6" gutterBottom>
                             Agregar tags a la planta
+                        </Typography>
+                        <Typography  sx={{ pl: 4 }} gutterBottom>
+                            En esta sección se puede {}
                         </Typography>
                         <Box
                             sx={{
