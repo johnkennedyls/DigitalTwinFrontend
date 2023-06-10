@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, TextField, Grid, Paper, Typography, Avatar, IconButton } from '@mui/material';
+import { Button, TextField, Grid, Paper, Typography, Avatar } from '@mui/material';
 
 import 'react-image-crop/dist/ReactCrop.css';
 import ImageIcon from '@mui/icons-material/Image';
