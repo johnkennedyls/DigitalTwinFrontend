@@ -9,36 +9,35 @@ export const tagSlice = createSlice({
   },
   reducers: {
     updateTagData: (state, action) => {
-      console.log("updateTagData", action.payload)
       action.payload.forEach((tag) => {
-        try{
+        try {
           if (!state[tag.assetId]) {
             state[tag.assetId] = [];
           }
-  
+
           const currentDate = moment(new Date(tag.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
-          state[tag.assetId].push([currentDate, tag.value])
-          state.date.push(currentDate)
-          if (state[tag.assetId].length > LIMIT_STORED_DATA) {
-            state[tag.assetId].shift()
-            state.date.shift()
+
+          if (Number.isFinite(tag.value)) { // Verifica si tag.value es un número
+            state[tag.assetId].push([currentDate, tag.value])
+            state.date.push(currentDate)
+            if (state[tag.assetId].length > LIMIT_STORED_DATA) {
+              state[tag.assetId].shift()
+              state.date.shift()
+            }
           }
-        }catch(err){
-          console.log(err)
+        } catch (err) {
+          console.err(err)
         }
-        
+
       });
 
       if (state.date.length > LIMIT_STORED_DATA) {
         state.date.shift()
       }
-    },
-    clearTags: (state, action) => {
-      
     }
   },
 })
 
-export const { updateTagData, clearTags } = tagSlice.actions
+export const { updateTagData } = tagSlice.actions
 
 export const tagReducer = tagSlice.reducer
