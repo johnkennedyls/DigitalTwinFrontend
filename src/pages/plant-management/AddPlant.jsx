@@ -27,7 +27,7 @@ const AddPlant = () => {
     svgImage: null,
     mapSvgTag: [],
     plantIp: '',
-    plantSlot: '',
+    plantSlot: ''
   });
 
   const history = useHistory();
@@ -84,7 +84,8 @@ const AddPlant = () => {
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        return <MainPlantForm onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} plantIp={plant.plantIp} plantSlot={plant.plantSlot}/>;
+        // name button change
+        return <MainPlantForm onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} plantIp={plant.plantIp} plantSlot={plant.plantSlot} />;
       case 1:
         return <TagsPlantForm onNext={handleNext} onBack={handleBack} currentTags={plant.tags} />;
       case 2:

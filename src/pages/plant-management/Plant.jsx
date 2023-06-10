@@ -26,7 +26,7 @@ export default function Plant() {
 
   return (
     <>
-      {plant === null ? <h1>No se puede visualizar la planta en este momento</h1> :
+      {plant === null ? <h1>Cargando datos de la planta. Esto puede tardar unos minutos</h1> :
         <>
 
           <Grid container>

@@ -102,7 +102,7 @@ const EditPlant = () => {
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        return <MainPlantForm processLabel='edit' onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} plantIp={plant.plantIp} plantSlot={plant.plantSlot} />;
+   return <MainPlantForm processLabel='edit' onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} plantIp={plant.plantIp} plantSlot={plant.plantSlot} />;
       case 1:
         return <TagsPlantForm processLabel='edit' onNext={handleNext} onBack={handleBack} currentTags={plant.tags} />;
       case 2:
