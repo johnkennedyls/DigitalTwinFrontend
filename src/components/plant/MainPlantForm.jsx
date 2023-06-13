@@ -11,8 +11,9 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
   const [plant, setPlant] = useState({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto, plantIp: plantIp, plantSlot: plantSlot });
 
   useEffect(() => {
-    setPlant({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto, plantIp: plantIp, plantSlot: plantSlot })
+   setPlant({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto, plantIp: plantIp, plantSlot: plantSlot })
   }, [plantName, plantDescription, plantPhoto, plantIp, plantSlot])
+  // Elemento nombre de boton
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,6 +42,16 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
             {processLabel === 'add' ? 'Agregar planta' : 'Editar planta'}
           </Typography>
           <Avatar src={plant.plantPhoto} variant="rounded" style={{ width: '7vw', height: '7vw', margin: '15px auto' }} />
+         
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <label htmlFor="image-upload">
+              <Button variant="outlined" component="span" startIcon={<ImageIcon />}>
+              {processLabel === 'add' ? 'Cargar imagen' : 'Editar imagen'}
+
+              </Button>
+            </label>
+            </div>
+         
           <form onSubmit={handleSubmit}>
             <TextField
               label="Nombre"
@@ -49,7 +60,7 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
               onChange={handleChange}
               fullWidth
               required
-              sx={{ mb: 2 }}
+              sx={{ margin: '30px 0' }}
             />
             <TextField
               label="Descripción"
@@ -87,11 +98,7 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
               onChange={handleFileChange}
               style={{ display: 'none' }}
             />
-            <label htmlFor="image-upload">
-              <Button variant="outlined" component="span" startIcon={<ImageIcon />}>
-                Cargar imagen
-              </Button>
-            </label>
+           
 
             <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
               Siguiente
@@ -110,7 +117,8 @@ MainPlantForm.propTypes = {
   plantPhoto: PropTypes.string,
   plantIp: PropTypes.string,
   plantSlot: PropTypes.string,
-  processLabel: PropTypes.string
+  processLabel: PropTypes.string,
+  nameButtom: PropTypes.string,
 };
 
 export default MainPlantForm;
