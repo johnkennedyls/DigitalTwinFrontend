@@ -267,6 +267,7 @@ export default function TimeSeries() {
           <Autocomplete
             clearIcon={false}
             multiple
+            disableCloseOnSelect
             options={tags}
             value={selectedTags}
             onChange={handleTagChange}
