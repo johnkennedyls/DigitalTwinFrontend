@@ -12,8 +12,7 @@ export default axios.create({
             },
         },
     },
-
-    /*
+    
     validateStatus: function validateStatus(status) {
         if (status === 401 || status === 403) {
             localStorage.removeItem("access_token");
@@ -22,5 +21,4 @@ export default axios.create({
         }
         return status >= 200 && status < 300;
     },
-    */
 });

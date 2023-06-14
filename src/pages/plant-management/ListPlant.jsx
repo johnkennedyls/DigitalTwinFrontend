@@ -22,10 +22,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-
 import { useMessage } from '/src/providers/MessageContext';
-
-import './styles/PlantStyles.css';
 
 export default function ListPlant() {
   const [plants, setPlants] = useState([]);

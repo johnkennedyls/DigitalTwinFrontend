@@ -20,7 +20,6 @@ const PROCESS_STATE = {
 }
 
 export default function ListProcess() {
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const [processes, setProcesses] = useState([]);
   const [processState, setProcessState] = useState([]);
 
@@ -99,6 +98,10 @@ export default function ListProcess() {
     });
   }
 
+  const handleSeeExecutions = (id) => {
+    history.push(`process-executions/${id}`);
+  }
+
   const columns = [
     { field: 'name', headerName: 'Nombre', width: 200 },
     { field: 'description', headerName: 'Descripción', flex: 1 },
@@ -150,6 +153,8 @@ export default function ListProcess() {
         localeText={{
           noRowsLabel: 'No hay elementos disponibles',
         }}
+        className="clickable-row"
+        onRowClick={(params) => handleSeeExecutions(params.row.id)}
       />
       <Box mt={3}>
         <Button

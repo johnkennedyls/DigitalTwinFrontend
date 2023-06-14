@@ -14,6 +14,7 @@ import ListAlarmHistory from '../pages/alarm-navegator/ListAlarmHistory';
 import DetailAlarm from '../pages/alarm-navegator/DetailAlarm';
 import ListProcess from '../pages/process-management/ListProcess';
 import AddProcess from '../pages/process-management/AddProcess';
+import ListExecutionsProcess from '../pages/process-management/ListExecutionsProcess';
 
 import App from '../App';
 
@@ -35,6 +36,7 @@ const MainLayoutRoutes = () => (
       <Route path="/detail-plant/:plantId" component={Plant} />
       <Route path="/manage-charts" component={ListTimeSeries} />
       <Route path="/manage-process" component={ListProcess} />
+      <Route path="/process-executions/:processId" component={ListExecutionsProcess} />
       <Route path="/add-process" component={AddProcess} />
     </Switch>
   </App>

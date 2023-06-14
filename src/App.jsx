@@ -18,13 +18,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { MessageProvider } from '/src/providers/MessageContext';
 
+import './assets/styles/global.css'
+
 const theme = createTheme({}, esES);
 
 
 
 const App = ({ children }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
   const dispatch = useDispatch();
 
   const token = localStorage.getItem('access_token');
