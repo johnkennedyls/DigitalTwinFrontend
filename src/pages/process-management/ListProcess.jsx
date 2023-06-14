@@ -98,8 +98,11 @@ export default function ListProcess() {
     });
   }
 
-  const handleSeeExecutions = (id) => {
-    history.push(`process-executions/${id}`);
+  const handleSeeExecutions = (param, event) => {
+    if (event.target.closest('[role="cell"]').dataset.field === "actions") {
+      return;
+    }
+    history.push(`process-executions/${param.row.id}`);
   }
 
   const columns = [
@@ -154,7 +157,7 @@ export default function ListProcess() {
           noRowsLabel: 'No hay elementos disponibles',
         }}
         className="clickable-row"
-        onRowClick={(params) => handleSeeExecutions(params.row.id)}
+        onRowClick={handleSeeExecutions}
       />
       <Box mt={3}>
         <Button
