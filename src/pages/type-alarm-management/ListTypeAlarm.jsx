@@ -106,9 +106,14 @@ const ListTypeAlarm = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+const handleChangePage = (event, newPage) => {
+  setPage(newPage);
+};
+  
+useEffect(() => {
+  const currentPlants = Object.values(plantState);
+  setPlants([{ plantId: null, plantName: "Todas" }, ...currentPlants]);
+}, [plantState]);
 
   useEffect(() => {
     const currentPlants = Object.values(plantState)
@@ -126,8 +131,12 @@ const ListTypeAlarm = () => {
       field: "typeAlarmName"
     },
     {
-      title: "Descripción",
-      field: "typeAlarmDescription"
+      title: "Planta",
+      field: "plantName"
+    },
+    {
+        title: "Descripción",
+        field: "typeAlarmDescription"
     },
     {
       title: "Maximo de Alarmas",
@@ -196,9 +205,19 @@ const ListTypeAlarm = () => {
       });
   };
 
-  useEffect(() => {
-    if (selectedPlant !== null) {
-      getTypeAlarmsByPlant(selectedPlant)
+  const handleChange = (e) => {
+    const plantId = e.target.value;
+    setSelectedPlant(plantId);
+    if (plantId === null) {
+      getTypeAlarms()
+        .then((data) => {
+          setAlarms(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      getTypeAlarmsByPlant(plantId)
         .then((response) => {
           setAlarms(response);
         })
@@ -206,106 +225,108 @@ const ListTypeAlarm = () => {
           console.error(error);
         });
     }
-  }, [selectedPlant]);
+  };
+
+
 
   return (
     <>
-      <div className={classes.tableContainer}>
-        <FormControl style={{ width: '250px', marginBottom: '30px' }}>
-          <InputLabel id="plant">Planta</InputLabel>
-          <Select
-            labelId="plant"
-            id="listPlants"
-            style={{ marginBottom: '10px' }}
-            value={selectedPlant || ''}
-            onChange={(e) => setSelectedPlant(e.target.value)}
-          >
-            {plants.map((plant) => (
-              <MenuItem key={plant.plantId} value={plant.plantId}>
-                {plant.plantName}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <TableContainer component={Paper} style={{ width: '1100px', height: 'auto' }}>
-          <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell className={`${classes.centeredCell} ${classes.titleCell}`} key={column.field} width={column.width}>
-                    {column.title}
-                  </TableCell>
-                ))}
-                <TableCell className={`${classes.centeredCell} ${classes.titleCell}`} width={100}>Usuarios Asignados</TableCell>
-                <TableCell className={`${classes.centeredCell} ${classes.titleCell}`} width={100}>Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {alarms.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={12} align="center" style={{ height: '198px' }}>
-                    No hay elementos disponibles.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                <>
-                  {(rowsPerPage > 0
-                    ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    : alarms
-                  ).map((row) => (
-                    <TableRow key={row.typeAlarmId}>
-                      {columns.map((column) => (
-                        <TableCell className={classes.centeredCell} key={`${row.typeAlarmId}-${column.field}`} width={column.width}>
-                          {row[column.field]}
-                        </TableCell>
-                      ))}
-                      <TableCell className={classes.usersCell}>
-                        <AvatarLetter names={row.usersAssigned} />
-                      </TableCell>
-                      <TableCell className={classes.actionColumn}>
-                        <IconButton aria-label="show" onClick={() => handleShow(row)}>
-                          <Visibility />
-                        </IconButton>
-                        <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
-                          <Edit />
-                        </IconButton>
-                        <IconButton aria-label="delete" onClick={() => handleOpenDialog(row)}>
-                          <Delete />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </>
-              )}
-            </TableBody>
-            <TableFooter className={classes.stickyFooter}>
-              <TableRow style={{ textAlign: 'center' }}>
-                <TablePagination
-                  rowsPerPageOptions={[3, 6, 10, { label: 'All', value: -1 }]}
-                  colSpan={8}
-                  count={alarms.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: {
-                      'aria-label': 'rows per page',
-                    },
-                    native: true,
-                  }}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
-        <AlertDialog
-          open={open}
-          onClose={handleCloseDialog}
-          onDelete={handleDelete}
-          title="Eliminar elemento"
-          message="¿Está seguro de que desea eliminar este elemento?"
-        />
+    <div className={classes.tableContainer}>
+    <FormControl style={{ width: '250px',marginBottom:'30px' }}>
+        <InputLabel id="plant">Planta</InputLabel>       
+        <Select
+          labelId="plant"
+          id="listPlants"
+          style={{ marginBottom: '10px' }}
+          value={selectedPlant || ''}
+          onChange={handleChange}
+        >
+          {plants.map((plant) => (
+            <MenuItem key={plant.plantId} value={plant.plantId}>
+              {plant.plantName}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+<TableContainer component={Paper} style={{ width: '1100px', height: 'auto' }}>
+        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell className={`${classes.centeredCell} ${classes.titleCell}`} key={column.field} width={column.width}>
+                  {column.title}
+                </TableCell>
+              ))}
+              <TableCell className={`${classes.centeredCell} ${classes.titleCell}`} width={100}>Usuarios Asignados</TableCell>
+              <TableCell className={`${classes.centeredCell} ${classes.titleCell}`} width={100}>Acciones</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+      {alarms.length === 0 ? (
+        <TableRow>
+          <TableCell colSpan={12} align="center" style={{ height: '198px' }}>
+            No hay elementos disponibles.
+          </TableCell>
+        </TableRow>
+      ) : (
+        <>
+          {(rowsPerPage > 0
+            ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : alarms
+          ).map((row) => (
+            <TableRow key={row.typeAlarmId}>
+              {columns.map((column) => (
+                <TableCell className={classes.centeredCell} key={`${row.typeAlarmId}-${column.field}`} width={column.width}>
+                  {row[column.field]}
+                </TableCell>
+              ))}
+              <TableCell className={classes.usersCell}>
+                <AvatarLetter names={row.usersAssigned} />
+              </TableCell>
+              <TableCell className={classes.actionColumn}>
+                <IconButton aria-label="show" onClick={() => handleShow(row)}>
+                  <Visibility />
+                </IconButton>
+                <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
+                  <Edit />
+                </IconButton>
+                <IconButton aria-label="delete" onClick={() => handleOpenDialog(row)}>
+                  <Delete />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </>
+      )}
+    </TableBody>
+          <TableFooter className={classes.stickyFooter}>
+            <TableRow style={{ textAlign: 'center' }}>
+              <TablePagination
+                rowsPerPageOptions={[3, 6, 10, { label: 'All', value: -1 }]}
+                colSpan={8}
+                count={alarms.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+<AlertDialog
+        open={open}
+        onClose={handleCloseDialog}
+        onDelete={handleDelete}
+        title="Eliminar elemento"
+        message="¿Está seguro de que desea eliminar este elemento?"
+      />
       </div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Button
