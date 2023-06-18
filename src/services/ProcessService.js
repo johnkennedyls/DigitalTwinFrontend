@@ -65,6 +65,19 @@ export const deleteProcess = (id) => {
     });
 }
 
+export const getExutionsByProcess = (id) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`processes/${id}/executions`) 
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
 export const startProcess = (id) => {
     return new Promise((resolve, reject) => {
         axios.post(`processes/start/${id}`)

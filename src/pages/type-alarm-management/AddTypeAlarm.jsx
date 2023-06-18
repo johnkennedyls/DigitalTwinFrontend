@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Badge,Chip,Select,MenuItem, Checkbox , FormControl , OutlinedInput,List, ListItem,Typography   } from '@mui/material';
+import { useHistory } from 'react-router-dom';
+import { TextField, Button, Badge, Chip, Select, MenuItem, Checkbox, FormControl, OutlinedInput, List, ListItem, Typography } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
 import AlertMessage from '../../components/messages/AlertMessage';
-import {createTypeAlarm,getEmails,getEvents} from '../../services/TypeAlarmService';
-import { Save,Cancel } from '@mui/icons-material';
+import { createTypeAlarm, getEmails, getEvents } from '../../services/TypeAlarmService';
+import { Save, Cancel } from '@mui/icons-material';
 import validate from "validate.js";
 import Paper from '@mui/material/Paper';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
-  
+
   root: {
     display: 'flex',
     justifyContent: 'center',
@@ -24,7 +25,7 @@ const useStyles = makeStyles({
       padding: '10px 10px',
       textAlign: 'left',
       '& > *': {
-        width: '100%', 
+        width: '100%',
       },
     },
   },
@@ -32,7 +33,7 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:'40px'
+    marginTop: '40px'
   },
   left: {
     width: '50%',
@@ -78,7 +79,7 @@ const useStyles = makeStyles({
     justifyContent: 'center',
   },
   title: {
-    color:"#2764E3",
+    color: "#2764E3",
     paddingTop: 30,
     fontSize: 45,
     justifyContent: 'center',
@@ -88,7 +89,7 @@ const useStyles = makeStyles({
 const alarm = {
   typeAlarmName: {
     presence: { allowEmpty: false, message: "Es requerido" },
-  }, 
+  },
   typeAlarmDescription: {
     presence: { allowEmpty: false, message: "Es requerido" },
     length: {
@@ -108,12 +109,15 @@ const alarm = {
   plant_id: {
     presence: { allowEmpty: false, message: "Seleccione una planta" },
   },
-  usersAssigned : {
+  usersAssigned: {
     presence: { allowEmpty: false, message: "Seleccione al menos una opción" },
   },
 };
 
 function AddTypeAlarm() {
+
+  const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   const classes = useStyles();
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
@@ -145,13 +149,13 @@ function AddTypeAlarm() {
 
   const getEmailsSystem = () => {
     getEmails()
-    .then((data) => {
-      const userEmails = data.map((item) => item.userEmail);
-      setEmails(userEmails);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((data) => {
+        const userEmails = data.map((item) => item.userEmail);
+        setEmails(userEmails);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
@@ -160,17 +164,17 @@ function AddTypeAlarm() {
 
   const getEventsDashboard = () => {
     getEvents()
-    .then((data) => {
-      setEvents(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((data) => {
+        setEvents(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const hasError = ((field) => {
     if (field === "typeAlarmName" || field === "typeAlarmDescription" || field === "numberAlarmsMax" || field === "event_id" || field === "usersAssigned" || field === "condition" || field === "plant_id") {
-      if (dataForm.values[field] === ""){
+      if (dataForm.values[field] === "") {
         return false
       }
     }
@@ -212,7 +216,7 @@ function AddTypeAlarm() {
       },
     }));
   };
-  
+
 
   const concatenateValues = () => {
     if (conditionalValues.tag && conditionalValues.conditional && conditionalValues.value) {
@@ -235,7 +239,7 @@ function AddTypeAlarm() {
     }
     handleErrors();
   };
-  
+
   const handleCloseAlert = () => {
     setAlert(prevState => ({ ...prevState, show: false }));
   }
@@ -268,261 +272,262 @@ function AddTypeAlarm() {
 
   const createNewTypeAlarm = () => {
     createTypeAlarm(dataForm.values)
-    .then((data) => {
-      let message = 'Se ha creado exitosamente el tipo de alarma';
-      let severity = 'success';
-      setAlert({ show: true, message: message, severity: severity });
-        window.location.href = `${publicUrl}${typeAlarmListPath}`;
-    })
-    .catch((error) => {
-      let message = '';
-      let severity = 'error';
-      if (error.response) {
-        if(error.response.data==="El nombre ya existe"){
+      .then((data) => {
+        let message = 'Se ha creado exitosamente el tipo de alarma';
+        let severity = 'success';
+        setAlert({ show: true, message: message, severity: severity });
+        // window.location.href = `${publicUrl}${typeAlarmListPath}`;
+        history.push(`/typeAlarmListPath`);
+      })
+      .catch((error) => {
+        let message = '';
+        let severity = 'error';
+        if (error.response) {
+          if (error.response.data === "El nombre ya existe") {
+            message = error.response.data;
+            setAlert({ show: true, message: message, severity: severity });
+          }
+        } else {
           message = error.response.data;
           setAlert({ show: true, message: message, severity: severity });
         }
-      }else{
-        message = error.response.data;
-        setAlert({ show: true, message: message, severity: severity }); 
-      }
-    });
+      });
   };
 
   return (
     <>
-    <div className={classes.paperContainer}>
-    <Paper elevation={3} style={{ width: '800px', height: '400px',margin: '10px' }}>
-    <div className={classes.root}>
-    <div className={classes.left}>
-    <FormControl >
-        <InputLabel id="plant">Planta</InputLabel>       
-    <Select
-      labelId='plant'
-      id="listPlants"
-      label="Plant"
-      style={{marginBottom: '10px'}}
-      value={dataForm.values.plant_id || ''}
-      error={hasError("condition")}
-      helperText={hasError("condition") ? dataForm.errors.condition : null}
-      onChange={(event) => {
-        setDataForm({
-            ...dataForm,
-            values: {
-                ...dataForm.values,
-                plant_id: event.target.value,
-            },
-        });
-        const selectedPlant = plants.find(plant => plant.plantId === event.target.value);
-        setTags(selectedPlant ? selectedPlant.tags : []);
-    }}
-    >
-        {plants.map((plant) => (
-    <MenuItem key={plant.plantId} value={plant.plantId}>
-            {plant.plantName}
-      </MenuItem>
-        ))}
-    </Select>
-      </FormControl>
-    <TextField
-      label="Nombre"
-      type="text"
-      className={classes.margin}
-      error={hasError("typeAlarmName")}
-          helperText={
-            hasError("typeAlarmName")
-            ? "El nombre del tipo de alarma es requerido" : null
-          }
-      onChange={handleChange}
-      value={dataForm.values.typeAlarmName || ""}
-      id="typeAlarmName"
-      name="typeAlarmName"
-    />
-    <div className={classes.container}>
+      <div className={classes.paperContainer}>
+        <Paper elevation={3} style={{ width: '800px', height: '400px', margin: '10px' }}>
+          <div className={classes.root}>
+            <div className={classes.left}>
+              <FormControl >
+                <InputLabel id="plant">Planta</InputLabel>
+                <Select
+                  labelId='plant'
+                  id="listPlants"
+                  label="Plant"
+                  style={{ marginBottom: '10px' }}
+                  value={dataForm.values.plant_id || ''}
+                  error={hasError("condition")}
+                  helperText={hasError("condition") ? dataForm.errors.condition : null}
+                  onChange={(event) => {
+                    setDataForm({
+                      ...dataForm,
+                      values: {
+                        ...dataForm.values,
+                        plant_id: event.target.value,
+                      },
+                    });
+                    const selectedPlant = plants.find(plant => plant.plantId === event.target.value);
+                    setTags(selectedPlant ? selectedPlant.tags : []);
+                  }}
+                >
+                  {plants.map((plant) => (
+                    <MenuItem key={plant.plantId} value={plant.plantId}>
+                      {plant.plantName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <TextField
+                label="Nombre"
+                type="text"
+                className={classes.margin}
+                error={hasError("typeAlarmName")}
+                helperText={
+                  hasError("typeAlarmName")
+                    ? "El nombre del tipo de alarma es requerido" : null
+                }
+                onChange={handleChange}
+                value={dataForm.values.typeAlarmName || ""}
+                id="typeAlarmName"
+                name="typeAlarmName"
+              />
+              <div className={classes.container}>
 
-    <FormControl >
-        <InputLabel id="tag">Tag</InputLabel>       
-    <Select
-      labelId='tag'
-      id="listTags"
-      label="Tag"
-      onChange={(event) => {
-        setConditionalValues({ ...conditionalValues, tag: event.target.value });
-      }}
-      className={classes.selectTag}
-    >
-       {Object.entries(tags).map(([key, value]) => (
-    <MenuItem key={key} value={value}>
-        {value}
-    </MenuItem>
-))}
-    </Select>
-      </FormControl>
-      <FormControl >
-      <InputLabel id="conditionalInput">Condicional</InputLabel>       
-        <Select
-        labelId='conditionalInput'
-          value={conditionalValues.conditional}
-          onChange={(event) => {
-            setConditionalValues({ ...conditionalValues, conditional: event.target.value });
-          }}
-          className={classes.selectConditional}
-        >
-          <MenuItem value="<">&lt;</MenuItem>
-          <MenuItem value=">=">&gt;=</MenuItem>
-          <MenuItem value=">">&gt;</MenuItem>
-          <MenuItem value="<=">&lt;=</MenuItem>
-          <MenuItem value="=">=</MenuItem>
-        </Select>
-        </FormControl>
-        <TextField
-          label="Valor"
-          type="number"
-          onChange={(event) => {
-            setConditionalValues({ ...conditionalValues, value: event.target.value });
-          }}
-          className={classes.valueTextField}
-          error={hasError("condition")}
-          helperText={hasError("condition") ? dataForm.errors.condition : null}
+                <FormControl >
+                  <InputLabel id="tag">Tag</InputLabel>
+                  <Select
+                    labelId='tag'
+                    id="listTags"
+                    label="Tag"
+                    onChange={(event) => {
+                      setConditionalValues({ ...conditionalValues, tag: event.target.value });
+                    }}
+                    className={classes.selectTag}
+                  >
+                    {Object.entries(tags).map(([key, value]) => (
+                      <MenuItem key={key} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl >
+                  <InputLabel id="conditionalInput">Condicional</InputLabel>
+                  <Select
+                    labelId='conditionalInput'
+                    value={conditionalValues.conditional}
+                    onChange={(event) => {
+                      setConditionalValues({ ...conditionalValues, conditional: event.target.value });
+                    }}
+                    className={classes.selectConditional}
+                  >
+                    <MenuItem value="<">&lt;</MenuItem>
+                    <MenuItem value=">=">&gt;=</MenuItem>
+                    <MenuItem value=">">&gt;</MenuItem>
+                    <MenuItem value="<=">&lt;=</MenuItem>
+                    <MenuItem value="=">=</MenuItem>
+                  </Select>
+                </FormControl>
+                <TextField
+                  label="Valor"
+                  type="number"
+                  onChange={(event) => {
+                    setConditionalValues({ ...conditionalValues, value: event.target.value });
+                  }}
+                  className={classes.valueTextField}
+                  error={hasError("condition")}
+                  helperText={hasError("condition") ? dataForm.errors.condition : null}
+                />
+              </div>
+              <FormControl >
+                <InputLabel id="event">Evento</InputLabel>
+                <Select
+                  labelId='event'
+                  id="listEvents"
+                  label="Evento cuando se genere x alarmas"
+                  style={{ marginBottom: '10px' }}
+                  value={dataForm.values.event_id || ''}
+                  onChange={(event) => setDataForm({
+                    ...dataForm,
+                    values: {
+                      ...dataForm.values,
+                      event_id: event.target.value,
+                    },
+                  })}
+                >
+                  {events.map((event) => (
+                    <MenuItem key={event.eventId} value={event.eventId}>
+                      {event.eventName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+            <div className={classes.right}>
+              <TextField
+                label="Descripción"
+                type="text"
+                multiline
+                rows={4}
+                style={{ marginBottom: '10px' }}
+                error={hasError("typeAlarmDescription")}
+                helperText={
+                  hasError("typeAlarmDescription")
+                    ? "La descripcion del tipo de alarma es requerido" : null
+                }
+                onChange={handleChange}
+                value={dataForm.values.typeAlarmDescription || ""}
+                id="typeAlarmDescription"
+                name="typeAlarmDescription"
+              />
+              <TextField
+                label="Máximo de número de alarmas generados para enviar correo"
+                type="number"
+                error={hasError("numberAlarmsMax")}
+                helperText={
+                  hasError("numberAlarmsMax")
+                    ? "El número maximo de alarmas es requerido" : null
+                }
+                onChange={handleChange}
+                value={dataForm.values.numberAlarmsMax || ""}
+                id="numberAlarmsMax"
+                name="numberAlarmsMax"
+                inputProps={{ min: "1" }}
+              />
+              <Autocomplete
+                multiple
+                id="listEmails"
+                options={emails}
+                disableCloseOnSelect
+                onChange={(event, value) => handleAutocompleteChange(value)}
+                value={dataForm.values.usersAssigned || []}
+                getOptionLabel={(option) => option}
+                renderOption={(props, option, { selected }) => (
+                  <li {...props}>
+                    <Checkbox
+                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                      checkedIcon={<CheckBoxIcon fontSize="small" />}
+                      checked={selected}
+                    />
+                    {option}
+                  </li>
+                )}
+                renderTags={(selected, getTagProps) =>
+                  selected.length > 1 ? [
+                    <Chip
+                      icon={<CheckBoxIcon fontSize="small" />}
+                      label={selected[0]}
+                      deleteIcon={<Badge badgeContent={selected.length - 1} color="primary">+{selected.length - 1}</Badge>}
+                      {...getTagProps({ index: 0 })}
+                    />
+                  ] :
+                    selected.map((option, index) => (
+                      <Chip
+                        icon={<CheckBoxIcon fontSize="small" />}
+                        label={option}
+                        {...getTagProps({ index })}
+                      />
+                    ))
+                }
+                renderInput={(params) => (
+                  <TextField {...params} label="Seleccione los correos donde se enviara una notificación"
+                    error={hasError("usersAssigned")}
+                    helperText={
+                      hasError("usersAssigned")
+                        ? "Por favor, seleccione al menos una opción"
+                        : null
+                    }
+                    id="usersAssigned"
+                    name="usersAssigned" />
+                )}
+              />
+            </div>
+          </div>
+          <div className={classes.buttonContainer}>
+            <Button
+              disabled={!dataForm.isValid}
+              type="submit"
+              onClick={createNewTypeAlarm}
+              variant="contained"
+              color="primary"
+              style={{ marginRight: '20px', marginBottom: '20px' }}
+            >
+              Guardar <Save />
+            </Button>
+            <Button
+              className={classes.createButton}
+              href={`${basePath}${typeAlarmListPath}`}
+              xs
+              variant="contained"
+              color="primary"
+              style={{ marginBottom: '20px' }}
+            >
+              Cancelar <Cancel />
+            </Button>
+          </div>
+        </Paper>
+      </div>
+      <div>
+        <AlertMessage
+          open={alert.show}
+          message={alert.message}
+          severity={alert.severity}
+          handleClose={handleCloseAlert}
         />
-    </div>
-    <FormControl >
-        <InputLabel id="event">Evento</InputLabel>       
-    <Select
-      labelId='event'
-      id="listEvents"
-      label="Evento cuando se genere x alarmas"
-      style={{marginBottom: '10px'}}
-      value={dataForm.values.event_id || ''}
-      onChange={(event) => setDataForm({
-        ...dataForm,
-        values: {
-          ...dataForm.values,
-          event_id: event.target.value,
-        },
-      })}
-    >
-        {events.map((event) => (
-    <MenuItem key={event.eventId} value={event.eventId}>
-            {event.eventName}
-      </MenuItem>
-        ))}
-    </Select>
-      </FormControl>
-    </div>
-      <div className={classes.right}>
-      <TextField
-        label="Descripción"
-        type="text"
-        multiline
-        rows={4}
-        style={{marginBottom: '10px'}}
-        error={hasError("typeAlarmDescription")}
-        helperText={
-          hasError("typeAlarmDescription")
-          ? "La descripcion del tipo de alarma es requerido" : null
-        }
-        onChange={handleChange}
-        value={dataForm.values.typeAlarmDescription || ""}
-        id="typeAlarmDescription"
-        name="typeAlarmDescription"
-      />
-      <TextField
-        label="Máximo de número de alarmas generados para enviar correo"
-        type="number"
-        error={hasError("numberAlarmsMax")}
-        helperText={
-          hasError("numberAlarmsMax")
-          ? "El número maximo de alarmas es requerido" : null
-        }
-        onChange={handleChange}
-        value={dataForm.values.numberAlarmsMax || ""}
-        id="numberAlarmsMax"
-        name="numberAlarmsMax"
-        inputProps={{ min: "1" }}
-      />
-       <Autocomplete
-        multiple
-        id="listEmails"
-        options={emails}
-        disableCloseOnSelect
-        onChange={(event, value) => handleAutocompleteChange(value)}
-        value={dataForm.values.usersAssigned || []}
-        getOptionLabel={(option) => option}
-  renderOption={(props, option, { selected }) => (
-    <li {...props}>
-      <Checkbox
-        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-        checkedIcon={<CheckBoxIcon fontSize="small" />}
-        checked={selected}
-      />
-      {option}
-    </li>
-  )}
-  renderTags={(selected, getTagProps) =>
-    selected.length > 1 ? [
-      <Chip
-        icon={<CheckBoxIcon fontSize="small" />}
-        label={selected[0]}
-        deleteIcon={<Badge badgeContent={selected.length - 1} color="primary">+{selected.length - 1}</Badge>}
-        {...getTagProps({ index: 0 })}
-      />
-    ] : 
-    selected.map((option, index) => (
-      <Chip
-        icon={<CheckBoxIcon fontSize="small" />}
-        label={option}
-        {...getTagProps({ index })}
-      />
-    ))
-  }
-        renderInput={(params) => (
-          <TextField {...params} label="Seleccione los correos donde se enviara una notificación" 
-          error={hasError("usersAssigned")}
-          helperText={
-          hasError("usersAssigned")
-          ? "Por favor, seleccione al menos una opción"
-          : null
-          }
-          id="usersAssigned"
-          name="usersAssigned"/>
-        )}
-      />
-    </div>
-  </div>
-  <div className={classes.buttonContainer}>
-  <Button
-    disabled={!dataForm.isValid}
-    type="submit"
-    onClick={createNewTypeAlarm}
-    variant="contained"
-    color="primary"
-    style={{ marginRight: '20px',marginBottom: '20px' }}
-  >
-    Guardar <Save/>
-  </Button>
-  <Button
-    className={classes.createButton}
-    href={`${publicUrl}${typeAlarmListPath}`}
-    xs
-    variant="contained"
-    color="primary"
-    style={{ marginBottom: '20px' }}
-  >
-    Cancelar <Cancel/>
-  </Button>
-</div>
-</Paper>
-</div>
-<div>
-    <AlertMessage 
-        open={alert.show} 
-        message={alert.message} 
-        severity={alert.severity} 
-        handleClose={handleCloseAlert}
-      />  
-    </div>
-</>
+      </div>
+    </>
   );
 }
 

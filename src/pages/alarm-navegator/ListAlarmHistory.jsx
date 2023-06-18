@@ -1,26 +1,27 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import {getAlarmsHistory} from '../../services/AlarmService';
-import AvatarLetter  from '../../components/alarms/AvatarLetter.jsx'; 
-import {  IconButton } from '@mui/material';
-import ChipState  from '../../components/alarms/ChipState.jsx'; 
-import {Visibility } from '@mui/icons-material';
-import { Table, TableBody, TableCell, TableHead, TableRow,TableContainer,TableFooter,TablePagination,Paper,FormControl,InputLabel,Select,MenuItem } from '@mui/material';
+import { useHistory } from 'react-router-dom';
+import { getAlarmsHistory } from '../../services/AlarmService';
+import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
+import { IconButton } from '@mui/material';
+import ChipState from '../../components/alarms/ChipState.jsx';
+import { Visibility } from '@mui/icons-material';
+import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer, TableFooter, TablePagination, Paper, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import {formatDate} from '../../services/utils/FormatterDate';
+import { formatDate } from '../../services/utils/FormatterDate';
 import { useSelector } from 'react-redux';
-import {getAllAlarmsClosedByPlantId} from '../../services/AlarmService';
+import { getAllAlarmsClosedByPlantId } from '../../services/AlarmService';
 
 const useStyles = makeStyles({
   tableContainer: {
     display: 'flex',
-    flexDirection: 'column', 
+    flexDirection: 'column',
     alignItems: 'center',
     marginTop: '50px',
-    marginBottom: '50px', 
+    marginBottom: '50px',
   },
   button: {
-    marginTop: '70px', 
+    marginTop: '70px',
   },
   actionCell: {
     width: '120px',
@@ -29,7 +30,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
   title: {
-    color:"#2764E3",
+    color: "#2764E3",
     paddingTop: 30,
     fontSize: 15,
   },
@@ -82,7 +83,7 @@ const useStyles = makeStyles({
     },
   },
   actionColumn: {
-    width: '150px', 
+    width: '150px',
     textAlign: 'center !important',
   },
   centeredCell: {
@@ -95,7 +96,7 @@ const useStyles = makeStyles({
     textOverflow: 'ellipsis'
   },
   conditionColumn: {
-    width: '150px', 
+    width: '150px',
     textAlign: 'center !important',
   },
 });
@@ -112,22 +113,25 @@ const ListAlarmHistory = () => {
   const [plants, setPlants] = useState([])
   const [selectedPlant, setSelectedPlant] = useState(null);
 
+  const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
+
   useEffect(() => {
     const currentPlants = Object.values(plantState)
     setPlants(currentPlants)
   }, []);
 
   const emptyRows =
-  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - alarms.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - alarms.length) : 0;
 
-const handleChangePage = (event, newPage) => {
-  setPage(newPage);
-};
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-const handleChangeRowsPerPage = (event) => {
-  setRowsPerPage(parseInt(event.target.value, 10));
-  setPage(0);
-};
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const columns = [
     {
@@ -139,13 +143,14 @@ const handleChangeRowsPerPage = (event) => {
       field: "condition"
     },
     {
-        title: "Fecha de Activación",
-        field: "activationDate"
+      title: "Fecha de Activación",
+      field: "activationDate"
     },
   ];
 
   const handleShowDetail = (row) => {
-    window.location.href = `${publicUrl}${detailAlarmPath}${row.alarmid}`;
+    // window.location.href = `${publicUrl}${detailAlarmPath}${row.alarmid}`;
+    history.push(`/${detailAlarmPath}${row.alarmid}`);
   };
   useEffect(() => {
     if (selectedPlant !== null) {
@@ -165,18 +170,18 @@ const handleChangeRowsPerPage = (event) => {
 
   const getAlarms = () => {
     getAlarmsHistory()
-    .then((data) => {
-      setAlarms(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((data) => {
+        setAlarms(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
     <div className={classes.tableContainer}>
-      <FormControl style={{ width: '250px',marginBottom:'30px' }}>
-        <InputLabel id="plant">Planta</InputLabel>       
+      <FormControl style={{ width: '250px', marginBottom: '30px' }}>
+        <InputLabel id="plant">Planta</InputLabel>
         <Select
           labelId="plant"
           id="listPlants"
@@ -192,84 +197,84 @@ const handleChangeRowsPerPage = (event) => {
         </Select>
       </FormControl>
       <TableContainer component={Paper} style={{ width: '800px', height: 'auto', overflow: 'visible' }}>
-  <Table className={classes.table} aria-label="custom pagination table">
-    <TableHead>
-      <TableRow>
-        {columns.map((column) => (
-          <TableCell key={column.field} width={column.width} className={`${classes.centeredCell} ${classes.titleCell}`}>
-            {column.title}
-          </TableCell>
-        ))}
-        <TableCell width={100} className={`${classes.centeredCell} ${classes.titleCell}`}>Estado</TableCell>
-        <TableCell width={100} className={`${classes.centeredCell} ${classes.titleCell}`}>Usuarios Asignados</TableCell> 
-        <TableCell width={100} className={`${classes.centeredCell} ${classes.titleCell}`}>Acciones</TableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {alarms.length === 0 ? (
-        <TableRow>
-          <TableCell colSpan={12} align="center" style={{ height: '200px' }}>
-            No hay elementos disponibles.
-          </TableCell>
-        </TableRow>
-      ) : (
-        <>
-          {(rowsPerPage > 0
-            ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : alarms
-          ).map((row) => (
-            <TableRow key={row.alarmid}>
-              {columns.map((column) => {
-                if (column.field === 'activationDate') {
-                  return (
-                    <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
-                      {formatDate(row[column.field])}
-                    </TableCell>
-                  );
-                }
-                return (
-                  <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
-                    {row[column.field]}
-                  </TableCell>
-                );
-              })}
-              <TableCell className={classes.centeredCell}>
-                <ChipState state={row.stateAlarmName} />
-              </TableCell>
-              <TableCell className={classes.centeredCell}>
-                <AvatarLetter names={row.usersAssigned} />
-              </TableCell>
-              <TableCell className={classes.centeredCell}>
-                <IconButton aria-label="show" onClick={() => handleShowDetail(row)}>
-                  <Visibility />
-                </IconButton>
-              </TableCell>
+        <Table className={classes.table} aria-label="custom pagination table">
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell key={column.field} width={column.width} className={`${classes.centeredCell} ${classes.titleCell}`}>
+                  {column.title}
+                </TableCell>
+              ))}
+              <TableCell width={100} className={`${classes.centeredCell} ${classes.titleCell}`}>Estado</TableCell>
+              <TableCell width={100} className={`${classes.centeredCell} ${classes.titleCell}`}>Usuarios Asignados</TableCell>
+              <TableCell width={100} className={`${classes.centeredCell} ${classes.titleCell}`}>Acciones</TableCell>
             </TableRow>
-          ))}
-        </>
-      )}
-    </TableBody>
-    <TableFooter className={classes.stickyFooter}>
-      <TableRow style={{ textAlign: 'center' }}>
-        <TablePagination
-          rowsPerPageOptions={[3, 6, 10, { label: 'All', value: -1 }]}
-          colSpan={8}
-          count={alarms.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          SelectProps={{
-            inputProps: {
-              'aria-label': 'rows per page',
-            },
-            native: true,
-          }}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </TableRow>
-    </TableFooter>
-  </Table>
-</TableContainer>
+          </TableHead>
+          <TableBody>
+            {alarms.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={12} align="center" style={{ height: '200px' }}>
+                  No hay elementos disponibles.
+                </TableCell>
+              </TableRow>
+            ) : (
+              <>
+                {(rowsPerPage > 0
+                  ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  : alarms
+                ).map((row) => (
+                  <TableRow key={row.alarmid}>
+                    {columns.map((column) => {
+                      if (column.field === 'activationDate') {
+                        return (
+                          <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
+                            {formatDate(row[column.field])}
+                          </TableCell>
+                        );
+                      }
+                      return (
+                        <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
+                          {row[column.field]}
+                        </TableCell>
+                      );
+                    })}
+                    <TableCell className={classes.centeredCell}>
+                      <ChipState state={row.stateAlarmName} />
+                    </TableCell>
+                    <TableCell className={classes.centeredCell}>
+                      <AvatarLetter names={row.usersAssigned} />
+                    </TableCell>
+                    <TableCell className={classes.centeredCell}>
+                      <IconButton aria-label="show" onClick={() => handleShowDetail(row)}>
+                        <Visibility />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
+            )}
+          </TableBody>
+          <TableFooter className={classes.stickyFooter}>
+            <TableRow style={{ textAlign: 'center' }}>
+              <TablePagination
+                rowsPerPageOptions={[3, 6, 10, { label: 'All', value: -1 }]}
+                colSpan={8}
+                count={alarms.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
 
     </div>
   )

@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Container, Stepper, Step, StepLabel } from '@mui/material';
 import MainPlantForm from '/src/components/plant/MainPlantForm';
 import TagsPlantForm from '/src/components/plant/TagsPlantForm';
 import LoadPlantSvgForm from '/src/components/plant/LoadPlantSvgForm';
 import MapSvgAndTagsForm from '/src/components/plant/MapSvgAndTagsForm';
+import AlertMessage from '../../components/messages/AlertMessage';
 
 import { addPlant } from '/src/services/PlantService'
 
@@ -14,6 +16,7 @@ const steps = [
   'RELACIÓN',
 ];
 const AddPlant = () => {
+  const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
   const [activeStep, setActiveStep] = useState(0);
   const [plant, setPlant] = useState({
     plantName: '',
@@ -24,8 +27,11 @@ const AddPlant = () => {
     svgImage: null,
     mapSvgTag: [],
     plantIp: '',
-    plantSlot: '',
+    plantSlot: ''
   });
+
+  const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   const handleBack = (currentForm = undefined) => {
 
@@ -58,11 +64,18 @@ const AddPlant = () => {
   const handleSubmit = (currentPlant) => {
     console.log("SUBMIT", currentPlant)
     addPlant(currentPlant).then(() => {
-      window.location.href = '/dashboard/manage-plant';
+      history.push(`/manage-plant`);
     }).catch((error) => {
       console.error(error);
+      let message = 'Ha ocurrido un error. No se ha podido crear la planta';
+      let severity = 'error';
+      setAlert({ show: true, message: message, severity: severity });
     });
   };
+
+  const handleCloseAlert = () => {
+    setAlert(prevState => ({ ...prevState, show: false }));
+  }
 
   const handleReset = () => {
     setActiveStep(0);
@@ -71,7 +84,8 @@ const AddPlant = () => {
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        return <MainPlantForm onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} />;
+        // name button change
+        return <MainPlantForm onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} plantIp={plant.plantIp} plantSlot={plant.plantSlot} />;
       case 1:
         return <TagsPlantForm onNext={handleNext} onBack={handleBack} currentTags={plant.tags} />;
       case 2:
@@ -92,16 +106,26 @@ const AddPlant = () => {
   };
 
   return (
-    <Container style={{ marginTop: '5rem' }}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      {renderStepContent(activeStep)}
-    </Container>
+    <>
+      <Container style={{ marginTop: '5rem' }}>
+        <Stepper activeStep={activeStep}>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        {renderStepContent(activeStep)}
+      </Container>
+      <div>
+        <AlertMessage
+          open={alert.show}
+          message={alert.message}
+          severity={alert.severity}
+          handleClose={handleCloseAlert}
+        />
+      </div>
+    </>
   );
 };
 

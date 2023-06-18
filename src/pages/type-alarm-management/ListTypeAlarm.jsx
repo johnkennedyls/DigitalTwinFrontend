@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import {getTypeAlarms,deleteTypeAlarm,getTypeAlarmsByPlant} from '../../services/TypeAlarmService';
-import AvatarLetter  from '../../components/alarms/AvatarLetter.jsx'; 
+import { useHistory } from 'react-router-dom';
+import { getTypeAlarms, deleteTypeAlarm, getTypeAlarmsByPlant } from '../../services/TypeAlarmService';
+import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
 import { IconButton } from '@mui/material';
-import { Delete, Edit, Add,Visibility } from '@mui/icons-material';
-import { Table, TableBody, TableCell, TableHead, TableRow,TextField,InputLabel,Select,MenuItem, FormControl } from '@mui/material';
+import { Delete, Edit, Add, Visibility } from '@mui/icons-material';
+import { Table, TableBody, TableCell, TableHead, TableRow, TextField, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
 import { Typography, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import AlertMessage from '../../components/messages/AlertMessage';
@@ -12,7 +13,7 @@ import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
-import AlertDialog  from '../../components/alarms/AlertDialog.jsx'; 
+import AlertDialog from '../../components/alarms/AlertDialog.jsx';
 import { useSelector } from 'react-redux';
 
 
@@ -21,10 +22,10 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '80%', 
-    margin: '0 auto', 
-    marginTop:'30px',
-    marginBottom:'30px',
+    width: '80%',
+    margin: '0 auto',
+    marginTop: '30px',
+    marginBottom: '30px',
   },
   table: {
     maxWidth: '800px',
@@ -42,7 +43,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
   title: {
-    color:"#2764E3",
+    color: "#2764E3",
     paddingTop: 30,
     fontSize: 15,
   },
@@ -58,14 +59,14 @@ const useStyles = makeStyles({
     height: '100vh',
   },
   actionColumn: {
-    width: '150px', 
+    width: '150px',
     textAlign: 'center !important',
   },
   centeredCell: {
     textAlign: 'center !important',
   },
   maxCell: {
-    width: '150px', 
+    width: '150px',
     textAlign: 'center !important',
   },
   titleCell: {
@@ -83,6 +84,9 @@ const useStyles = makeStyles({
 
 const ListTypeAlarm = () => {
 
+  const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
+
   const plantState = useSelector(state => state.plants)
   const [plants, setPlants] = useState([])
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
@@ -91,7 +95,7 @@ const ListTypeAlarm = () => {
   const showTypeAlarmPath = `/detail-type-alarm/`
   const addTypeAlarmPath = `/add-type-alarm`
   const editTypeAlarmPath = `/edit-type-alarm/`
-  
+
   const [alarms, setAlarms] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);
@@ -111,10 +115,15 @@ useEffect(() => {
   setPlants([{ plantId: null, plantName: "Todas" }, ...currentPlants]);
 }, [plantState]);
 
-const handleChangeRowsPerPage = (event) => {
-  setRowsPerPage(parseInt(event.target.value, 10));
-  setPage(0);
-};
+  useEffect(() => {
+    const currentPlants = Object.values(plantState)
+    setPlants(currentPlants)
+  }, []);
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const columns = [
     {
@@ -130,12 +139,12 @@ const handleChangeRowsPerPage = (event) => {
         field: "typeAlarmDescription"
     },
     {
-        title: "Maximo de Alarmas",
-        field: "numberAlarmsMax"
+      title: "Maximo de Alarmas",
+      field: "numberAlarmsMax"
     },
     {
-        title: "Condición",
-        field: "condition"
+      title: "Condición",
+      field: "condition"
     }
   ];
 
@@ -143,18 +152,20 @@ const handleChangeRowsPerPage = (event) => {
     setCurrentRow(row);
     setOpen(true);
   };
-  
+
 
   const handleCloseDialog = () => {
     setOpen(false);
   };
 
   const handleEdit = (row) => {
-    window.location.href = `${publicUrl}${editTypeAlarmPath}${row.typeAlarmId}`;
+    // window.location.href = `${publicUrl}${editTypeAlarmPath}${row.typeAlarmId}`;
+    history.push(`/edit-type-alarm/${row.typeAlarmId}`);
   };
 
   const handleShow = (row) => {
-    window.location.href = `${publicUrl}${showTypeAlarmPath}${row.typeAlarmId}`;
+    // window.location.href = `${publicUrl}${showTypeAlarmPath}${row.typeAlarmId}`;
+    history.push(`/detail-type-alarm/${row.typeAlarmId}`);
   };
 
 
@@ -169,9 +180,8 @@ const handleChangeRowsPerPage = (event) => {
       setAlarms(newAlarms);
     })
     .catch((error) => {
-      let message = '';
+      let message = 'No se ha podido eliminar la alarma';
       let severity = 'error';
-      message = error.response;
       setAlert({ show: true, message: message, severity: severity });
     })
     }
@@ -187,12 +197,12 @@ const handleChangeRowsPerPage = (event) => {
 
   const getAlarms = () => {
     getTypeAlarms()
-    .then((data) => {
-      setAlarms(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((data) => {
+        setAlarms(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleChange = (e) => {
@@ -318,27 +328,27 @@ const handleChangeRowsPerPage = (event) => {
         message="¿Está seguro de que desea eliminar este elemento?"
       />
       </div>
-      <div style={{  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-       <Button
-        className={classes.button}
-        href={`${publicUrl}${addTypeAlarmPath}`}
-        startIcon={<Add />}
-        size="large"
-        variant="contained"
-        color="primary"
-      >
-        Crear Alarma
-      </Button>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Button
+          className={classes.button}
+          href={`${basePath}${addTypeAlarmPath}`}
+          startIcon={<Add />}
+          size="large"
+          variant="contained"
+          color="primary"
+        >
+          Crear Alarma
+        </Button>
       </div>
       <div>
-    <AlertMessage 
-        open={alert.show} 
-        message={alert.message} 
-        severity={alert.severity} 
-        handleClose={handleCloseAlert}
-      />  
-    </div>
-      </>
+        <AlertMessage
+          open={alert.show}
+          message={alert.message}
+          severity={alert.severity}
+          handleClose={handleCloseAlert}
+        />
+      </div>
+    </>
   )
 }
 

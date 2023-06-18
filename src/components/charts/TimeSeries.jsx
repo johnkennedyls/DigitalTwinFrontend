@@ -146,6 +146,7 @@ export default function TimeSeries() {
   };
 
   const handleModeChange = (event) => {
+    setIsPlaying(true)
     setMode(event.target.value);
   };
 
@@ -251,7 +252,7 @@ export default function TimeSeries() {
       </Box>
       {(showGraphic() && showTags()) && (
         <Box>
-          <ReactECharts key={selectedTags.length} option={getOption()} style={{ height: 400 }} />
+          <ReactECharts key={selectedTags.length} option={getOption()} style={{ height: '60vh' }} />
           {mode == 'realtime' && (
             <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <IconButton onClick={handlePlayPause}>
@@ -266,6 +267,7 @@ export default function TimeSeries() {
           <Autocomplete
             clearIcon={false}
             multiple
+            disableCloseOnSelect
             options={tags}
             value={selectedTags}
             onChange={handleTagChange}

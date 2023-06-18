@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Container, Stepper, Step, StepLabel } from '@mui/material';
 import MainPlantForm from '/src/components/plant/MainPlantForm';
 import TagsPlantForm from '/src/components/plant/TagsPlantForm';
 import LoadPlantSvgForm from '/src/components/plant/LoadPlantSvgForm';
 import MapSvgAndTagsForm from '/src/components/plant/MapSvgAndTagsForm';
+import AlertMessage from '../../components/messages/AlertMessage';
+
+import { useMessage } from '/src/providers/MessageContext';
 
 import { editPlant, getPlantData } from '/src/services/PlantService'
 
@@ -18,6 +21,9 @@ const EditPlant = () => {
   const { plantId } = useParams();
 
   const [activeStep, setActiveStep] = useState(0);
+  const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
+
+
   const [plant, setPlant] = useState({
     plantName: '',
     plantDescription: '',
@@ -30,6 +36,10 @@ const EditPlant = () => {
     plantIp: '',
     plantSlot: ''
   });
+
+  const { showMessage } = useMessage();
+  const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   useEffect(() => {
     getPlantData(plantId).then((data) => {
@@ -71,12 +81,20 @@ const EditPlant = () => {
     currentPlant.tags = [...currentPlant.tags, ...currentPlant.removedTags]
     console.log("SUBMIT", currentPlant)
     editPlant(currentPlant, plantId).then(() => {
-      window.location.href = '/dashboard/manage-plant';
+      showMessage("Editado correctamente");
+      history.push(`/manage-plant`);
     }).catch((error) => {
       console.error(error);
+      let message = 'Ha ocurrido un error. No se ha podido editar la planta';
+      let severity = 'error';
+      setAlert({ show: true, message: message, severity: severity });
     });
   };
 
+  const handleCloseAlert = () => {
+    setAlert(prevState => ({ ...prevState, show: false }));
+  }
+  
   const handleReset = () => {
     setActiveStep(0);
   };
@@ -84,7 +102,7 @@ const EditPlant = () => {
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        return <MainPlantForm processLabel='edit' onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} plantIp={plant.plantIp} plantSlot={plant.plantSlot} />;
+   return <MainPlantForm processLabel='edit' onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} plantIp={plant.plantIp} plantSlot={plant.plantSlot} />;
       case 1:
         return <TagsPlantForm processLabel='edit' onNext={handleNext} onBack={handleBack} currentTags={plant.tags} />;
       case 2:
@@ -106,6 +124,7 @@ const EditPlant = () => {
   };
 
   return (
+    <>
     <Container style={{ marginTop: '5rem' }}>
       <Stepper activeStep={activeStep}>
         {steps.map((label) => (
@@ -116,6 +135,15 @@ const EditPlant = () => {
       </Stepper>
       {renderStepContent(activeStep)}
     </Container>
+        <div>
+          <AlertMessage 
+              open={alert.show} 
+              message={alert.message} 
+              severity={alert.severity} 
+              handleClose={handleCloseAlert}
+            />  
+        </div>
+    </>
   );
 };
 

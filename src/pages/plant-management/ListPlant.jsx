@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Box,
   Button,
@@ -15,14 +16,26 @@ import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '/src/red
 import { useSelector, useDispatch } from "react-redux";
 import { hasAnyRole } from "/src/services/utils/funtions";
 
-import './styles/PlantStyles.css';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+import { useMessage } from '/src/providers/MessageContext';
 
 export default function ListPlant() {
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const [plants, setPlants] = useState([]);
 
   const plantState = useSelector(state => state.plants)
   const dispatch = useDispatch();
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
+
+  const history = useHistory();
+  const { showMessage } = useMessage();
 
   const loadPLantData = () => {
     getPlantsData()
@@ -31,6 +44,7 @@ export default function ListPlant() {
       })
       .catch((error) => {
         console.error(error);
+        showMessage("Algo salio mal, por favor intente mas tarde", 'error')
       });
   }
 
@@ -55,20 +69,32 @@ export default function ListPlant() {
   }, [plantState]);
 
   const handleAdd = () => {
-    window.location.href = `${publicUrl}/add-plant`;
+    history.push(`/add-plant`);
   };
 
   const handleEdit = (id) => {
-    window.location.href = `${publicUrl}/edit-plant/${id}`;
+    history.push(`/edit-plant/${id}`);
   };
 
   const handleDelete = (id) => {
+    setDeleteId(id);
+    setOpenDialog(true);
+  };
 
-    deletePlant(id).then(() => {
-      // setPlants(plants.filter((plant) => plant.plantId !== id));
-      dispatch(deletePlantFromRedux(id));
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
+  const confirmDelete = () => {
+    setOpenDialog(false);
+    deletePlant(deleteId).then(() => {
+      dispatch(deletePlantFromRedux(deleteId));
+    }).catch((error) => {
+      console.error(error);
+      showMessage("Algo salió mal al intentar borrar la planta, por favor intenta de nuevo más tarde", 'error')
     });
   };
+
 
   const columns = [
     {
@@ -112,17 +138,33 @@ export default function ListPlant() {
   ];
 
   const handleRowClick = (param, event) => {
-    // No redirigir si se hace clic en la columna de acciones.
     if (event.target.closest('[role="cell"]').dataset.field === "actions") {
       return;
     }
-
-    // Redirige a la página de detalles.
-    window.location.href = `${publicUrl}/detail-plant/${param.row.plantId}`;
+    history.push(`/detail-plant/${param.row.plantId}`);
   };
 
   return (
     <Box m={4} maxWidth={1000} mx="auto">
+      <Dialog
+        open={openDialog}
+        onClose={handleClose}
+      >
+        <DialogTitle>Borrar Planta</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            ¿Estás seguro de que quieres borrar esta planta? Esta acción no se puede deshacer.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={confirmDelete} color="primary" autoFocus>
+            Borrar
+          </Button>
+        </DialogActions>
+      </Dialog>
       <DataGrid
         rows={plants}
         getRowId={(row) => row.plantId}

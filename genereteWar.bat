@@ -1,7 +1,7 @@
 @echo off
 
 REM Ejecuta el build de la aplicación
-npm run build
+call npm run build
 
 REM Crea la carpeta WEB-INF en la carpeta dist
 mkdir dist\WEB-INF

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Box,
   Button,
@@ -19,9 +20,10 @@ const PROCESS_STATE = {
 }
 
 export default function ListProcess() {
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const [processes, setProcesses] = useState([]);
   const [processState, setProcessState] = useState([]);
+
+  const history = useHistory();
 
   const loadProcessData = () => {
     getProcessesData()
@@ -46,7 +48,8 @@ export default function ListProcess() {
   }, []);
 
   const handleAdd = () => {
-    window.location.href = `${publicUrl}/add-process`;
+    // window.location.href = `${publicUrl}/add-process`;
+    history.push("add-process");
   };
 
   const handlePlay = (id) => {
@@ -93,6 +96,10 @@ export default function ListProcess() {
     }).catch((error) => {
       console.error(error);
     });
+  }
+
+  const handleSeeExecutions = (id) => {
+    history.push(`process-executions/${id}`);
   }
 
   const columns = [
@@ -146,6 +153,8 @@ export default function ListProcess() {
         localeText={{
           noRowsLabel: 'No hay elementos disponibles',
         }}
+        className="clickable-row"
+        onRowClick={(params) => handleSeeExecutions(params.row.id)}
       />
       <Box mt={3}>
         <Button
