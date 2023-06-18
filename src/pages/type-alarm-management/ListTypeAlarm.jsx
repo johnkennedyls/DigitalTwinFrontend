@@ -107,9 +107,9 @@ const handleChangePage = (event, newPage) => {
 };
   
 useEffect(() => {
-  const currentPlants = Object.values(plantState)
-  setPlants(currentPlants)
-}, []);
+  const currentPlants = Object.values(plantState);
+  setPlants([{ plantId: null, plantName: "Todas" }, ...currentPlants]);
+}, [plantState]);
 
 const handleChangeRowsPerPage = (event) => {
   setRowsPerPage(parseInt(event.target.value, 10));
@@ -120,6 +120,10 @@ const handleChangeRowsPerPage = (event) => {
     {
       title: "Nombre",
       field: "typeAlarmName"
+    },
+    {
+      title: "Planta",
+      field: "plantName"
     },
     {
         title: "Descripción",
@@ -191,17 +195,29 @@ const handleChangeRowsPerPage = (event) => {
     });
   };
 
-  useEffect(() => {
-  if (selectedPlant !== null) {
-    getTypeAlarmsByPlant(selectedPlant)
-      .then((response) => {
-        setAlarms(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-}, [selectedPlant]);
+  const handleChange = (e) => {
+    const plantId = e.target.value;
+    setSelectedPlant(plantId);
+    if (plantId === null) {
+      getTypeAlarms()
+        .then((data) => {
+          setAlarms(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      getTypeAlarmsByPlant(plantId)
+        .then((response) => {
+          setAlarms(response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
+
 
   return (
     <>
@@ -213,7 +229,7 @@ const handleChangeRowsPerPage = (event) => {
           id="listPlants"
           style={{ marginBottom: '10px' }}
           value={selectedPlant || ''}
-          onChange={(e) => setSelectedPlant(e.target.value)}
+          onChange={handleChange}
         >
           {plants.map((plant) => (
             <MenuItem key={plant.plantId} value={plant.plantId}>
