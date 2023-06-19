@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, TextField, Typography, Grid, Paper, Box } from '@mui/material';
-import { withStyles } from '@mui/styles';
+import { FormControl, Button, TextField, Typography, Grid, Paper, Box, MenuItem, Select, InputLabel } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -9,16 +8,14 @@ import PropTypes from "prop-types";
 import './styles/TagsPlantForm.css'
 import CsvLoader from '../utils/CsvLoader';
 
-const InputLabel = withStyles({
-  root: {
-    whiteSpace: 'normal'
-  },
-})(TextField);
 
-export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '' }], processLabel = 'add' }) {
+export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '', dataType: '' }], processLabel = 'add' }) {
     const [tags, setTags] = useState(currentTags);
     const [removedTags, setRemovedTags] = useState([]);
     const [isValid, setIsValid] = useState(false);
+
+    const DATA_TYPES = ['COUNTER', 'DINT', 'REAL', 'BOOL'];
+
     const handleChange = (e, index) => {
         const { name, value } = e.target;
         const newTags = tags.map((tag, i) => (i === index ? { ...tag, [name]: value } : tag));
@@ -26,7 +23,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
     };
 
     const handleAddTag = () => {
-        setTags([...tags, { name: '', description: '' }]);
+        setTags([...tags, { name: '', description: '', dataType: '' }]);
     };
 
     const handleRemoveTag = (index) => {
@@ -45,7 +42,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
     const validateForm = () => {
         if (tags.length === 0) setIsValid(false);
         tags.forEach((tag) => {
-            if (tag.name === '' || tag.description === '') {
+            if (tag.name === '' || tag.description === '' || tag.dataType === '') {
                 setIsValid(false);
                 return;
             }
@@ -53,8 +50,12 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
         });
     }
 
-    const onFileTagsImport = (importedTags, importedDescriptions) => {
-        const newTags = importedTags.map((tag, index) => ({ name: tag, description: importedDescriptions[index] ? importedDescriptions[index] : '' }));
+    const onFileTagsImport = (importedTags, importedDescriptions, importedDataTypes) => {
+        const newTags = importedTags.map((tag, index) => ({
+            name: tag,
+            description: importedDescriptions[index] ? importedDescriptions[index] : '',
+            dataType: importedDataTypes[index] ? importedDataTypes[index] : ''
+        }));
         setTags([...tags, ...newTags]);
     }
 
@@ -65,9 +66,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
     return (
         <Grid container justifyContent="center">
             <Grid item xs={12} sm={10} md={12}>
-
                 <form onSubmit={handleSubmit}>
-
                     <Paper elevation={3} sx={{ p: 4, my: 4 }}>
                         <Typography variant="h6" gutterBottom>
                             {processLabel === 'add' ? 'Agregar tags a la planta' : 'Editar tags de la planta'}
@@ -93,7 +92,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                                     <Grid item xs={12} md={12} key={index} marginTop={'1rem'}>
                                         <Grid container spacing={2} >
                                             <Grid item xs={12} md={3} >
-                                                <InputLabel
+                                                <TextField
                                                     label="Nombre del tag (debe coincidir con el nombre del tag en el PLC)"
                                                     name="name"
                                                     value={tag.name}
@@ -101,10 +100,30 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                                                     fullWidth
                                                     required
                                                     variant="outlined"
-                                                    style={{ height: '78px', whiteSpace: 'normal' }}
-                                                />
+                                                    style={{ height: '78px' }}
+                                                >
+                                                </TextField>
                                             </Grid>
-                                            <Grid item xs={12} md={7}>
+                                            <Grid item xs={12} md={3}>
+                                                <FormControl fullWidth>
+                                                    <InputLabel>Tipo</InputLabel>
+                                                    <Select
+                                                        label="Tipo"
+                                                        name="dataType"
+                                                        value={tag.dataType}
+                                                        onChange={(e) => handleChange(e, index)}
+                                                        required
+                                                        style={{ height: '78px' }}
+                                                    >
+                                                        {
+                                                            DATA_TYPES.map((dataType) => (
+                                                                <MenuItem key={dataType} value={dataType}>{dataType}</MenuItem>
+                                                            ))
+                                                        }
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item xs={12} md={5}>
                                                 <TextField
                                                     label="Descripción"
                                                     name="description"
@@ -118,7 +137,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                                                     style={{ height: '78px' }}
                                                 />
                                             </Grid>
-                                            <Grid item xs={12} md={2}>
+                                            <Grid item xs={12} md={1}>
                                                 <Button
                                                     style={{ height: '78px' }}
                                                     variant="outlined"
@@ -150,11 +169,9 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                                     display: 'flex',
                                     justifyContent: 'flex-end',
                                 }}
-
                             >
                                 <CsvLoader
                                     onConfirmDataImport={onFileTagsImport}
-
                                 />
                             </Grid>
                         </Grid>

@@ -5,13 +5,13 @@ import {
   Button,
   IconButton,
 } from '@mui/material';
-// import EditIcon from '@mui/icons-material/Edit';
-// import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { PlayCircleFilled, PauseCircleFilled, StopRounded } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 
-import { getProcessesData, startProcess, pauseProcess, stopProcess } from '/src/services/ProcessService';
+import { getProcessesData, deleteProcess, startProcess, pauseProcess, stopProcess } from '/src/services/ProcessService';
 
 const PROCESS_STATE = {
   STOPPED: 0,
@@ -48,12 +48,10 @@ export default function ListProcess() {
   }, []);
 
   const handleAdd = () => {
-    // window.location.href = `${publicUrl}/add-process`;
     history.push("add-process");
   };
 
   const handlePlay = (id) => {
-    console.log(id)
     startProcess(id).then(() => {
       setProcessState((prevState) => {
         return {
@@ -66,12 +64,7 @@ export default function ListProcess() {
     });
   }
 
-  useEffect(() => {
-    console.log(processState)
-  }, [processState])
-
   const handlePause = (id) => {
-    console.log(id)
     pauseProcess(id).then(() => {
       setProcessState((prevState) => {
         return {
@@ -85,7 +78,6 @@ export default function ListProcess() {
   }
 
   const handleStop = (id) => {
-    console.log(id)
     stopProcess(id).then(() => {
       setProcessState((prevState) => {
         return {
@@ -121,7 +113,6 @@ export default function ListProcess() {
               {processState[params.row.id] === PROCESS_STATE.STOPPED && <PlayCircleFilled sx={{ fontSize: '100%', borderRadius: '50%' }} />}
               {processState[params.row.id] === PROCESS_STATE.PAUSED && <PlayCircleFilled sx={{ fontSize: '100%', borderRadius: '50%' }} />}
               {processState[params.row.id] === PROCESS_STATE.RUNNING && <PauseCircleFilled sx={{ fontSize: '100%', borderRadius: '50%' }} />}
-
             </IconButton>
 
             {(processState[params.row.id] === PROCESS_STATE.PAUSED || processState[params.row.id] === PROCESS_STATE.RUNNING) &&
@@ -133,11 +124,38 @@ export default function ListProcess() {
                   <StopRounded sx={{ fontSize: '100%', borderRadius: '50%' }} />
                 </IconButton>
               )}
+
+            <IconButton
+              color="primary"
+              disible
+              onClick={() => handleEdit(params.row.id)}
+            >
+              <EditIcon />
+            </IconButton>
+
+            <IconButton
+              color="secondary"
+              onClick={() => handleDelete(params.row.id)}
+            >
+              <DeleteIcon />
+            </IconButton>
           </div>
         );
       },
     },
   ];
+
+  const handleEdit = (id) => {
+    history.push(`/edit-process/${id}`);
+  };
+
+  const handleDelete = (id) => {
+    deleteProcess(id).then(() => {
+      loadProcessData();
+    }).catch((error) => {
+      console.error(error);
+    });
+  };
 
   return (
     <Box m={3} maxWidth={1000} mx="auto">

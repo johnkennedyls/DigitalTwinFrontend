@@ -56,7 +56,7 @@ export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvg
                                                     onChange={(e) => handleChange(e, index)}
                                                     fullWidth
                                                 >
-                                                    {svgIdTag.svgId}
+                                                    {svgIdTag.svgId.replace('text_', '').toUpperCase()}
                                                 </TextField>
                                             </Grid>
                                             <Grid item xs={12} md={6}>

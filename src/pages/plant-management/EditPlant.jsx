@@ -29,7 +29,7 @@ const EditPlant = () => {
     plantDescription: '',
     conventions: '',
     plantPhoto: null,
-    tags: [{ name: '', descroption: '' }],
+    tags: [{ name: '', descroption: '', dataType: '' }],
     removedTags: [],
     svgImage: null,
     mapSvgTag: [],
@@ -39,7 +39,6 @@ const EditPlant = () => {
 
   const { showMessage } = useMessage();
   const history = useHistory();
-  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   useEffect(() => {
     getPlantData(plantId).then((data) => {

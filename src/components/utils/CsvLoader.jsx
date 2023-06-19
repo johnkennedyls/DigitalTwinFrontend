@@ -28,6 +28,7 @@ const CsvLoader = ({ onConfirmDataImport }) => {
   const [hasHeaders, setHasHeaders] = useState(true);
   const [selectedTagColumn, setSelectedTagColumn] = useState('');
   const [selectedDescriptionColumn, setSelectedDescriptionColumn] = useState('');
+  const [selectedDataTypeColumn, setSelectedDataTypeColumn] = useState('');
 
   const fileInput = useRef(null);
 
@@ -50,13 +51,15 @@ const CsvLoader = ({ onConfirmDataImport }) => {
     setFileLoaded(false);
     setSelectedTagColumn('');
     setSelectedDescriptionColumn('');
+    setSelectedDataTypeColumn('');
     setOpen(false);
   };
 
   const handleConfirm = () => {
-    const descriptionsData = data.map((row) => selectedDescriptionColumn != '' ? row[headers.indexOf(selectedDescriptionColumn)] : '');
+    const descriptionsData = data.map((row) => selectedDescriptionColumn !== '' ? row[headers.indexOf(selectedDescriptionColumn)] : '');
     const tagsData = data.map((row) => row[headers.indexOf(selectedTagColumn)]);
-    onConfirmDataImport(tagsData, descriptionsData)
+    const dataTypeData = data.map((row) => selectedDataTypeColumn !== '' ? row[headers.indexOf(selectedDataTypeColumn)] : '');
+    onConfirmDataImport(tagsData, descriptionsData, dataTypeData);
     handleClose();
   };
 
@@ -68,11 +71,15 @@ const CsvLoader = ({ onConfirmDataImport }) => {
     setSelectedDescriptionColumn(e.target.value);
   };
 
+  const handleDataTypeColumnChange = (e) => {
+    setSelectedDataTypeColumn(e.target.value);
+  };
+
   const renderOnFileLoaded = () => {
     return (
       <>
         <p>Preview de los datos</p>
-        <TableContainer style={{ maxHeight: '40vh', overflow: 'auto'}}>
+        <TableContainer style={{ maxHeight: '40vh', overflow: 'auto' }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -110,6 +117,15 @@ const CsvLoader = ({ onConfirmDataImport }) => {
             ))}
           </Select>
         </FormControl>
+        <p>Selecciona la columna que contiene los tipos de datos</p>
+        <FormControl fullWidth>
+          <InputLabel>TIPO DE DATO</InputLabel>
+          <Select value={selectedDataTypeColumn} onChange={handleDataTypeColumnChange} label="TIPO DE DATO">
+            {headers.map((header, index) => (
+              <MenuItem key={index} value={header}>{header}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </>
     )
   }
@@ -134,7 +150,7 @@ const CsvLoader = ({ onConfirmDataImport }) => {
       <Button variant="outlined" color="success" onClick={handleOpen}>
         Importar datos
       </Button>
-      <Dialog open={open} onClose={handleClose} style={{minWidth:'80vw'}}>
+      <Dialog open={open} onClose={handleClose} style={{ minWidth: '80vw' }}>
         <DialogTitle>Importar tags</DialogTitle>
         <DialogContent>
           {!fileLoaded && renderOnFileNotLoaded()}

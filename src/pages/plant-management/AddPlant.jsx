@@ -23,7 +23,7 @@ const AddPlant = () => {
     plantDescription: '',
     conventions: '',
     plantPhoto: null,
-    tags: [{ name: '', descroption: '' }],
+    tags: [{ name: '', descroption: '', dataType: '' }],
     svgImage: null,
     mapSvgTag: [],
     plantIp: '',
@@ -31,7 +31,6 @@ const AddPlant = () => {
   });
 
   const history = useHistory();
-  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   const handleBack = (currentForm = undefined) => {
 
