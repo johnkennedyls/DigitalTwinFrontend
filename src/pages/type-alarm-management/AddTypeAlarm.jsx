@@ -277,7 +277,7 @@ function AddTypeAlarm() {
         let severity = 'success';
         setAlert({ show: true, message: message, severity: severity });
         // window.location.href = `${publicUrl}${typeAlarmListPath}`;
-        history.push(`/typeAlarmListPath`);
+        history.push(typeAlarmListPath);
       })
       .catch((error) => {
         let message = '';

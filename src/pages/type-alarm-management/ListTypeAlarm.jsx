@@ -86,7 +86,6 @@ const ListTypeAlarm = () => {
 
   const history = useHistory();
   const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
-
   const plantState = useSelector(state => state.plants)
   const [plants, setPlants] = useState([])
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
@@ -110,9 +109,10 @@ const handleChangePage = (event, newPage) => {
   setPage(newPage);
 };
   
+
 useEffect(() => {
   const currentPlants = Object.values(plantState);
-  setPlants([{ plantId: null, plantName: "Todas" }, ...currentPlants]);
+  setPlants(currentPlants);
 }, [plantState]);
 
   useEffect(() => {
@@ -196,6 +196,7 @@ useEffect(() => {
   }, []);
 
   const getAlarms = () => {
+    console.log("OLAAAAAAAAAAAAA")
     getTypeAlarms()
       .then((data) => {
         setAlarms(data);
@@ -208,7 +209,7 @@ useEffect(() => {
   const handleChange = (e) => {
     const plantId = e.target.value;
     setSelectedPlant(plantId);
-    if (plantId === null) {
+    if (plantId === 'all') {
       getTypeAlarms()
         .then((data) => {
           setAlarms(data);
@@ -233,21 +234,24 @@ useEffect(() => {
     <>
     <div className={classes.tableContainer}>
     <FormControl style={{ width: '250px',marginBottom:'30px' }}>
-        <InputLabel id="plant">Planta</InputLabel>       
-        <Select
-          labelId="plant"
-          id="listPlants"
-          style={{ marginBottom: '10px' }}
-          value={selectedPlant || ''}
-          onChange={handleChange}
-        >
-          {plants.map((plant) => (
-            <MenuItem key={plant.plantId} value={plant.plantId}>
-              {plant.plantName}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+    <InputLabel id="plant">Planta</InputLabel>       
+    <Select
+      labelId="plant"
+      id="listPlants"
+      style={{ marginBottom: '10px' }}
+      value={selectedPlant || 'all'}
+      onChange={handleChange}
+    >
+      <MenuItem key="all" value="all">
+        Todas
+      </MenuItem>
+      {plants.map((plant) => (
+        <MenuItem key={plant.plantId} value={plant.plantId}>
+          {plant.plantName}
+        </MenuItem>
+      ))}
+    </Select>
+</FormControl>
 <TableContainer component={Paper} style={{ width: '1100px', height: 'auto' }}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableHead>
