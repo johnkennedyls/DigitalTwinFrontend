@@ -119,8 +119,6 @@ function EditTypeAlarm() {
   const history = useHistory();
 
   const classes = useStyles();
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
-  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
   const typeAlarmListPath = `/manage-type-alarm`
   const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
 
@@ -312,12 +310,16 @@ function EditTypeAlarm() {
     setAlert(prevState => ({ ...prevState, show: false }));
   }
 
+  const typeAlarmNavigate = (e) => {
+    e.preventDefault();
+    history.push(typeAlarmListPath);
+  }
+
   const editTypeAlarm = async (event) => {
       updateTypeAlarm(id,dataForm.values).then((data) => {
         let message = 'Se ha editado exitosamente el tipo de alarma';
         let severity = 'success';
         setAlert({ show: true, message: message, severity: severity });
-        // window.location.href = `${publicUrl}${typeAlarmListPath}`;
         history.push(typeAlarmListPath);
       })
       .catch((error) => {
@@ -510,6 +512,7 @@ function EditTypeAlarm() {
                 renderTags={(selected, getTagProps) =>
                   selected.length > 1 ? [
                     <Chip
+                      key={selected.length}
                       icon={<CheckBoxIcon fontSize="small" />}
                       label={selected[0]}
                       deleteIcon={<Badge badgeContent={selected.length - 1} color="primary">+{selected.length - 1}</Badge>}
@@ -518,6 +521,7 @@ function EditTypeAlarm() {
                   ] :
                     selected.map((option, index) => (
                       <Chip
+                        key={index}
                         icon={<CheckBoxIcon fontSize="small" />}
                         label={option}
                         {...getTagProps({ index })}
@@ -551,7 +555,7 @@ function EditTypeAlarm() {
             </Button>
             <Button
               className={classes.createButton}
-              href={`${basePath}/${typeAlarmListPath}`}
+              onClick={typeAlarmNavigate}
               xs
               variant="contained"
               color="primary"

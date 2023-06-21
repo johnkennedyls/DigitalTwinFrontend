@@ -4,6 +4,11 @@ import {
   Box,
   Button,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -22,6 +27,8 @@ const PROCESS_STATE = {
 export default function ListProcess() {
   const [processes, setProcesses] = useState([]);
   const [processState, setProcessState] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   const history = useHistory();
 
@@ -90,9 +97,34 @@ export default function ListProcess() {
     });
   }
 
-  const handleSeeExecutions = (id) => {
-    history.push(`process-executions/${id}`);
+  const handleSeeExecutions = (param, event) => {
+    if (event.target.closest('[role="cell"]').dataset.field === "actions") {
+      return;
+    }
+    history.push(`process-executions/${param.row.id}`);
   }
+
+  const handleEdit = (id) => {
+    history.push(`/edit-process/${id}`);
+  };
+
+  const handleDelete = (id) => {
+    setDeleteId(id);
+    setOpenDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
+  const confirmDelete = () => {
+    setOpenDialog(false);
+    deleteProcess(deleteId).then(() => {
+      loadProcessData();
+    }).catch((error) => {
+      console.error(error);
+    });
+  };
 
   const columns = [
     { field: 'name', headerName: 'Nombre', width: 200 },
@@ -127,7 +159,7 @@ export default function ListProcess() {
 
             <IconButton
               color="primary"
-              disible
+              disabled
               onClick={() => handleEdit(params.row.id)}
             >
               <EditIcon />
@@ -145,20 +177,24 @@ export default function ListProcess() {
     },
   ];
 
-  const handleEdit = (id) => {
-    history.push(`/edit-process/${id}`);
-  };
-
-  const handleDelete = (id) => {
-    deleteProcess(id).then(() => {
-      loadProcessData();
-    }).catch((error) => {
-      console.error(error);
-    });
-  };
-
   return (
     <Box m={3} maxWidth={1000} mx="auto">
+      <Dialog open={openDialog} onClose={handleClose}>
+        <DialogTitle>Borrar Proceso</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            ¿Estás seguro de que quieres borrar este proceso? Esta acción no se puede deshacer.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={confirmDelete} color="primary" autoFocus>
+            Borrar
+          </Button>
+        </DialogActions>
+      </Dialog>
       <DataGrid
         rows={processes}
         getRowId={(row) => row.id}
@@ -172,7 +208,7 @@ export default function ListProcess() {
           noRowsLabel: 'No hay elementos disponibles',
         }}
         className="clickable-row"
-        onRowClick={(params) => handleSeeExecutions(params.row.id)}
+        onRowClick={handleSeeExecutions}
       />
       <Box mt={3}>
         <Button

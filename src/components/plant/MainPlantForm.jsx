@@ -3,12 +3,11 @@ import { Button, TextField, Grid, Paper, Typography, Avatar } from '@mui/materia
 
 import 'react-image-crop/dist/ReactCrop.css';
 import ImageIcon from '@mui/icons-material/Image';
-
 import PropTypes from "prop-types";
-
 
 const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPhoto = null, plantIp = '', plantSlot = '', processLabel = 'add' }) => {
   const [plant, setPlant] = useState({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto, plantIp: plantIp, plantSlot: plantSlot });
+  const [valid, setValid] = useState(false);
 
   useEffect(() => {
    setPlant({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto, plantIp: plantIp, plantSlot: plantSlot })
@@ -33,6 +32,14 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
     onNext(plant)
     e.preventDefault();
   };
+
+  const isValid = () => {
+    return plant.plantName !== '' && plant.plantDescription !== '' && plant.plantIp !== '' && plant.plantSlot !== '' && plant.plantPhoto !== null;
+  };
+
+  useEffect(() => {
+    setValid(isValid());
+  }, [plant]);
 
   return (
     <Grid container justifyContent="center">
@@ -100,7 +107,7 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
             />
            
 
-            <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
+            <Button disabled={!valid} type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
               Siguiente
             </Button>
           </form>

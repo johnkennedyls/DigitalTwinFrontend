@@ -142,6 +142,7 @@ export default function TimeSeries() {
   };
 
   const handlePlantChange = (event) => {
+    setSelectedTags([])
     setPlant(event.target.value);
   };
 

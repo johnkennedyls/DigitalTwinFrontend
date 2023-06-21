@@ -9,7 +9,6 @@ import './WelcomeLayout.css';
 
 const WelcomeLayout = () => {
   const saamfiUrl = import.meta.env.VITE_SAAMFI_FRONTEND_URL;
-  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   const [logoWidth, setLogoWidth] = useState(null);
   const titleRef = useRef();

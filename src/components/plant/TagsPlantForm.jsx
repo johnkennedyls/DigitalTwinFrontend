@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { FormControl, Button, TextField, Typography, Grid, Paper, Box, MenuItem, Select, InputLabel } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,60 +8,133 @@ import PropTypes from "prop-types";
 import './styles/TagsPlantForm.css'
 import CsvLoader from '../utils/CsvLoader';
 
+const Tag = React.memo(({ tag, index, handleChange, handleRemoveTag }) => {
+    const DATA_TYPES = useMemo(() => ['COUNTER', 'DINT', 'REAL', 'BOOL', 'INT'], []);
+
+    return (
+        <Grid item xs={12} md={12} key={index} marginTop={'1rem'}>
+            <Grid container spacing={2}>
+                <Grid item xs={12} md={3}>
+                    <TextField
+                        label="Nombre del tag (debe coincidir con el nombre del tag en el PLC)"
+                        name="name"
+                        value={tag.name}
+                        onChange={(e) => handleChange(e, index)}
+                        fullWidth
+                        required
+                        multiline
+                        rows={2}
+                        variant="outlined"
+                        style={{ height: '78px' }}
+                    />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                    <FormControl fullWidth>
+                        <InputLabel>Tipo</InputLabel>
+                        <Select
+                            label="Tipo"
+                            name="dataType"
+                            value={tag.dataType}
+                            onChange={(e) => handleChange(e, index)}
+                            required
+                            style={{ height: '78px' }}
+                        >
+                            {
+                                DATA_TYPES.map((dataType) => (
+                                    <MenuItem key={dataType} value={dataType}>{dataType}</MenuItem>
+                                ))
+                            }
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} md={5}>
+                    <TextField
+                        label="Descripción"
+                        name="description"
+                        value={tag.description}
+                        onChange={(e) => handleChange(e, index)}
+                        fullWidth
+                        required
+                        multiline
+                        rows={2}
+                        variant="outlined"
+                        style={{ height: '78px' }}
+                    />
+                </Grid>
+                <Grid item xs={12} md={1}>
+                    <Button
+                        style={{ height: '78px' }}
+                        variant="outlined"
+                        color="secondary"
+                        startIcon={<DeleteIcon />}
+                        onClick={() => handleRemoveTag(index)}
+                    />
+                </Grid>
+            </Grid>
+        </Grid>
+    )
+}, (prevProps, nextProps) => prevProps.tag === nextProps.tag);
 
 export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '', dataType: '' }], processLabel = 'add' }) {
     const [tags, setTags] = useState(currentTags);
     const [removedTags, setRemovedTags] = useState([]);
     const [isValid, setIsValid] = useState(false);
 
-    const DATA_TYPES = ['COUNTER', 'DINT', 'REAL', 'BOOL'];
-
-    const handleChange = (e, index) => {
+    const handleChange = useCallback((e, index) => {
         const { name, value } = e.target;
-        const newTags = tags.map((tag, i) => (i === index ? { ...tag, [name]: value } : tag));
-        setTags(newTags);
-    };
+        setTags((prevTags) => prevTags.map((tag, i) => (i === index ? { ...tag, [name]: value } : tag)));
+    }, []);
 
-    const handleAddTag = () => {
-        setTags([...tags, { name: '', description: '', dataType: '' }]);
-    };
+    const handleAddTag = useCallback(() => {
+        setTags((prevTags) => [...prevTags, { name: '', description: '', dataType: '' }]);
+    }, []);
 
-    const handleRemoveTag = (index) => {
-        if (tags[index].assetId !== undefined) {
-            tags[index].state = 'R';
-            setRemovedTags([...removedTags, tags[index]]);
+    const handleRemoveTag = useCallback((index) => {
+        const tag = tags[index];
+        if (tag.assetId !== undefined) {
+            const newTag = { ...tag, state: 'R' };
+            setRemovedTags((prevRemovedTags) => [...prevRemovedTags, newTag]);
         }
-        setTags(tags.filter((_, i) => i !== index));
-    };
+        setTags((prevTags) => [...prevTags.slice(0, index), ...prevTags.slice(index + 1)]);
+    }, [tags, removedTags]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = useCallback((e) => {
         e.preventDefault();
-        onNext({ tags: tags, removedTags: removedTags });
-    };
+        const nonEmptyTags = tags.filter(tag => 
+            !(tag.name === '' || tag.name === undefined || tag.name === null) ||
+            !(tag.description === '' || tag.description === undefined || tag.description === null) ||
+            !(tag.dataType === '' || tag.dataType === undefined || tag.dataType === null)
+        );
+        onNext({ tags: nonEmptyTags, removedTags: removedTags });
+    }, [tags, removedTags, onNext]);
 
-    const validateForm = () => {
-        if (tags.length === 0) setIsValid(false);
-        tags.forEach((tag) => {
-            if (tag.name === '' || tag.description === '' || tag.dataType === '') {
-                setIsValid(false);
-                return;
+    const validateForm = useCallback(() => {
+        setIsValid(tags.every(tag => 
+            (tag.name === '' || tag.name === undefined || tag.name === null) &&
+            (tag.description === '' || tag.description === undefined || tag.description === null) &&
+            (tag.dataType === '' || tag.dataType === undefined || tag.dataType === null)
+            ||
+            (tag.name !== '' && tag.name !== undefined && tag.name !== null) &&
+            (tag.description !== '' && tag.description !== undefined && tag.description !== null) &&
+            (tag.dataType !== '' && tag.dataType !== undefined && tag.dataType !== null)
+        ));
+    }, [tags]);
+
+    const onFileTagsImport = useCallback((importedTags, importedDescriptions, importedDataTypes) => {
+
+        const newTags = importedTags.map((tag, index) => {
+            return {
+                name: tag,
+                description: importedDescriptions[index] ? importedDescriptions[index] : '',
+                dataType: importedDataTypes[index] ? importedDataTypes[index] : ''
             }
-            setIsValid(true);
         });
-    }
-
-    const onFileTagsImport = (importedTags, importedDescriptions, importedDataTypes) => {
-        const newTags = importedTags.map((tag, index) => ({
-            name: tag,
-            description: importedDescriptions[index] ? importedDescriptions[index] : '',
-            dataType: importedDataTypes[index] ? importedDataTypes[index] : ''
-        }));
         setTags([...tags, ...newTags]);
-    }
+    }, [tags]);
 
     useEffect(() => {
         validateForm();
-    }, [tags]);
+    }, [tags, validateForm]);
 
     return (
         <Grid container justifyContent="center">
@@ -89,66 +162,13 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                         >
                             <Grid container spacing={1} style={{ minHeight: '40vh' }}>
                                 {tags.map((tag, index) => (
-                                    <Grid item xs={12} md={12} key={index} marginTop={'1rem'}>
-                                        <Grid container spacing={2} >
-                                            <Grid item xs={12} md={3} >
-                                                <TextField
-                                                    label="Nombre del tag (debe coincidir con el nombre del tag en el PLC)"
-                                                    name="name"
-                                                    value={tag.name}
-                                                    onChange={(e) => handleChange(e, index)}
-                                                    fullWidth
-                                                    required
-                                                    variant="outlined"
-                                                    style={{ height: '78px' }}
-                                                >
-                                                </TextField>
-                                            </Grid>
-                                            <Grid item xs={12} md={3}>
-                                                <FormControl fullWidth>
-                                                    <InputLabel>Tipo</InputLabel>
-                                                    <Select
-                                                        label="Tipo"
-                                                        name="dataType"
-                                                        value={tag.dataType}
-                                                        onChange={(e) => handleChange(e, index)}
-                                                        required
-                                                        style={{ height: '78px' }}
-                                                    >
-                                                        {
-                                                            DATA_TYPES.map((dataType) => (
-                                                                <MenuItem key={dataType} value={dataType}>{dataType}</MenuItem>
-                                                            ))
-                                                        }
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={12} md={5}>
-                                                <TextField
-                                                    label="Descripción"
-                                                    name="description"
-                                                    value={tag.description}
-                                                    onChange={(e) => handleChange(e, index)}
-                                                    fullWidth
-                                                    required
-                                                    multiline
-                                                    rows={2}
-                                                    variant="outlined"
-                                                    style={{ height: '78px' }}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} md={1}>
-                                                <Button
-                                                    style={{ height: '78px' }}
-                                                    variant="outlined"
-                                                    color="secondary"
-                                                    startIcon={<DeleteIcon />}
-                                                    onClick={() => handleRemoveTag(index)}
-                                                >
-                                                </Button>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
+                                    <Tag
+                                        key={index}
+                                        tag={tag}
+                                        index={index}
+                                        handleChange={handleChange}
+                                        handleRemoveTag={handleRemoveTag}
+                                    />
                                 ))}
                             </Grid>
                         </Box>
@@ -200,4 +220,12 @@ TagsPlantForm.propTypes = {
     onBack: PropTypes.func.isRequired,
     currentTags: PropTypes.arrayOf(PropTypes.object),
     processLabel: PropTypes.string,
+};
+
+Tag.displayName = "Tag";
+Tag.propTypes = {
+    tag: PropTypes.object.isRequired,
+    index: PropTypes.number.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    handleRemoveTag: PropTypes.func.isRequired,
 };

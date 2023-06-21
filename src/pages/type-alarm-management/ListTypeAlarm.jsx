@@ -150,12 +150,10 @@ const ListTypeAlarm = () => {
   };
 
   const handleEdit = (row) => {
-    // window.location.href = `${publicUrl}${editTypeAlarmPath}${row.typeAlarmId}`;
     history.push(`/edit-type-alarm/${row.typeAlarmId}`);
   };
 
   const handleShow = (row) => {
-    // window.location.href = `${publicUrl}${showTypeAlarmPath}${row.typeAlarmId}`;
     history.push(`/detail-type-alarm/${row.typeAlarmId}`);
   };
 
@@ -195,6 +193,11 @@ const ListTypeAlarm = () => {
         console.log(error);
       });
   };
+
+  const addTypeAlarmNavidate = (e) => {
+    e.preventDefault();
+    history.push(addTypeAlarmPath);
+  }
 
   useEffect(() => {
     if (selectedPlant !== null) {
@@ -310,7 +313,7 @@ const ListTypeAlarm = () => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Button
           className={classes.button}
-          href={`${basePath}${addTypeAlarmPath}`}
+          onClick={addTypeAlarmNavidate}
           startIcon={<Add />}
           size="large"
           variant="contained"

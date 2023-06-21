@@ -149,7 +149,6 @@ const ListAlarmHistory = () => {
   ];
 
   const handleShowDetail = (row) => {
-    // window.location.href = `${publicUrl}${detailAlarmPath}${row.alarmid}`;
     history.push(`/${detailAlarmPath}${row.alarmid}`);
   };
   useEffect(() => {

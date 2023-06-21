@@ -42,6 +42,7 @@ const EditPlant = () => {
 
   useEffect(() => {
     getPlantData(plantId).then((data) => {
+      console.log("DATA", data)
       setPlant(data)
     }).catch((error) => {
       console.error(error);

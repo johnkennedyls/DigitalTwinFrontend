@@ -1,4 +1,5 @@
 import  { useState } from 'react';
+import { useHistory } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
@@ -12,10 +13,10 @@ import './MainToolbar.css';
 
 
 // import { hasAnyRole } from "/src/services/utils/funtions";
-const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
 export default function MainToolbar() {
   const [anchorEl, setAnchorEl] = useState(null);
+  const history = useHistory();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,7 +25,38 @@ export default function MainToolbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  
+
+  const plantNavigate = (e) => {
+    e.preventDefault();
+    history.push(`/manage-plant`);
+  }
+
+  const processNavigate = (e) => {
+    e.preventDefault();
+    history.push(`/manage-process`);
+  }
+
+  const typeAlarmNavigate = (e) => {
+    e.preventDefault();
+    history.push(`/manage-type-alarm`);
+  }
+
+  const alarmNavigate = (e) => {
+    e.preventDefault();
+    history.push(`/navegator-alarm-active`);
+  }
+
+  const chartNavigate = (e) => {
+    e.preventDefault();
+    history.push(`/manage-charts`);
+  }
+
+  const logout = (e) => {
+    e.preventDefault();
+    window.localStorage.removeItem('access_token');
+    history.push('/');
+  }
+
   return (
     <>
       <AppBar position="static" className="appBar">
@@ -37,13 +69,13 @@ export default function MainToolbar() {
           <img src={logobioinc} alt="Otro Logo" className="logo" />
         </Box>
         <Box className="buttonBox">
-          <Button color="inherit" className="button" href={`${basePath}/manage-plant`}>
+          <Button color="inherit" className="button" onClick={plantNavigate}>
             Plantas
           </Button>
-          <Button color="inherit" className="button" href={`${basePath}/manage-process`}>
+          <Button color="inherit" className="button" onClick={processNavigate}>
             Procesos
           </Button>
-          <Button color="inherit" className="button" href={`${basePath}/manage-type-alarm`}>
+          <Button color="inherit" className="button" onClick={typeAlarmNavigate}>
             Tipos de Alarmas
           </Button>
           <Button color="inherit" className="button" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
@@ -57,22 +89,22 @@ export default function MainToolbar() {
             onClose={handleClose}
           >
             <MenuItem onClick={handleClose}>
-              <Button color="inherit" className="button" href={`${basePath}/navegator-alarm-active`}>
+              <Button color="inherit" className="button" onClick={alarmNavigate}>
                 Alarmas Activas
               </Button>
             </MenuItem>
             <MenuItem onClick={handleClose}>
-            <Button color="inherit" className="button" href={`${basePath}/navegator-alarm-history`}>
+            <Button color="inherit" className="button" onClick={plantNavigate}>
                 Historial de Alarmas
               </Button>
             </MenuItem>
           </Menu>
-          <Button color="inherit" className="button" href={`${basePath}/manage-charts`}>
+          <Button color="inherit" className="button" onClick={chartNavigate}>
             Gráficas
           </Button>
         </Box>
         <Box className="iconBox">
-          <IconButton edge="end" color="inherit" aria-label="logout" href={`${basePath}`}>
+          <IconButton edge="end" color="inherit" aria-label="logout" onClick={logout}>
             <Logout />
           </IconButton>
           {/* <IconButton edge="end" color="inherit" aria-label="notifications">

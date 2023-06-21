@@ -120,7 +120,6 @@ function AddTypeAlarm() {
   const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   const classes = useStyles();
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const typeAlarmListPath = `/manage-type-alarm`
   const plantState = useSelector(state => state.plants)
 
@@ -129,6 +128,7 @@ function AddTypeAlarm() {
   const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
   const [events, setEvents] = useState([]);
   const [emails, setEmails] = useState([]);
+
   const [conditionalValues, setConditionalValues] = useState({
     tag: "",
     conditional: "",
@@ -143,6 +143,7 @@ function AddTypeAlarm() {
       usersAssigned: [],
     },
   });
+
   useEffect(() => {
     getEmailsSystem()
   }, []);
@@ -270,13 +271,17 @@ function AddTypeAlarm() {
     }));
   };
 
+  const typeAlarmNavigate = (e) => {
+    e.preventDefault();
+    history.push(typeAlarmListPath);
+  }
+
   const createNewTypeAlarm = () => {
     createTypeAlarm(dataForm.values)
       .then((data) => {
         let message = 'Se ha creado exitosamente el tipo de alarma';
         let severity = 'success';
         setAlert({ show: true, message: message, severity: severity });
-        // window.location.href = `${publicUrl}${typeAlarmListPath}`;
         history.push(`/typeAlarmListPath`);
       })
       .catch((error) => {
@@ -467,6 +472,7 @@ function AddTypeAlarm() {
                 renderTags={(selected, getTagProps) =>
                   selected.length > 1 ? [
                     <Chip
+                      key={selected.length}
                       icon={<CheckBoxIcon fontSize="small" />}
                       label={selected[0]}
                       deleteIcon={<Badge badgeContent={selected.length - 1} color="primary">+{selected.length - 1}</Badge>}
@@ -475,6 +481,7 @@ function AddTypeAlarm() {
                   ] :
                     selected.map((option, index) => (
                       <Chip
+                        key={index}
                         icon={<CheckBoxIcon fontSize="small" />}
                         label={option}
                         {...getTagProps({ index })}
@@ -508,7 +515,7 @@ function AddTypeAlarm() {
             </Button>
             <Button
               className={classes.createButton}
-              href={`${basePath}${typeAlarmListPath}`}
+              onClick={typeAlarmNavigate}
               xs
               variant="contained"
               color="primary"

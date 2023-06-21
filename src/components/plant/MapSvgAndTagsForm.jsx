@@ -27,12 +27,13 @@ export default function MapSvgAndTagsForm({ svgIds, tags, onNext, onBack, mapSvg
                 <form onSubmit={handleSubmit}>
                     <Paper elevation={3} sx={{ p: 4, my: 4 }}>
                         <Typography variant="h6" gutterBottom>
-                            {processLabel === 'add' ? 'Agregar tags a la planta' : 'Editar tags de la planta'}
+                            Asociar tags con etiquetas de visualización
                         </Typography>
                         <Box
                             sx={{
                                 maxHeight: '60vh',
                                 overflowY: 'scroll',
+                                paddingTop: '1rem',
                                 pr: 1,
                                 '&::-webkit-scrollbar': {
                                     width: '0.6em',
