@@ -66,7 +66,7 @@ export default function MainToolbar() {
           <Box className="separatorBox">
             <div className="separator" />
           </Box>
-          <img src={logobioinc} alt="Otro Logo" className="logo" />
+          <img src={logobioinc} alt="Otro Logo" className="logo enlarged" />
         </Box>
         <Box className="buttonBox">
           <Button color="inherit" className="button" onClick={plantNavigate}>

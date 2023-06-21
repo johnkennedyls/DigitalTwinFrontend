@@ -86,7 +86,6 @@ const ListTypeAlarm = () => {
 
   const history = useHistory();
   const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
-
   const plantState = useSelector(state => state.plants)
   const [plants, setPlants] = useState([])
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
@@ -110,6 +109,12 @@ const ListTypeAlarm = () => {
     setPage(newPage);
   };
 
+
+  useEffect(() => {
+    const currentPlants = Object.values(plantState);
+    setPlants(currentPlants);
+  }, [plantState]);
+
   useEffect(() => {
     const currentPlants = Object.values(plantState)
     setPlants(currentPlants)
@@ -124,6 +129,10 @@ const ListTypeAlarm = () => {
     {
       title: "Nombre",
       field: "typeAlarmName"
+    },
+    {
+      title: "Planta",
+      field: "plantName"
     },
     {
       title: "Descripción",
@@ -161,18 +170,18 @@ const ListTypeAlarm = () => {
   const handleDelete = () => {
     if (currentRow) {
       deleteTypeAlarm(currentRow.typeAlarmId)
-    .then(() => {
-      let message = 'Se ha eliminado exitosamente el tipo de alarma';
-      let severity = 'success';
-      setAlert({ show: true, message: message, severity: severity });
-      const newAlarms = alarms.filter(alarm => alarm.typeAlarmId !== currentRow.typeAlarmId);
-      setAlarms(newAlarms);
-    })
-    .catch((error) => {
-      let message = 'No se ha podido eliminar la alarma';
-      let severity = 'error';
-      setAlert({ show: true, message: message, severity: severity });
-    })
+        .then(() => {
+          let message = 'Se ha eliminado exitosamente el tipo de alarma';
+          let severity = 'success';
+          setAlert({ show: true, message: message, severity: severity });
+          const newAlarms = alarms.filter(alarm => alarm.typeAlarmId !== currentRow.typeAlarmId);
+          setAlarms(newAlarms);
+        })
+        .catch((error) => {
+          let message = 'No se ha podido eliminar la alarma';
+          let severity = 'error';
+          setAlert({ show: true, message: message, severity: severity });
+        })
     }
     setOpen(false);
   };
@@ -185,6 +194,7 @@ const ListTypeAlarm = () => {
   }, []);
 
   const getAlarms = () => {
+    console.log("OLAAAAAAAAAAAAA")
     getTypeAlarms()
       .then((data) => {
         setAlarms(data);
@@ -197,11 +207,21 @@ const ListTypeAlarm = () => {
   const addTypeAlarmNavidate = (e) => {
     e.preventDefault();
     history.push(addTypeAlarmPath);
-  }
+  };
 
-  useEffect(() => {
-    if (selectedPlant !== null) {
-      getTypeAlarmsByPlant(selectedPlant)
+  const handleChange = (e) => {
+    const plantId = e.target.value;
+    setSelectedPlant(plantId);
+    if (plantId === 'all') {
+      getTypeAlarms()
+        .then((data) => {
+          setAlarms(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      getTypeAlarmsByPlant(plantId)
         .then((response) => {
           setAlarms(response);
         })
@@ -209,7 +229,9 @@ const ListTypeAlarm = () => {
           console.error(error);
         });
     }
-  }, [selectedPlant]);
+  };
+
+
 
   return (
     <>
@@ -220,9 +242,12 @@ const ListTypeAlarm = () => {
             labelId="plant"
             id="listPlants"
             style={{ marginBottom: '10px' }}
-            value={selectedPlant || ''}
-            onChange={(e) => setSelectedPlant(e.target.value)}
+            value={selectedPlant || 'all'}
+            onChange={handleChange}
           >
+            <MenuItem key="all" value="all">
+              Todas
+            </MenuItem>
             {plants.map((plant) => (
               <MenuItem key={plant.plantId} value={plant.plantId}>
                 {plant.plantName}

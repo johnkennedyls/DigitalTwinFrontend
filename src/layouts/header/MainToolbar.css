@@ -11,6 +11,9 @@
 .logo {
   height: 40px;
 }
+.logo.enlarged {
+  height: 90px; 
+}
 
 .separatorBox {
   margin-left: 1rem;
