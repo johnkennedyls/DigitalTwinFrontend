@@ -130,6 +130,25 @@ export default function ListProcess() {
     { field: 'name', headerName: 'Nombre', width: 200 },
     { field: 'description', headerName: 'Descripción', flex: 1 },
     {
+      field: 'assets',
+      headerName: 'Equipos',
+      flex: 1,
+      sortable: false,
+      valueGetter: (params) => params.row.assets.map(asset => asset.name).join(", "),
+      renderCell: (params) => {
+        const assetNames = params.value.split(", ");
+        const displayAssets = assetNames.slice(0, 3).join(", ");
+        return (
+          <span>
+            {assetNames.length > 3 ? 
+              `${displayAssets}, ...` : 
+              displayAssets
+            }
+          </span>
+        );
+      },
+    },
+    {
       field: 'actions',
       headerName: 'Acciones',
       sortable: false,
