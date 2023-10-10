@@ -1,11 +1,11 @@
 import { useRef, useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import LoginIcon from '@mui/icons-material/Login';
 import icesi_logo_black from '/src/assets/images/ICESI_logo_black.png';
 import './WelcomeLayout.css';
+import { useHistory } from 'react-router-dom';
 
 const WelcomeLayout = () => {
   const saamfiUrl = import.meta.env.VITE_SAAMFI_FRONTEND_URL;
