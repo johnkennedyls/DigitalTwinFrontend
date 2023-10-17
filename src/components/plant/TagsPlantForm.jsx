@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { FormControl, Button, TextField, Typography, Grid, Paper, Box, MenuItem, Select, InputLabel } from '@mui/material';
+import { FormControl, Button, TextField, Typography, Paper, Box, MenuItem, Select, InputLabel, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 
 import './styles/TagsPlantForm.css'
 import CsvLoader from '../utils/CsvLoader';
+import DynamicTable from './components/DynamicTable';
 
 const Tag = React.memo(({ tag, index, handleChange, handleRemoveTag }) => {
     const DATA_TYPES = useMemo(() => ['COUNTER', 'DINT', 'REAL', 'BOOL', 'INT'], []);
@@ -160,17 +161,8 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                                 },
                             }}
                         >
-                            <Grid container spacing={1} style={{ minHeight: '40vh' }}>
-                                {tags.map((tag, index) => (
-                                    <Tag
-                                        key={index}
-                                        tag={tag}
-                                        index={index}
-                                        handleChange={handleChange}
-                                        handleRemoveTag={handleRemoveTag}
-                                    />
-                                ))}
-                            </Grid>
+                            
+                                <DynamicTable tags={tags} />
                         </Box>
                         <Grid container spacing={2} style={{ marginTop: '2em', marginBottom: '2em' }} >
                             <Grid item xs={12} md={6}>

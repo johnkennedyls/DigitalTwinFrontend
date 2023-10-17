@@ -23,6 +23,10 @@ export default function Plant() {
       });
   }, [plantId]);
 
+  useEffect(() => {
+    console.log(plant);
+  }, [plant]);
+
   return (
     <>
       {plant === null ?
