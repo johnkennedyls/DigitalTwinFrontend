@@ -151,18 +151,10 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                         <Box
                             sx={{
                                 maxHeight: '60vh',
-                                overflowY: 'scroll',
-                                pr: 1,
-                                '&::-webkit-scrollbar': {
-                                    width: '0.6em',
-                                },
-                                '&::-webkit-scrollbar-thumb': {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                },
+                                pr: 1
                             }}
                         >
-                            
-                                <DynamicTable tags={tags} />
+                            <DynamicTable tags={tags} />
                         </Box>
                         <Grid container spacing={2} style={{ marginTop: '2em', marginBottom: '2em' }} >
                             <Grid item xs={12} md={6}>
