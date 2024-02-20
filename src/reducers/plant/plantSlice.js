@@ -8,8 +8,8 @@ export const plantSlice = createSlice({
       let newState = {};
 
       action.payload.forEach((plant) => {
-        newState[plant.plantId] = {
-          plantId: plant.plantId,
+        newState[plant.assetId] = {
+          plantId: plant.assetId,
           assetId: plant.assetId,
           plantName: plant.plantName,
           plantDescription: plant.plantDescription,
@@ -17,7 +17,7 @@ export const plantSlice = createSlice({
           tags: {},
         }
         plant.tags.forEach((tag) => {
-          newState[plant.plantId].tags[tag.assetId] = tag.name
+          newState[plant.assetId].tags[tag.assetId] = tag.name
         });
       });
 

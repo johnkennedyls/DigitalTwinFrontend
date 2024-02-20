@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Container, Stepper, Step, StepLabel } from '@mui/material';
 import MainPlantForm from '/src/components/plant/MainPlantForm';
-import TagsPlantForm from '/src/components/plant/TagsPlantForm';
-import LoadPlantSvgForm from '/src/components/plant/LoadPlantSvgForm';
-import MapSvgAndTagsForm from '/src/components/plant/MapSvgAndTagsForm';
+import TagsPlantForm from '../../components/plant/TagsPlantForm';
+import LoadPlantSvgForm from '../../components/plant/LoadPlantSvgForm';
+import MapSvgAndTagsForm from '../../components/plant/MapSvgAndTagsForm';
 import AlertMessage from '../../components/messages/AlertMessage';
 
 import { useMessage } from '/src/providers/MessageContext';
