@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 const TagSelectionForm = ({ tags }) => {
   const [selectedTag, setSelectedTag] = useState('');

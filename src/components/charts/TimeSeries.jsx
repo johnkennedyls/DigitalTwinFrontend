@@ -23,8 +23,13 @@ import { useSelector } from 'react-redux';
 import { deepCopy } from '../../services/utils/funtions';
 
 import { getDelimitedData } from '../../services/PlantService';
+import {getProcessesData} from '../../services/ProcessService';
+import ProcessSelectionForm from '../filters/ProcessSelectionForm';
+import ExecutionSelectionForm from '../filters/ExecutionSelectionForm';
+import { getExutionsByProcess } from "../../services/ProcessService";
 
 import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, SYMBOLS } from '../../services/utils/constants';
+
 
 ECharts.use([
   ToolboxComponent,
@@ -39,6 +44,8 @@ export default function TimeSeries() {
   // REDUX DATA
   const plantState = useSelector(state => state.plants)
   const tagsState = useSelector(state => state.tags)
+  const processesState = useSelector(state => state.processes)
+  const executionsState = useSelector(state => state.executions)
 
   // AXIOS DATA
   const [delimitedData, setDelimitedData] = useState({ date: [] })
@@ -69,6 +76,35 @@ export default function TimeSeries() {
   // TAGS
   const [selectedTags, setSelectedTags] = useState([]);
   const [tags, setTags] = useState([]);
+
+  // PROCESSES
+  const [processes, setProcesses] = useState([])
+  const [selectedProcess, setSelectedProcess] = useState('')
+
+  const handleProcessChange = (newProcess) => {
+    setSelectedProcess(newProcess)
+  }
+
+  useEffect(() => {
+    getProcessesData().then(setProcesses);
+  }, []);
+
+  //EXECUTIONS
+  const [executions, setExecutions] = useState([])
+  const [selectedExecution, setSelectedExecution] = useState('')
+
+  const handleExecutionChange = (newExecution) => {
+    setSelectedExecution(newExecution)
+  }
+
+  useEffect(() => {
+    if (selectedProcess === '') {
+      return
+    }
+    getExutionsByProcess(selectedProcess).then(setExecutions);
+  }, [selectedProcess]);
+
+
 
   let currentOption = {}
 
@@ -209,6 +245,12 @@ export default function TimeSeries() {
           </Select>
         </FormControl>
 
+<ProcessSelectionForm processes={processes} selechandleProcessChange={handleProcessChange} />
+
+<Box mt={2} /> 
+
+
+<ExecutionSelectionForm executions={executions} selechandleExecutionChange={handleExecutionChange} />
         <Box
           display="flex"
           flexDirection="row"
@@ -222,6 +264,7 @@ export default function TimeSeries() {
               <MenuItem value="range">Delimitado</MenuItem>
             </Select>
           </FormControl>
+
 
           {mode === "range" && (
             <Box display="flex" justifyContent="space-between" sx={{ flexGrow: 2 }}>
@@ -250,6 +293,7 @@ export default function TimeSeries() {
             </Box>
           )}
         </Box>
+
       </Box>
       {(showGraphic() && showTags()) && (
         <Box>
@@ -263,7 +307,7 @@ export default function TimeSeries() {
           )}
         </Box>
       )}
-      {showTags() && isPlaying && (
+      
         <Box>
           <Autocomplete
             clearIcon={false}
@@ -299,7 +343,7 @@ export default function TimeSeries() {
             fullWidth
           />
         </Box>
-      )}
+      
     </Box>
   )
 }

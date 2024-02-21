@@ -100,7 +100,7 @@ export default function MainToolbar() {
             </MenuItem>
           </Menu>
           <Button color="inherit" className="button" onClick={chartNavigate}>
-            Gráficas
+            Lienzos
           </Button>
         </Box>
         <Box className="iconBox">

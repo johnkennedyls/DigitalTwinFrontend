@@ -68,7 +68,7 @@ export default function ListTimeSeries() {
                     startIcon={<AddIcon />}
                     onClick={handleAddChart}
                 >
-                    Agregar nueva gráfica
+                    Agregar nuevo Lienzo
                 </Button>
             </Box>
         </Box>
