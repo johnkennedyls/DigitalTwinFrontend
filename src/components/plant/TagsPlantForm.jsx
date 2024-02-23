@@ -6,7 +6,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PropTypes from "prop-types";
 
 import './styles/TagsPlantForm.css'
-import CsvLoader from '../utils/CsvLoader';
 import DynamicTable from './editComponents/DynamicTable';
 import ImportDialog from './editComponents/ImportDialog';
 
@@ -121,18 +120,6 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
             (tag.dataType !== '' && tag.dataType !== undefined && tag.dataType !== null)
         ));
     }, [tags]);
-    //TODO corregir importe de tags
-    const onFileTagsImport = useCallback((importedTags, importedDescriptions, importedDataTypes) => {
-
-        const newTags = importedTags.map((tag, index) => {
-            return {
-                name: tag,
-                description: importedDescriptions[index] ? importedDescriptions[index] : '',
-                dataType: importedDataTypes[index] ? importedDataTypes[index] : ''
-            }
-        });
-        setTags([...tags, ...newTags]);
-    }, [tags]);
 
     useEffect(() => {
         validateForm();
@@ -183,10 +170,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                                     display: 'flex',
                                     justifyContent: 'flex-end',
                                 }}
-                            >   
-                                <CsvLoader
-                                    onConfirmDataImport={onFileTagsImport}
-                                />
+                            >
                                 <ImportDialog tags={tags} setTags={setTags}/>
                             </Grid>
                         </Grid>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { toTitleCase } from '../../utils/TextConverter';
@@ -10,6 +10,7 @@ const basicProperties = ['name', 'dataType', 'description'];
 function DynamicTable({ tags, setTags }) {
     const [tagProperties, setTagProperties] = useState(basicProperties);
     const [editingCell, setEditingCell] = useState(null);
+    const textFieldRef = useRef(null);
 
     useEffect(() => {
         const uniqueMetadataNames = getUniqueMetadataNames(tags)
@@ -17,10 +18,11 @@ function DynamicTable({ tags, setTags }) {
         setTagProperties([...tagProperties, ...filteredMetadataNames]);
     }, [tags]);
 
-    const handleAddColumn = () => {
-        const newColumn = window.prompt('Enter new column name');
-        setTagProperties([...tagProperties, newColumn]);
-    }
+    useEffect(() => {
+        if (textFieldRef.current) {
+            textFieldRef.current.focus();
+        }
+    }, [editingCell]);
 
     const handleCellClick = (rowIndex, columnIndex) => {
         setEditingCell({ rowIndex, columnIndex });
@@ -42,12 +44,9 @@ function DynamicTable({ tags, setTags }) {
           };
         } else if (newValue) {
             newTags[rowIndex].metadata = newTags[rowIndex].metadata || {};
-        
-            // Check if columnName exists in metadata
             if (newTags[rowIndex].metadata.hasOwnProperty(columnName)) {
                 newTags[rowIndex].metadata[columnName] = newValue;
             } else {
-                // If columnName doesn't exist, add it to metadata
                 newTags[rowIndex].metadata[columnName] = newValue;
             }
         }
@@ -67,19 +66,17 @@ function DynamicTable({ tags, setTags }) {
                 }}
             >
                 <Table stickyHeader>
-                    <TableHead
-                        sx={{
-                            position: 'sticky',
-                            backgroundColor: '#11111111'
-                        }}
-                    >
+                    <TableHead>
                         <TableRow>
                             {tagProperties.map((column, columnIndex) => (
                                 <TableCell
                                     key={columnIndex}
                                     sx={{
                                         minWidth: '100px',
-                                        maxWidth: '150px'
+                                        maxWidth: '150px',
+                                        fontWeight:'bold',
+                                        backgroundColor: '#f0f0f0',
+                                        border: '1px solid #e0e0e0'
                                     }}
                                 >
                                     {toTitleCase(column)}
@@ -93,13 +90,15 @@ function DynamicTable({ tags, setTags }) {
                                 {tagProperties.map((column, columnIndex) => (
                                     editingCell?.rowIndex === rowIndex && editingCell?.columnIndex === columnIndex ? (
                                         <TextField
-                                            size='small'
+                                            inputRef={textFieldRef}
+                                            multiline
+                                            size='medium'
+                                            fullWidth
                                             value={basicProperties.includes(column)? tags[rowIndex][tagProperties[columnIndex]] :
                                                 tags[rowIndex].metadata? compareMetadata(tags[rowIndex].metadata, column) : ''}
                                             onChange={(e) => handleCellChange(rowIndex, columnIndex, e.target.value)}
                                             onBlur={() => setEditingCell(null)}
-                                            autoFocus
-                                            sx={{ margin: 1}}
+                                            sx={{ alignContent: 'center'}} 
                                         />
                                     ) : (
                                         <TableCell
@@ -108,7 +107,7 @@ function DynamicTable({ tags, setTags }) {
                                             onClick={() => handleCellClick(rowIndex, columnIndex)}
                                             onBlur={() => setEditingCell(null)}
                                             onKeyDown={(e) => handleKeyDown(e)}
-                                            sx={{ cursor: 'pointer' }}
+                                            sx={{ cursor: 'pointer', border: '0.1px solid #e0e0e0', minWidth: '100px', maxWidth: '150px'}}
                                         >
                                             {basicProperties.includes(column)? tag[column] : tag.metadata? (
                                                 compareMetadata(tag.metadata, column)
