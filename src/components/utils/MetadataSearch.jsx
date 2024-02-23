@@ -1,13 +1,15 @@
 export function getUniqueMetadataNames(tags) {
     const uniqueMetadataNames = new Set()
     tags.forEach((tag) => {
-        const metadata = tag.metadata
-
-        if (metadata !== null) {
-            Object.keys(metadata).forEach((name) => {
-                uniqueMetadataNames.add(name)
-            })
+        if (tag && tag !== null) {
+            const metadata = tag.metadata
+            if (metadata && metadata !== null) {
+                Object.keys(metadata).forEach((name) => {
+                    uniqueMetadataNames.add(name)
+                })
+            }
         }
+        
     })
     return uniqueMetadataNames
 }

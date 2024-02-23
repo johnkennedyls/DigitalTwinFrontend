@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { toTitleCase } from '../../utils/TextConverter';
 import { compareMetadata, getUniqueMetadataNames } from '../../utils/MetadataSearch';
+import MetadataDialog from './MetadataDialog';
 
 const basicProperties = ['name', 'dataType', 'description'];
 
@@ -15,10 +16,6 @@ function DynamicTable({ tags, setTags }) {
         const filteredMetadataNames = Array.from(uniqueMetadataNames).filter(name => !tagProperties.includes(name));
         setTagProperties([...tagProperties, ...filteredMetadataNames]);
     }, [tags]);
-
-    useEffect(() => {
-        console.log(tags)
-    }, [tags])
 
     const handleAddColumn = () => {
         const newColumn = window.prompt('Enter new column name');
@@ -59,13 +56,7 @@ function DynamicTable({ tags, setTags }) {
 
     return (
         <>
-            <Button
-                variant='outlined'
-                onClick={handleAddColumn}
-                sx={{ mb: 1 }}
-            >
-                Añadir Metadata
-            </Button>
+            <MetadataDialog tagProperties={tagProperties} setTagProperties={setTagProperties} />
             <TableContainer 
                 component={Paper}
                 sx={{
@@ -75,7 +66,7 @@ function DynamicTable({ tags, setTags }) {
                     overflowX: 'scroll'
                 }}
             >
-                <Table>
+                <Table stickyHeader>
                     <TableHead
                         sx={{
                             position: 'sticky',
@@ -100,25 +91,30 @@ function DynamicTable({ tags, setTags }) {
                         {tags.map((tag, rowIndex) => (
                             <TableRow key={tag.assetId}>
                                 {tagProperties.map((column, columnIndex) => (
-                                    <TableCell
-                                        key={columnIndex}
-                                        autoFocus = {true}
-                                        onClick={() => handleCellClick(rowIndex, columnIndex)}
-                                        onBlur={() => setEditingCell(null)}
-                                        onKeyDown={(e) => handleKeyDown(e)}
-                                    >
-                                        {editingCell?.rowIndex === rowIndex && editingCell?.columnIndex === columnIndex ? (
-                                            <TextField
-                                                size='small'
-                                                value={tags[rowIndex][tagProperties[columnIndex]]}
-                                                onChange={(e) => handleCellChange(rowIndex, columnIndex, e.target.value)}
-                                            />
-                                        ) : (
-                                            basicProperties.includes(column)? tag[column] : tag.metadata? (
+                                    editingCell?.rowIndex === rowIndex && editingCell?.columnIndex === columnIndex ? (
+                                        <TextField
+                                            size='small'
+                                            value={basicProperties.includes(column)? tags[rowIndex][tagProperties[columnIndex]] :
+                                                tags[rowIndex].metadata? compareMetadata(tags[rowIndex].metadata, column) : ''}
+                                            onChange={(e) => handleCellChange(rowIndex, columnIndex, e.target.value)}
+                                            onBlur={() => setEditingCell(null)}
+                                            autoFocus
+                                            sx={{ margin: 1}}
+                                        />
+                                    ) : (
+                                        <TableCell
+                                            key={columnIndex}
+                                            autoFocus = {true}
+                                            onClick={() => handleCellClick(rowIndex, columnIndex)}
+                                            onBlur={() => setEditingCell(null)}
+                                            onKeyDown={(e) => handleKeyDown(e)}
+                                            sx={{ cursor: 'pointer' }}
+                                        >
+                                            {basicProperties.includes(column)? tag[column] : tag.metadata? (
                                                 compareMetadata(tag.metadata, column)
-                                            ) : 'asd'
-                                        )}
-                                    </TableCell>
+                                            ) : ''}
+                                        </TableCell>
+                                    )
                                 ))}
                             </TableRow>
                         ))}

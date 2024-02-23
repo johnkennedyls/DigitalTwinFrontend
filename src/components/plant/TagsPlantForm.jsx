@@ -7,7 +7,8 @@ import PropTypes from "prop-types";
 
 import './styles/TagsPlantForm.css'
 import CsvLoader from '../utils/CsvLoader';
-import DynamicTable from './components/DynamicTable';
+import DynamicTable from './editComponents/DynamicTable';
+import ImportDialog from './editComponents/ImportDialog';
 
 const Tag = React.memo(({ tag, index, handleChange, handleRemoveTag }) => {
     const DATA_TYPES = useMemo(() => ['COUNTER', 'DINT', 'REAL', 'BOOL', 'INT'], []);
@@ -76,7 +77,7 @@ const Tag = React.memo(({ tag, index, handleChange, handleRemoveTag }) => {
     )
 }, (prevProps, nextProps) => prevProps.tag === nextProps.tag);
 
-export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '', dataType: '' }], processLabel = 'add' }) {
+export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '' }], processLabel = 'add' }) {
     const [tags, setTags] = useState(currentTags);
     const [removedTags, setRemovedTags] = useState([]);
     const [isValid, setIsValid] = useState(false);
@@ -87,7 +88,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
     }, []);
 
     const handleAddTag = useCallback(() => {
-        setTags((prevTags) => [...prevTags, { name: '', description: '', dataType: '' }]);
+        setTags((prevTags) => [...prevTags, { name: '', description: '' }]);
     }, []);
 
     const handleRemoveTag = useCallback((index) => {
@@ -120,7 +121,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
             (tag.dataType !== '' && tag.dataType !== undefined && tag.dataType !== null)
         ));
     }, [tags]);
-
+    //TODO corregir importe de tags
     const onFileTagsImport = useCallback((importedTags, importedDescriptions, importedDataTypes) => {
 
         const newTags = importedTags.map((tag, index) => {
@@ -182,10 +183,11 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                                     display: 'flex',
                                     justifyContent: 'flex-end',
                                 }}
-                            >
+                            >   
                                 <CsvLoader
                                     onConfirmDataImport={onFileTagsImport}
                                 />
+                                <ImportDialog tags={tags} setTags={setTags}/>
                             </Grid>
                         </Grid>
 

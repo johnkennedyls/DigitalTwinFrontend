@@ -9,7 +9,7 @@ import AlertMessage from '../../components/messages/AlertMessage';
 
 import { useMessage } from '/src/providers/MessageContext';
 
-import { editPlant, getPlantData } from '/src/services/PlantService'
+import { editPlant, getPlantData } from '../../services/PlantService'
 
 const steps = [
   'INFORMACIÓN GENERAL',
@@ -29,7 +29,7 @@ const EditPlant = () => {
     plantDescription: '',
     conventions: '',
     plantPhoto: null,
-    tags: [{ name: '', descroption: '', dataType: '' }],
+    tags: [{ name: '', descroption: '' }],
     removedTags: [],
     svgImage: null,
     mapSvgTag: [],
