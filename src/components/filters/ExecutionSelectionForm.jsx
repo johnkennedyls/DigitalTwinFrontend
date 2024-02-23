@@ -19,7 +19,7 @@ function ExecutionSelectionForm({ executions }) {
       >
         {executions.map((execution) => (
           <MenuItem key={execution.id} value={execution.id}>
-            {execution.processName}
+            {execution.id}
           </MenuItem>
         ))}
       </Select>

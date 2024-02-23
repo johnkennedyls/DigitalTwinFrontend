@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import PlantSelectionForm from '../filters/PlantSelectionForm';
-import ProcessSelectionForm from '../filters/ProcessSelectionForm';
-import ExecutionSelectionForm from '../filters/ExecutionSelectionForm';
-import TagSelectionForm from '../filters/TagSelectionForm';
+import PlantSelectionForm from './PlantSelectionForm';
+import ProcessSelectionForm from './ProcessSelectionForm';
+import ExecutionSelectionForm from './ExecutionSelectionForm';
+import TagSelectionForm from './TagSelectionForm';
 
 function FilterForm({ plants, processes, executions, tags }) {
   const [selectedPlant, setSelectedPlant] = useState('');

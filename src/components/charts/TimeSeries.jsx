@@ -44,8 +44,8 @@ export default function TimeSeries() {
   // REDUX DATA
   const plantState = useSelector(state => state.plants)
   const tagsState = useSelector(state => state.tags)
-  const processesState = useSelector(state => state.processes)
-  const executionsState = useSelector(state => state.executions)
+  const processState = useSelector(state => state.processes)
+  const executionState = useSelector(state => state.executions)
 
   // AXIOS DATA
   const [delimitedData, setDelimitedData] = useState({ date: [] })
@@ -101,7 +101,8 @@ export default function TimeSeries() {
     if (selectedProcess === '') {
       return
     }
-    getExutionsByProcess(selectedProcess).then(setExecutions);
+    
+    getExutionsByProcess(selectedProcess.id).then(setExecutions);
   }, [selectedProcess]);
 
 
@@ -251,51 +252,22 @@ export default function TimeSeries() {
 
 
 <ExecutionSelectionForm executions={executions} selechandleExecutionChange={handleExecutionChange} />
+<Box mt={2} /> 
         <Box
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
           alignItems="center"
-        >
-          <FormControl variant="outlined" margin="normal" sx={mode == 'range' ? { flexGrow: 1, mr: 1 } : { flexGrow: 1, mr: 0 }}>
-            <InputLabel>Modo</InputLabel>
-            <Select value={mode} onChange={handleModeChange} label="Modo">
-              <MenuItem value="realtime">Tiempo real</MenuItem>
-              <MenuItem value="range">Delimitado</MenuItem>
-            </Select>
-          </FormControl>
+        >      
+          
+          
 
 
-          {mode === "range" && (
-            <Box display="flex" justifyContent="space-between" sx={{ flexGrow: 2 }}>
-              <TextField
-                label="Fecha inicio"
-                type="datetime-local"
-                value={dateRange.start}
-                onChange={(e) => handleDateChange("start", e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                margin="normal"
-                sx={{ flexGrow: 1, mr: 1 }}
-              />
-              <TextField
-                label="Fecha fin"
-                type="datetime-local"
-                value={dateRange.end}
-                onChange={(e) => handleDateChange("end", e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                margin="normal"
-                sx={{ flexGrow: 1 }}
-              />
-            </Box>
-          )}
+        
         </Box>
 
       </Box>
-      {(showGraphic() && showTags()) && (
+      {(showGraphic() ) && (
         <Box>
           <ReactECharts key={selectedTags.length} option={getOption()} style={{ height: '60vh' }} />
           {mode == 'realtime' && (
