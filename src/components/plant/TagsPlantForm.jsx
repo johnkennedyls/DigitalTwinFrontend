@@ -76,7 +76,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                             }}
                         >
                             <Grid>
-                                <DynamicTable tags={tags} setTags={setTags} />
+                                <DynamicTable tags={tags} setTags={setTags} handleRemoveTag={handleRemoveTag}/>
                             </Grid>
                         </Box>
                         <Grid container spacing={2} style={{ marginTop: '2em', marginBottom: '2em' }} >

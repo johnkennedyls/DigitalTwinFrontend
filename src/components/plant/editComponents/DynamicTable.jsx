@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, IconButton, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
 import { toTitleCase } from '../../utils/TextConverter';
 import { compareMetadata, getUniqueMetadataNames } from '../../utils/MetadataSearch';
 import MetadataDialog from './MetadataDialog';
+import { Delete } from '@mui/icons-material';
 
 const basicProperties = ['name', 'dataType', 'description'];
 
-function DynamicTable({ tags, setTags }) {
+function DynamicTable({ tags, setTags, handleRemoveTag }) {
     const [tagProperties, setTagProperties] = useState(basicProperties);
     const [editingCell, setEditingCell] = useState(null);
     const textFieldRef = useRef(null);
@@ -38,10 +39,10 @@ function DynamicTable({ tags, setTags }) {
         const newTags = [...tags];
         const columnName = tagProperties[columnIndex];
         if (basicProperties.includes(columnName)) {
-          newTags[rowIndex] = {
-            ...newTags[rowIndex],
-            [columnName]: newValue
-          };
+            newTags[rowIndex] = {
+                ...newTags[rowIndex],
+                [columnName]: newValue
+            };
         } else if (newValue) {
             newTags[rowIndex].metadata = newTags[rowIndex].metadata || {};
             if (newTags[rowIndex].metadata.hasOwnProperty(columnName)) {
@@ -51,7 +52,7 @@ function DynamicTable({ tags, setTags }) {
             }
         }
         setTags(newTags);
-      };
+    };
 
     return (
         <>
@@ -68,6 +69,13 @@ function DynamicTable({ tags, setTags }) {
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
+                            <TableCell
+                                sx={{
+                                    borderRight: '1px solid #e0e0e0'
+                                }}
+                            >
+                                Acciones
+                            </TableCell>
                             {tagProperties.map((column, columnIndex) => (
                                 <TableCell
                                     key={columnIndex}
@@ -87,6 +95,17 @@ function DynamicTable({ tags, setTags }) {
                     <TableBody>
                         {tags.map((tag, rowIndex) => (
                             <TableRow key={tag.assetId}>
+                                <TableCell
+                                    sx={{
+                                        borderRight: '1px solid #e0e0e0'
+                                    }}
+                                >
+                                    <Tooltip title="Eliminar tag">
+                                        <IconButton onClick={() => handleRemoveTag(rowIndex)}>
+                                            <Delete />
+                                        </IconButton>
+                                    </Tooltip>
+                                </TableCell>
                                 {tagProperties.map((column, columnIndex) => (
                                     editingCell?.rowIndex === rowIndex && editingCell?.columnIndex === columnIndex ? (
                                         <TextField
