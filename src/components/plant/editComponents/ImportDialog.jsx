@@ -39,15 +39,33 @@ function ImportDialog({ tags, setTags }) {
         const newTags = [];
         for (let i = 0; i < rows.length; i++) {
             const tag = {};
-            for (let j = 0; j < headers.length; j++) {
-                if (headers[j] === 'name' || headers[j] === 'description') {
-                    tag[headers[j]] = rows[i][j];
-                }else {
-                    tag.metadata = tag.metadata || {};
-                    tag.metadata[headers[j]] = rows[i][j];
+            let tagExists = false;
+            for (let existingTag of tags) {
+                if (existingTag.name === rows[i][headers.indexOf('name')]) {
+                    tagExists = true;
+                    Object.assign(existingTag.metadata, {
+                        ...existingTag.metadata,
+                        ...rows[i].reduce((acc, value, index) => {
+                            if (headers[index] !== 'name' && headers[index] !== 'description') {
+                                acc[headers[index]] = value;
+                            }
+                            return acc;
+                        }, {}),
+                    });
+                    break;
                 }
             }
-            newTags.push(tag);
+            if (!tagExists) {
+                for (let j = 0; j < headers.length; j++) {
+                    if (headers[j] === 'name' || headers[j] === 'description') {
+                        tag[headers[j]] = rows[i][j];
+                    } else {
+                        tag.metadata = tag.metadata || {};
+                        tag.metadata[headers[j]] = rows[i][j];
+                    }
+                }
+                newTags.push(tag);
+            }
         }
         setTags([...tags, ...newTags]);
     }
