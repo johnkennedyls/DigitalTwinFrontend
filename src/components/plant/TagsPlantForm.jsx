@@ -112,12 +112,9 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
     const validateForm = useCallback(() => {
         setIsValid(tags.every(tag => 
             (tag.name === '' || tag.name === undefined || tag.name === null) &&
-            (tag.description === '' || tag.description === undefined || tag.description === null) &&
-            (tag.dataType === '' || tag.dataType === undefined || tag.dataType === null)
-            ||
+            (tag.description === '' || tag.description === undefined || tag.description === null) ||
             (tag.name !== '' && tag.name !== undefined && tag.name !== null) &&
-            (tag.description !== '' && tag.description !== undefined && tag.description !== null) &&
-            (tag.dataType !== '' && tag.dataType !== undefined && tag.dataType !== null)
+            (tag.description !== '' && tag.description !== undefined && tag.description !== null)
         ));
     }, [tags]);
 
