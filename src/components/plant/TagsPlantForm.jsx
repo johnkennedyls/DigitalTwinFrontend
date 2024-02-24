@@ -1,80 +1,9 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { FormControl, Button, TextField, Typography, Paper, Box, MenuItem, Select, InputLabel, Grid } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from "prop-types";
-
-import './styles/TagsPlantForm.css'
+import { Button, Typography, Paper, Box, Grid } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import DynamicTable from './editComponents/DynamicTable';
 import ImportDialog from './editComponents/ImportDialog';
-
-const Tag = React.memo(({ tag, index, handleChange, handleRemoveTag }) => {
-    const DATA_TYPES = useMemo(() => ['COUNTER', 'DINT', 'REAL', 'BOOL', 'INT'], []);
-
-    return (
-        <Grid item xs={12} md={12} key={index} marginTop={'1rem'}>
-            <Grid container spacing={2}>
-                <Grid item xs={12} md={3}>
-                    <TextField
-                        label="Nombre del tag (debe coincidir con el nombre del tag en el PLC)"
-                        name="name"
-                        value={tag.name}
-                        onChange={(e) => handleChange(e, index)}
-                        fullWidth
-                        required
-                        multiline
-                        rows={2}
-                        variant="outlined"
-                        style={{ height: '78px' }}
-                    />
-                </Grid>
-                <Grid item xs={12} md={3}>
-                    <FormControl fullWidth>
-                        <InputLabel>Tipo</InputLabel>
-                        <Select
-                            label="Tipo"
-                            name="dataType"
-                            value={tag.dataType}
-                            onChange={(e) => handleChange(e, index)}
-                            required
-                            style={{ height: '78px' }}
-                        >
-                            {
-                                DATA_TYPES.map((dataType) => (
-                                    <MenuItem key={dataType} value={dataType}>{dataType}</MenuItem>
-                                ))
-                            }
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} md={5}>
-                    <TextField
-                        label="Descripción"
-                        name="description"
-                        value={tag.description}
-                        onChange={(e) => handleChange(e, index)}
-                        fullWidth
-                        required
-                        multiline
-                        rows={2}
-                        variant="outlined"
-                        style={{ height: '78px' }}
-                    />
-                </Grid>
-                <Grid item xs={12} md={1}>
-                    <Button
-                        style={{ height: '78px' }}
-                        variant="outlined"
-                        color="secondary"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => handleRemoveTag(index)}
-                    />
-                </Grid>
-            </Grid>
-        </Grid>
-    )
-}, (prevProps, nextProps) => prevProps.tag === nextProps.tag);
 
 export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '' }], processLabel = 'add' }) {
     const [tags, setTags] = useState(currentTags);
@@ -196,12 +125,4 @@ TagsPlantForm.propTypes = {
     onBack: PropTypes.func.isRequired,
     currentTags: PropTypes.arrayOf(PropTypes.object),
     processLabel: PropTypes.string,
-};
-
-Tag.displayName = "Tag";
-Tag.propTypes = {
-    tag: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired,
-    handleChange: PropTypes.func.isRequired,
-    handleRemoveTag: PropTypes.func.isRequired,
 };
