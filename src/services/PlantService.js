@@ -41,6 +41,7 @@ export const addPlant = (plant) => {
 }
 
 export const editPlant = (plant, plantId) => {
+    console.log(plant);
     return new Promise((resolve, reject) => {
         axios.put(`plants/edit/${plantId}`, plant)
             .then(response => {

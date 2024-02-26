@@ -23,8 +23,13 @@ import { useSelector } from 'react-redux';
 import { deepCopy } from '../../services/utils/funtions';
 
 import { getDelimitedData } from '../../services/PlantService';
+import {getProcessesData} from '../../services/ProcessService';
+import ProcessSelectionForm from '../filters/ProcessSelectionForm';
+import ExecutionSelectionForm from '../filters/ExecutionSelectionForm';
+import { getExutionsByProcess } from "../../services/ProcessService";
 
 import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, SYMBOLS } from '../../services/utils/constants';
+
 
 ECharts.use([
   ToolboxComponent,
@@ -39,6 +44,8 @@ export default function TimeSeries() {
   // REDUX DATA
   const plantState = useSelector(state => state.plants)
   const tagsState = useSelector(state => state.tags)
+  const processState = useSelector(state => state.processes)
+  const executionState = useSelector(state => state.executions)
 
   // AXIOS DATA
   const [delimitedData, setDelimitedData] = useState({ date: [] })
@@ -69,6 +76,36 @@ export default function TimeSeries() {
   // TAGS
   const [selectedTags, setSelectedTags] = useState([]);
   const [tags, setTags] = useState([]);
+
+  // PROCESSES
+  const [processes, setProcesses] = useState([])
+  const [selectedProcess, setSelectedProcess] = useState('')
+
+  const handleProcessChange = (newProcess) => {
+    setSelectedProcess(newProcess)
+  }
+
+  useEffect(() => {
+    getProcessesData().then(setProcesses);
+  }, []);
+
+  //EXECUTIONS
+  const [executions, setExecutions] = useState([])
+  const [selectedExecution, setSelectedExecution] = useState('')
+
+  const handleExecutionChange = (newExecution) => {
+    setSelectedExecution(newExecution)
+  }
+
+  useEffect(() => {
+    if (selectedProcess === '') {
+      return
+    }
+    
+    getExutionsByProcess(selectedProcess.id).then(setExecutions);
+  }, [selectedProcess]);
+
+
 
   let currentOption = {}
 
@@ -209,49 +246,28 @@ export default function TimeSeries() {
           </Select>
         </FormControl>
 
+<ProcessSelectionForm processes={processes} selechandleProcessChange={handleProcessChange} />
+
+<Box mt={2} /> 
+
+
+<ExecutionSelectionForm executions={executions} selechandleExecutionChange={handleExecutionChange} />
+<Box mt={2} /> 
         <Box
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
           alignItems="center"
-        >
-          <FormControl variant="outlined" margin="normal" sx={mode == 'range' ? { flexGrow: 1, mr: 1 } : { flexGrow: 1, mr: 0 }}>
-            <InputLabel>Modo</InputLabel>
-            <Select value={mode} onChange={handleModeChange} label="Modo">
-              <MenuItem value="realtime">Tiempo real</MenuItem>
-              <MenuItem value="range">Delimitado</MenuItem>
-            </Select>
-          </FormControl>
+        >      
+          
+          
 
-          {mode === "range" && (
-            <Box display="flex" justifyContent="space-between" sx={{ flexGrow: 2 }}>
-              <TextField
-                label="Fecha inicio"
-                type="datetime-local"
-                value={dateRange.start}
-                onChange={(e) => handleDateChange("start", e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                margin="normal"
-                sx={{ flexGrow: 1, mr: 1 }}
-              />
-              <TextField
-                label="Fecha fin"
-                type="datetime-local"
-                value={dateRange.end}
-                onChange={(e) => handleDateChange("end", e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                margin="normal"
-                sx={{ flexGrow: 1 }}
-              />
-            </Box>
-          )}
+
+        
         </Box>
+
       </Box>
-      {(showGraphic() && showTags()) && (
+      {(showGraphic() ) && (
         <Box>
           <ReactECharts key={selectedTags.length} option={getOption()} style={{ height: '60vh' }} />
           {mode == 'realtime' && (
@@ -263,7 +279,7 @@ export default function TimeSeries() {
           )}
         </Box>
       )}
-      {showTags() && isPlaying && (
+      
         <Box>
           <Autocomplete
             clearIcon={false}
@@ -299,7 +315,7 @@ export default function TimeSeries() {
             fullWidth
           />
         </Box>
-      )}
+      
     </Box>
   )
 }
