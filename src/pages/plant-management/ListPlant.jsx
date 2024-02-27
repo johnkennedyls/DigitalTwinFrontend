@@ -54,7 +54,7 @@ export default function ListPlant() {
     console.log(plantState)
     Object.keys(plantState).forEach((plant) => {
       currentPlants.push({
-        plantId: plantState[plant].plantId,
+        plantId: plantState[plant].assetId,
         plantName: plantState[plant].plantName,
         plantDescription: plantState[plant].plantDescription,
         plantPhoto: plantState[plant].plantPhoto,
