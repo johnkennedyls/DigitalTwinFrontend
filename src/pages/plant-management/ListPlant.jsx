@@ -162,8 +162,8 @@ export default function ListPlant() {
         </DialogActions>
       </Dialog>
       <DataGrid
-        rows={plants.map((plant, index) => ({ ...plant, id: plant.assetId || index }))}
-        getRowId={(row) => row.id}        
+        rows={plants}
+        getRowId={(row) => row.plantId}        
         columns={columns}
         pageSize={10}
         rowsPerPageOptions={[10, 25, 50]}
