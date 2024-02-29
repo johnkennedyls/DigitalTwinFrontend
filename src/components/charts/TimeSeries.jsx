@@ -81,12 +81,28 @@ export default function TimeSeries() {
   // PROCESSES
   const [processes, setProcesses] = useState([])
   const [selectedProcess, setSelectedProcess] = useState('')
+  const [isProcessSelected, setIsProcessSelected] = useState(false);
 
 
   const handleProcessChange = (newProcess) => {
+    console.log(newProcess); // Check the structure of the newProcess object in the console
     setSelectedProcess(newProcess)
     getExecutionsOfProcess(newProcess.id)
+    setIsProcessSelected(true);
+    setTags([]); // Reset tags when a new process is selected
+
+
   }
+
+  useEffect(() => {
+    if (isProcessSelected) {
+      // Update the tags array when a process is selected
+      const data = plantState[plant].tags;
+      const currentTags = Object.keys(data);
+      setSelectedTags([]);
+      setTags(currentTags);
+    }
+  }, [isProcessSelected, plant, plantState]);
 
   const getProcessesOfPlant = (plantId) => {
     
@@ -258,16 +274,17 @@ export default function TimeSeries() {
       processes={processes}
       onChange={handleProcessChange} 
     />
+
   ) 
 }
 
 <Box mt={2} /> 
 
-{
-  processes && (
-    <ExecutionSelectionForm executions={executions} selechandleExecutionChange={handleExecutionChange} />
-  ) 
-}
+
+ {isProcessSelected && (
+  <ExecutionSelectionForm executions={executions} handleExecutionChange={handleExecutionChange} />
+)}
+
 
 <Box mt={2} /> 
         <Box
@@ -297,41 +314,43 @@ export default function TimeSeries() {
         </Box>
       )}
       
+      
         <Box>
-          <Autocomplete
-            clearIcon={false}
-            multiple
-            disableCloseOnSelect
-            options={tags}
-            value={selectedTags}
-            onChange={handleTagChange}
-            getOptionLabel={(option) => plantState[plant]['tags'][option]}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip
-                  key={option}
-                  label={plantState[plant]['tags'][option]}
-                  color="primary"
-                  onDelete={(_, clicked) => {
-                    if (clicked) {
-                      handleTagChange(null, value.filter((v) => v !== option));
-                    }
-                  }}
-                  {...getTagProps({ index })}
-                />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                label="Selecciona los tags"
-                placeholder="Tags"
+        <Autocomplete
+          clearIcon={false}
+          multiple
+          disableCloseOnSelect
+          options={tags}
+          value={selectedTags}
+          onChange={handleTagChange}
+          getOptionLabel={(option) => plantState[plant]['tags'][option]}
+          renderTags={(value, getTagProps) =>
+            value.map((option, index) => (
+              <Chip
+                key={option}
+                label={plantState[plant]['tags'][option]}
+                color="primary"
+                onDelete={(_, clicked) => {
+                  if (clicked) {
+                    handleTagChange(null, value.filter((v) => v !== option));
+                  }
+                }}
+                {...getTagProps({ index })}
               />
-            )}
-            fullWidth
-          />
-        </Box>
+            ))
+          }
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Selecciona los tags"
+              placeholder="Tags"
+            />
+          )}
+          fullWidth
+        />
+      </Box>
+      
       
     </Box>
   )
