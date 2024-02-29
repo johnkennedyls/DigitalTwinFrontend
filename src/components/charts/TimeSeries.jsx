@@ -27,6 +27,7 @@ import {getProcessesData} from '../../services/ProcessService';
 import ProcessSelectionForm from '../filters/ProcessSelectionForm';
 import ExecutionSelectionForm from '../filters/ExecutionSelectionForm';
 import { getExutionsByProcess } from "../../services/ProcessService";
+import { getProcessByPlant } from "../../services/ProcessService";
 
 import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, SYMBOLS } from '../../services/utils/constants';
 
@@ -85,9 +86,10 @@ export default function TimeSeries() {
     setSelectedProcess(newProcess)
   }
 
-  useEffect(() => {
-    getProcessesData().then(setProcesses);
-  }, []);
+  const getProcessesOfPlant = (plantId) => {
+    const integerPlantId = parseInt(plantId)
+      getProcessByPlant(integerPlantId).then(setProcesses)
+  }
 
   //EXECUTIONS
   const [executions, setExecutions] = useState([])
@@ -97,14 +99,10 @@ export default function TimeSeries() {
     setSelectedExecution(newExecution)
   }
 
-  useEffect(() => {
-    if (selectedProcess === '') {
-      return
-    }
-    
-    getExutionsByProcess(selectedProcess.id).then(setExecutions);
-  }, [selectedProcess]);
-
+ const getExecutionsOfProcess = (processId) => {
+    const integerProcessId = parseInt(processId)
+    getExutionsByProcess(integerProcessId).then(setExecutions)
+ }
 
 
   let currentOption = {}
@@ -181,6 +179,7 @@ export default function TimeSeries() {
   const handlePlantChange = (event) => {
     setSelectedTags([])
     setPlant(event.target.value);
+   
   };
 
   const handleModeChange = (event) => {
@@ -243,15 +242,28 @@ export default function TimeSeries() {
                 {plantState[currentPlant]['plantName']}
               </MenuItem>
             ))}
+            
           </Select>
         </FormControl>
-
-<ProcessSelectionForm processes={processes} selechandleProcessChange={handleProcessChange} />
+{ getProcessesOfPlant("1") }
+{
+  plant && (
+    <ProcessSelectionForm 
+      processes={processes}
+      onChange={handleProcessChange} 
+    />
+  ) 
+}
 
 <Box mt={2} /> 
 
+{getExecutionsOfProcess("1")}
+{
+  processes && (
+    <ExecutionSelectionForm executions={executions} selechandleExecutionChange={handleExecutionChange} />
+  ) 
+}
 
-<ExecutionSelectionForm executions={executions} selechandleExecutionChange={handleExecutionChange} />
 <Box mt={2} /> 
         <Box
           display="flex"
