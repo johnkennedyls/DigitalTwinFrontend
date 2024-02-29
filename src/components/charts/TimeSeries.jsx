@@ -258,7 +258,7 @@ export default function TimeSeries() {
     <Box style={{ maxWidth: '80%', margin: 'auto' }}>
       <Box>
         <FormControl fullWidth variant="outlined" margin="normal">
-          <InputLabel>Planta</InputLabel>
+          <InputLabel>Seleccione Planta</InputLabel>
           <Select value={plant} onChange={handlePlantChange} label="Planta">
             {plants.map((currentPlant) => (
               <MenuItem key={currentPlant} value={currentPlant}>
