@@ -82,14 +82,20 @@ export default function TimeSeries() {
   const [processes, setProcesses] = useState([])
   const [selectedProcess, setSelectedProcess] = useState('')
 
+
   const handleProcessChange = (newProcess) => {
     setSelectedProcess(newProcess)
+    getExecutionsOfProcess(newProcess.id)
   }
 
   const getProcessesOfPlant = (plantId) => {
-    const integerPlantId = parseInt(plantId)
-      getProcessByPlant(integerPlantId).then(setProcesses)
+    
+      getProcessByPlant(plantId).then(setProcesses)
   }
+
+  useEffect(() => {
+    console.log(processes);
+  }, [processes]);
 
   //EXECUTIONS
   const [executions, setExecutions] = useState([])
@@ -100,8 +106,7 @@ export default function TimeSeries() {
   }
 
  const getExecutionsOfProcess = (processId) => {
-    const integerProcessId = parseInt(processId)
-    getExutionsByProcess(integerProcessId).then(setExecutions)
+    getExutionsByProcess(processId).then(setExecutions)
  }
 
 
@@ -179,6 +184,8 @@ export default function TimeSeries() {
   const handlePlantChange = (event) => {
     setSelectedTags([])
     setPlant(event.target.value);
+
+    getProcessesOfPlant(plantState[event.target.value].assetId)
    
   };
 
@@ -242,10 +249,9 @@ export default function TimeSeries() {
                 {plantState[currentPlant]['plantName']}
               </MenuItem>
             ))}
-            
           </Select>
         </FormControl>
-{ getProcessesOfPlant("1") }
+
 {
   plant && (
     <ProcessSelectionForm 
@@ -257,7 +263,6 @@ export default function TimeSeries() {
 
 <Box mt={2} /> 
 
-{getExecutionsOfProcess("1")}
 {
   processes && (
     <ExecutionSelectionForm executions={executions} selechandleExecutionChange={handleExecutionChange} />
