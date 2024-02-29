@@ -1,92 +1,47 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { FormControl, Button, TextField, Typography, Grid, Paper, Box, MenuItem, Select, InputLabel } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from "prop-types";
+import { Button, Typography, Paper, Box, Grid } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import DynamicTable from './editComponents/DynamicTable';
+import ImportDialog from './editComponents/ImportDialog';
 
-import './styles/TagsPlantForm.css'
-import CsvLoader from '../utils/CsvLoader';
-
-const Tag = React.memo(({ tag, index, handleChange, handleRemoveTag }) => {
-    const DATA_TYPES = useMemo(() => ['COUNTER', 'DINT', 'REAL', 'BOOL', 'INT'], []);
-
-    return (
-        <Grid item xs={12} md={12} key={index} marginTop={'1rem'}>
-            <Grid container spacing={2}>
-                <Grid item xs={12} md={3}>
-                    <TextField
-                        label="Nombre del tag (debe coincidir con el nombre del tag en el PLC)"
-                        name="name"
-                        value={tag.name}
-                        onChange={(e) => handleChange(e, index)}
-                        fullWidth
-                        required
-                        multiline
-                        rows={2}
-                        variant="outlined"
-                        style={{ height: '78px' }}
-                    />
-                </Grid>
-                <Grid item xs={12} md={3}>
-                    <FormControl fullWidth>
-                        <InputLabel>Tipo</InputLabel>
-                        <Select
-                            label="Tipo"
-                            name="dataType"
-                            value={tag.dataType}
-                            onChange={(e) => handleChange(e, index)}
-                            required
-                            style={{ height: '78px' }}
-                        >
-                            {
-                                DATA_TYPES.map((dataType) => (
-                                    <MenuItem key={dataType} value={dataType}>{dataType}</MenuItem>
-                                ))
-                            }
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} md={5}>
-                    <TextField
-                        label="Descripción"
-                        name="description"
-                        value={tag.description}
-                        onChange={(e) => handleChange(e, index)}
-                        fullWidth
-                        required
-                        multiline
-                        rows={2}
-                        variant="outlined"
-                        style={{ height: '78px' }}
-                    />
-                </Grid>
-                <Grid item xs={12} md={1}>
-                    <Button
-                        style={{ height: '78px' }}
-                        variant="outlined"
-                        color="secondary"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => handleRemoveTag(index)}
-                    />
-                </Grid>
-            </Grid>
-        </Grid>
-    )
-}, (prevProps, nextProps) => prevProps.tag === nextProps.tag);
-
-export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '', dataType: '' }], processLabel = 'add' }) {
+export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '' }], svgIds, mapSvgTagPrev = null, processLabel = 'add' }) {
     const [tags, setTags] = useState(currentTags);
     const [removedTags, setRemovedTags] = useState([]);
+    const [mapSvgTag, setMapSvgTag] = useState(mapSvgTagPrev == null ? svgIds : mapSvgTagPrev);
     const [isValid, setIsValid] = useState(false);
+
+    useEffect(() => {
+        console.log(mapSvgTag)
+    }, [mapSvgTag]);
 
     const handleChange = useCallback((e, index) => {
         const { name, value } = e.target;
         setTags((prevTags) => prevTags.map((tag, i) => (i === index ? { ...tag, [name]: value } : tag)));
     }, []);
 
+    const handleChangeSvgId = (index, value) => {
+        const svgIdExists = mapSvgTag.some((tag) => tag.svgId === value);
+        if (svgIdExists) {
+            const newTags = mapSvgTag.map((tag, i) =>
+            i === index
+                ? {
+                    ...tag,
+                    svgId: value,
+                    tagName: tags.find((tag) => tag.metadata && tag.metadata['svgId'] === value)?.name || '',
+                }
+                : tag
+            );
+            setMapSvgTag(newTags);
+        } else {
+            // El SvgId no existe en la lista, puedes manejar esto de alguna manera si es necesario
+            console.log(`SvgId ${value} no existe en la lista.`);
+            // O puedes optar por no hacer nada
+        }
+    };
+
     const handleAddTag = useCallback(() => {
-        setTags((prevTags) => [...prevTags, { name: '', description: '', dataType: '' }]);
+        setTags((prevTags) => [...prevTags, { name: '', description: '' }]);
     }, []);
 
     const handleRemoveTag = useCallback((index) => {
@@ -105,31 +60,16 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
             !(tag.description === '' || tag.description === undefined || tag.description === null) ||
             !(tag.dataType === '' || tag.dataType === undefined || tag.dataType === null)
         );
-        onNext({ tags: nonEmptyTags, removedTags: removedTags });
+        onNext({ tags: nonEmptyTags, removedTags: removedTags, mapSvgTag: mapSvgTag }, true);
     }, [tags, removedTags, onNext]);
 
     const validateForm = useCallback(() => {
         setIsValid(tags.every(tag => 
             (tag.name === '' || tag.name === undefined || tag.name === null) &&
-            (tag.description === '' || tag.description === undefined || tag.description === null) &&
-            (tag.dataType === '' || tag.dataType === undefined || tag.dataType === null)
-            ||
+            (tag.description === '' || tag.description === undefined || tag.description === null) ||
             (tag.name !== '' && tag.name !== undefined && tag.name !== null) &&
-            (tag.description !== '' && tag.description !== undefined && tag.description !== null) &&
-            (tag.dataType !== '' && tag.dataType !== undefined && tag.dataType !== null)
+            (tag.description !== '' && tag.description !== undefined && tag.description !== null)
         ));
-    }, [tags]);
-
-    const onFileTagsImport = useCallback((importedTags, importedDescriptions, importedDataTypes) => {
-
-        const newTags = importedTags.map((tag, index) => {
-            return {
-                name: tag,
-                description: importedDescriptions[index] ? importedDescriptions[index] : '',
-                dataType: importedDataTypes[index] ? importedDataTypes[index] : ''
-            }
-        });
-        setTags([...tags, ...newTags]);
     }, [tags]);
 
     useEffect(() => {
@@ -160,16 +100,8 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                                 },
                             }}
                         >
-                            <Grid container spacing={1} style={{ minHeight: '40vh' }}>
-                                {tags.map((tag, index) => (
-                                    <Tag
-                                        key={index}
-                                        tag={tag}
-                                        index={index}
-                                        handleChange={handleChange}
-                                        handleRemoveTag={handleRemoveTag}
-                                    />
-                                ))}
+                            <Grid>
+                                <DynamicTable tags={tags} setTags={setTags} handleRemoveTag={handleRemoveTag} handleChangeSvgId={handleChangeSvgId}/>
                             </Grid>
                         </Box>
                         <Grid container spacing={2} style={{ marginTop: '2em', marginBottom: '2em' }} >
@@ -190,9 +122,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                                     justifyContent: 'flex-end',
                                 }}
                             >
-                                <CsvLoader
-                                    onConfirmDataImport={onFileTagsImport}
-                                />
+                                <ImportDialog tags={tags} setTags={setTags}/>
                             </Grid>
                         </Grid>
 
@@ -220,12 +150,4 @@ TagsPlantForm.propTypes = {
     onBack: PropTypes.func.isRequired,
     currentTags: PropTypes.arrayOf(PropTypes.object),
     processLabel: PropTypes.string,
-};
-
-Tag.displayName = "Tag";
-Tag.propTypes = {
-    tag: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired,
-    handleChange: PropTypes.func.isRequired,
-    handleRemoveTag: PropTypes.func.isRequired,
 };

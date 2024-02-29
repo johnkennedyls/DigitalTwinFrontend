@@ -37,7 +37,7 @@ export default function ListPlant() {
   const history = useHistory();
   const { showMessage } = useMessage();
 
-  const loadPLantData = () => {
+  useEffect(() => {
     getPlantsData()
       .then((data) => {
         dispatch(loadAllPlantsData(data));
@@ -46,11 +46,7 @@ export default function ListPlant() {
         console.error(error);
         showMessage("Algo salio mal, por favor intente mas tarde", 'error')
       });
-  }
-
-  useEffect(() => {
-    loadPLantData();
-  }, []);
+  }, [dispatch, showMessage]);
 
   useEffect(() => {
 
@@ -167,7 +163,7 @@ export default function ListPlant() {
       </Dialog>
       <DataGrid
         rows={plants}
-        getRowId={(row) => row.plantId}
+        getRowId={(row) => row.plantId}        
         columns={columns}
         pageSize={10}
         rowsPerPageOptions={[10, 25, 50]}

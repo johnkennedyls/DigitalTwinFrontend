@@ -1,34 +1,16 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Container, Stepper, Step, StepLabel } from '@mui/material';
-import MainPlantForm from '/src/components/plant/MainPlantForm';
-import TagsPlantForm from '/src/components/plant/TagsPlantForm';
-import LoadPlantSvgForm from '/src/components/plant/LoadPlantSvgForm';
-import MapSvgAndTagsForm from '/src/components/plant/MapSvgAndTagsForm';
-import AlertMessage from '../../components/messages/AlertMessage';
+import MainPlantForm from '../../components/plant/MainPlantForm';
+import TagsPlantForm from '../../components/plant/TagsPlantForm';
+import LoadPlantSvgForm from '../../components/plant/LoadPlantSvgForm';
+import { addPlant } from '../../services/PlantService'
+import { ErrorAlert, SuccessAlert } from '../../components/utils/Alert';
 
-import { addPlant } from '/src/services/PlantService'
-
-const steps = [
-  'INFORMACIÓN GENERAL',
-  'TAGS',
-  'REPRESENTACIÓN GRAFICA',
-  'RELACIÓN',
-];
+const steps = [ 'INFORMACIÓN GENERAL', 'REPRESENTACIÓN GRAFICA', 'TAGS' ];
 const AddPlant = () => {
-  const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
   const [activeStep, setActiveStep] = useState(0);
-  const [plant, setPlant] = useState({
-    plantName: '',
-    plantDescription: '',
-    conventions: '',
-    plantPhoto: null,
-    tags: [{ name: '', descroption: '', dataType: '' }],
-    svgImage: null,
-    mapSvgTag: [],
-    plantIp: '',
-    plantSlot: ''
-  });
+  const [plant, setPlant] = useState({});
 
   const history = useHistory();
 
@@ -64,17 +46,12 @@ const AddPlant = () => {
     console.log("SUBMIT", currentPlant)
     addPlant(currentPlant).then(() => {
       history.push(`/manage-plant`);
+      SuccessAlert('Planta creada correctamente');
     }).catch((error) => {
       console.error(error);
-      let message = 'Ha ocurrido un error. No se ha podido crear la planta';
-      let severity = 'error';
-      setAlert({ show: true, message: message, severity: severity });
+      ErrorAlert('Ha ocurrido un error. No se ha podido crear la planta');
     });
   };
-
-  const handleCloseAlert = () => {
-    setAlert(prevState => ({ ...prevState, show: false }));
-  }
 
   const handleReset = () => {
     setActiveStep(0);
@@ -83,22 +60,11 @@ const AddPlant = () => {
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        // name button change
         return <MainPlantForm onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} plantIp={plant.plantIp} plantSlot={plant.plantSlot} />;
       case 1:
-        return <TagsPlantForm onNext={handleNext} onBack={handleBack} currentTags={plant.tags} />;
-      case 2:
         return <LoadPlantSvgForm onNext={handleNext} onBack={handleBack} svgImageUrl={plant.svgImage} conventions={plant.conventions} />;
-      case 3:
-        return (
-          <MapSvgAndTagsForm
-            svgIds={plant.mapSvgTag}
-            tags={plant.tags}
-            onNext={handleNext}
-            onBack={handleBack}
-            onReset={handleReset}
-          />
-        );
+      case 2:
+        return <TagsPlantForm onNext={handleNext} onBack={handleBack} currentTags={plant.tags} svgIds={plant['mapSvgTag']}/>;
       default:
         throw new Error('Unknown step');
     }
@@ -116,14 +82,6 @@ const AddPlant = () => {
         </Stepper>
         {renderStepContent(activeStep)}
       </Container>
-      <div>
-        <AlertMessage
-          open={alert.show}
-          message={alert.message}
-          severity={alert.severity}
-          handleClose={handleCloseAlert}
-        />
-      </div>
     </>
   );
 };

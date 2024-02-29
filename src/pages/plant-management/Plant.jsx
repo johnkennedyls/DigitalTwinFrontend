@@ -21,7 +21,11 @@ export default function Plant() {
         console.error(error);
         history.push(`/manage-plant`);
       });
-  }, [plantId]);
+  }, [plantId, history]);
+
+  useEffect(() => {
+    console.log(plant);
+  }, [plant]);
 
   return (
     <>
