@@ -21,8 +21,23 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
     }, []);
 
     const handleChangeSvgId = (index, value) => {
-        const newTags = mapSvgTag.map((tag, i) => (i === index ? { ...tag, svgId: value, tagName: tags.find(tag => tag.metadata && tag.metadata['svgId'] === value)?.name || '' } : tag));
-        setMapSvgTag(newTags);
+        const svgIdExists = mapSvgTag.some((tag) => tag.svgId === value);
+        if (svgIdExists) {
+            const newTags = mapSvgTag.map((tag, i) =>
+            i === index
+                ? {
+                    ...tag,
+                    svgId: value,
+                    tagName: tags.find((tag) => tag.metadata && tag.metadata['svgId'] === value)?.name || '',
+                }
+                : tag
+            );
+            setMapSvgTag(newTags);
+        } else {
+            // El SvgId no existe en la lista, puedes manejar esto de alguna manera si es necesario
+            console.log(`SvgId ${value} no existe en la lista.`);
+            // O puedes optar por no hacer nada
+        }
     };
 
     const handleAddTag = useCallback(() => {
@@ -45,7 +60,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
             !(tag.description === '' || tag.description === undefined || tag.description === null) ||
             !(tag.dataType === '' || tag.dataType === undefined || tag.dataType === null)
         );
-        onNext({ tags: nonEmptyTags, removedTags: removedTags }, true);
+        onNext({ tags: nonEmptyTags, removedTags: removedTags, mapSvgTag: mapSvgTag }, true);
     }, [tags, removedTags, onNext]);
 
     const validateForm = useCallback(() => {

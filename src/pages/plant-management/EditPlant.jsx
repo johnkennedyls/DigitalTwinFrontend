@@ -4,7 +4,6 @@ import { Container, Stepper, Step, StepLabel } from '@mui/material';
 import MainPlantForm from '../../components/plant/MainPlantForm';
 import TagsPlantForm from '../../components/plant/TagsPlantForm';
 import LoadPlantSvgForm from '../../components/plant/LoadPlantSvgForm';
-import MapSvgAndTagsForm from '../../components/plant/MapSvgAndTagsForm';
 import { editPlant, getPlantData } from '../../services/PlantService'
 import { ErrorAlert, SuccessAlert } from '../../components/utils/Alert';
 
