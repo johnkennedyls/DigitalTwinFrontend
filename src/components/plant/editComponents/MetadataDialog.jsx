@@ -59,7 +59,7 @@ function MetadataDialog({ tagProperties, setTagProperties }) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="error">
-                        Cancelar
+                        Cerrar
                     </Button>
                     <Button onClick={handleAddMetadata} color="primary">
                         Agregar

@@ -5,15 +5,25 @@ import AddIcon from '@mui/icons-material/Add';
 import DynamicTable from './editComponents/DynamicTable';
 import ImportDialog from './editComponents/ImportDialog';
 
-export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '' }], processLabel = 'add' }) {
+export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '' }], svgIds, mapSvgTagPrev = null, processLabel = 'add' }) {
     const [tags, setTags] = useState(currentTags);
     const [removedTags, setRemovedTags] = useState([]);
+    const [mapSvgTag, setMapSvgTag] = useState(mapSvgTagPrev == null ? svgIds : mapSvgTagPrev);
     const [isValid, setIsValid] = useState(false);
+
+    useEffect(() => {
+        console.log(mapSvgTag)
+    }, [mapSvgTag]);
 
     const handleChange = useCallback((e, index) => {
         const { name, value } = e.target;
         setTags((prevTags) => prevTags.map((tag, i) => (i === index ? { ...tag, [name]: value } : tag)));
     }, []);
+
+    const handleChangeSvgId = (index, value) => {
+        const newTags = mapSvgTag.map((tag, i) => (i === index ? { ...tag, svgId: value, tagName: tags.find(tag => tag.metadata && tag.metadata['svgId'] === value)?.name || '' } : tag));
+        setMapSvgTag(newTags);
+    };
 
     const handleAddTag = useCallback(() => {
         setTags((prevTags) => [...prevTags, { name: '', description: '' }]);
@@ -35,7 +45,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
             !(tag.description === '' || tag.description === undefined || tag.description === null) ||
             !(tag.dataType === '' || tag.dataType === undefined || tag.dataType === null)
         );
-        onNext({ tags: nonEmptyTags, removedTags: removedTags });
+        onNext({ tags: nonEmptyTags, removedTags: removedTags }, true);
     }, [tags, removedTags, onNext]);
 
     const validateForm = useCallback(() => {
@@ -76,7 +86,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                             }}
                         >
                             <Grid>
-                                <DynamicTable tags={tags} setTags={setTags} handleRemoveTag={handleRemoveTag}/>
+                                <DynamicTable tags={tags} setTags={setTags} handleRemoveTag={handleRemoveTag} handleChangeSvgId={handleChangeSvgId}/>
                             </Grid>
                         </Box>
                         <Grid container spacing={2} style={{ marginTop: '2em', marginBottom: '2em' }} >

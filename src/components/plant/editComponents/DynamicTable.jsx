@@ -6,17 +6,22 @@ import { compareMetadata, getUniqueMetadataNames } from '../../utils/MetadataSea
 import MetadataDialog from './MetadataDialog';
 import { Delete } from '@mui/icons-material';
 
-const basicProperties = ['name', 'dataType', 'description'];
+const basicProperties = ['svgId', 'name', 'description'];
 
-function DynamicTable({ tags, setTags, handleRemoveTag }) {
+function DynamicTable({ tags, setTags, handleRemoveTag, handleChangeSvgId }) {
     const [tagProperties, setTagProperties] = useState(basicProperties);
     const [editingCell, setEditingCell] = useState(null);
     const textFieldRef = useRef(null);
 
     useEffect(() => {
-        const uniqueMetadataNames = getUniqueMetadataNames(tags)
-        const filteredMetadataNames = Array.from(uniqueMetadataNames).filter(name => !tagProperties.includes(name));
-        setTagProperties([...tagProperties, ...filteredMetadataNames]);
+        console.log(tagProperties)
+    }, [tagProperties]);
+
+    useEffect(() => {
+        const uniqueMetadataNames = getUniqueMetadataNames(tags);
+        const filteredMetadataNames = Array.from(uniqueMetadataNames).filter(name => !basicProperties.includes(name));
+        setTagProperties([...basicProperties, ...filteredMetadataNames]);
+        console.log(tags)
     }, [tags]);
 
     useEffect(() => {
@@ -38,7 +43,7 @@ function DynamicTable({ tags, setTags, handleRemoveTag }) {
     const handleCellChange = (rowIndex, columnIndex, newValue) => {
         const newTags = [...tags];
         const columnName = tagProperties[columnIndex];
-        if (basicProperties.includes(columnName)) {
+        if (basicProperties.includes(columnName) && columnName !== 'svgId') {
             newTags[rowIndex] = {
                 ...newTags[rowIndex],
                 [columnName]: newValue
@@ -52,6 +57,9 @@ function DynamicTable({ tags, setTags, handleRemoveTag }) {
             }
         }
         setTags(newTags);
+        if (columnName === 'svgId') {
+            handleChangeSvgId(rowIndex, newValue);
+        }
     };
 
     return (
@@ -113,7 +121,7 @@ function DynamicTable({ tags, setTags, handleRemoveTag }) {
                                             multiline
                                             size='medium'
                                             fullWidth
-                                            value={basicProperties.includes(column)? tags[rowIndex][tagProperties[columnIndex]] :
+                                            value={(basicProperties.includes(column) && column !== 'svgId')? tags[rowIndex][tagProperties[columnIndex]] :
                                                 tags[rowIndex].metadata? compareMetadata(tags[rowIndex].metadata, column) : ''}
                                             onChange={(e) => handleCellChange(rowIndex, columnIndex, e.target.value)}
                                             onBlur={() => setEditingCell(null)}
@@ -128,7 +136,7 @@ function DynamicTable({ tags, setTags, handleRemoveTag }) {
                                             onKeyDown={(e) => handleKeyDown(e)}
                                             sx={{ cursor: 'pointer', border: '0.1px solid #e0e0e0', minWidth: '100px', maxWidth: '150px'}}
                                         >
-                                            {basicProperties.includes(column)? tag[column] : tag.metadata? (
+                                            {(basicProperties.includes(column) && column !== 'svgId')? tag[column] : tag.metadata? (
                                                 compareMetadata(tag.metadata, column)
                                             ) : ''}
                                         </TableCell>

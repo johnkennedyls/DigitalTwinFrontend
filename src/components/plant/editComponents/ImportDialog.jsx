@@ -25,7 +25,7 @@ function ImportDialog({ tags, setTags }) {
     }
 
     const generateTemplate = () => {
-        const data = [['Id Svg', 'Name', 'Description']];
+        const data = [['Svg Id', 'Name', 'Description']];
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1');
@@ -178,7 +178,7 @@ function ImportDialog({ tags, setTags }) {
             <Button variant="outlined" color="success" onClick={handleOpen}>
                 Importar Datos
             </Button>
-            <Dialog open={open} onClose={handleClose} maxWidth>
+            <Dialog open={open} onClose={handleClose} fullWidth>
                 <DialogTitle>Importar Tags Por CSV o Excel</DialogTitle>
                 <DialogContent>
                     {fileLoaded ? renderOnFileLoaded() : renderOnFileNotLoaded()}
