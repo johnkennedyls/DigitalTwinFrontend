@@ -12,16 +12,15 @@ function DynamicTable({ tags, setTags, handleRemoveTag, handleChangeSvgId }) {
     const [tagProperties, setTagProperties] = useState(basicProperties);
     const [editingCell, setEditingCell] = useState(null);
     const textFieldRef = useRef(null);
+    const isInitialLoad = useRef(true);
 
     useEffect(() => {
-        console.log(tagProperties)
-    }, [tagProperties]);
-
-    useEffect(() => {
-        const uniqueMetadataNames = getUniqueMetadataNames(tags);
-        const filteredMetadataNames = Array.from(uniqueMetadataNames).filter(name => !basicProperties.includes(name));
-        setTagProperties([...basicProperties, ...filteredMetadataNames]);
-        console.log(tags)
+        if (isInitialLoad.current) {
+            const uniqueMetadataNames = getUniqueMetadataNames(tags);
+            const filteredMetadataNames = Array.from(uniqueMetadataNames).filter(name => !basicProperties.includes(name));
+            setTagProperties([...basicProperties, ...filteredMetadataNames]);
+            isInitialLoad.current = false;
+        }
     }, [tags]);
 
     useEffect(() => {
@@ -48,7 +47,7 @@ function DynamicTable({ tags, setTags, handleRemoveTag, handleChangeSvgId }) {
                 ...newTags[rowIndex],
                 [columnName]: newValue
             };
-        } else if (newValue) {
+        } else {
             newTags[rowIndex].metadata = newTags[rowIndex].metadata || {};
             if (newTags[rowIndex].metadata.hasOwnProperty(columnName)) {
                 newTags[rowIndex].metadata[columnName] = newValue;
