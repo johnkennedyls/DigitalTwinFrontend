@@ -30,6 +30,7 @@ import { getExutionsByProcess } from "../../services/ProcessService";
 import { getProcessByPlant } from "../../services/ProcessService";
 
 import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, SYMBOLS } from '../../services/utils/constants';
+import { use } from "echarts";
 
 
 ECharts.use([
@@ -78,9 +79,12 @@ export default function TimeSeries() {
   const [selectedTags, setSelectedTags] = useState([]);
   const [tags, setTags] = useState([]);
 
+  
+
+
   // PROCESSES
   const [processes, setProcesses] = useState([])
-  const [selectedProcess, setSelectedProcess] = useState('')
+  const [selectedProcess, setSelectedProcess] = useState({})
   const [isProcessSelected, setIsProcessSelected] = useState(false);
 
 
@@ -113,19 +117,70 @@ export default function TimeSeries() {
     console.log(processes);
   }, [processes]);
 
+  useEffect(() => {
+    console.log(selectedTags);
+  }, [processes]);
+
+  
+
   //EXECUTIONS
   const [executions, setExecutions] = useState([])
-  const [selectedExecution, setSelectedExecution] = useState('')
+  const [selectedExecution, setSelectedExecution] = useState({})
 
-  const handleExecutionChange = (newExecution) => {
-    setSelectedExecution(newExecution)
-  }
+  const handleExecutionChange = (newExecution) => {  
+    setSelectedExecution(newExecution);
+    setDateRange({ start: formatDate(newExecution.startDate), end: formatDate(newExecution.endDate) });
+    if (newExecution.state === 'running') {
+      setMode('realtime');
+    }
+    if (newExecution.state === 'stoped') {
+      setMode('range');
+    }
+  };
+  
+
+  useEffect(() => {
+    console.log(executions);
+  }, [executions]);
+
+  useEffect(() => {
+    console.log(selectedExecution);
+  }, [selectedExecution]);
+  
 
  const getExecutionsOfProcess = (processId) => {
     getExutionsByProcess(processId).then(setExecutions)
+    
  }
 
+ 
 
+    
+const isExecutionRunning = selectedExecution.state === 'running';
+
+
+
+const formatDate = (date) => {
+  return moment(date).format('YYYY-MM-DDTHH:mm'); 
+  
+}
+
+useEffect(() => {
+  console.log(mode);
+}, [mode]);
+
+ 
+
+
+ 
+
+
+//Executions for graphics
+
+
+useEffect(() => {
+  console.log(tags);
+}, [processes]);
   let currentOption = {}
 
   const getOption = () => {
@@ -207,10 +262,13 @@ export default function TimeSeries() {
 
   const handleModeChange = (event) => {
     setIsPlaying(true)
-    setMode(event.target.value);
+    setMode('realtime');
   };
 
   const handleDateChange = (field, value) => {
+    console.log("ENTRO AQUI")
+
+
     setDateRange((prev) => ({ ...prev, [field]: value }));
     setTimeout(() => {
       if (mode == 'realtime' || plant == '' || dateRange.start == '' || dateRange.end == '') {
@@ -247,11 +305,16 @@ export default function TimeSeries() {
   };
 
   const showTags = () => {
-    return plant != '' && (mode == 'realtime' || (mode == 'range' && dateRange.start != '' && dateRange.end != ''));
+    return plant 
+      && (mode === 'realtime'  
+         || mode === 'range'); 
   };
-
   const showGraphic = () => {
     return selectedTags.length > 0
+  }
+
+  const handleTest = () => {
+    console.log('Entered test handler') 
   }
 
   return (
@@ -281,9 +344,13 @@ export default function TimeSeries() {
 <Box mt={2} /> 
 
 
- {isProcessSelected && (
-  <ExecutionSelectionForm executions={executions} handleExecutionChange={handleExecutionChange} />
+{isProcessSelected && (
+  <ExecutionSelectionForm
+    executions={executions}
+    onChange={handleExecutionChange}
+  />
 )}
+
 
 
 <Box mt={2} /> 
@@ -293,18 +360,54 @@ export default function TimeSeries() {
           justifyContent="space-between"
           alignItems="center"
         >      
-          
-          
+        <FormControl variant="outlined" margin="normal" sx={mode == 'range' ? { flexGrow: 1, mr: 1, opacity:0} : { flexGrow: 1, mr: 0, opacity:0}}>
+            <InputLabel>Modo</InputLabel>
+            <Select value={"realtime"} onChange={handleModeChange} label="Modo">
+              <MenuItem value="realtime">Tiempo real</MenuItem>
+              <MenuItem value="range">Delimitado</MenuItem>
+            </Select>
+          </FormControl>
 
+          {mode === "range"  &&
+          selectedExecution && 
+  selectedExecution.state === "stoped" && (
+            <Box display="flex" justifyContent="space-between" sx={{ flexGrow: 2 }}>
+              <TextField
+                label="Fecha inicio"
+                type="datetime-local"
+                value={formatDate(selectedExecution.startDate)}
+                onFocus={(e) => handleDateChange("start", formatDate(selectedExecution.startDate))}
 
-        
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin="normal"
+                sx={{ flexGrow: 1, mr: 1 }}
+                
+              />
+              
+              <TextField
+                label="Fecha fin"
+                type="datetime-local"
+                value={formatDate(selectedExecution.endDate)}
+                onFocus={(e) => handleDateChange("end", formatDate(selectedExecution.endDate))}
+
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin="normal"
+                sx={{ flexGrow: 1 }}
+              />
+            </Box>
+          )}
         </Box>
-
       </Box>
-      {(showGraphic() ) && (
+      {(showGraphic() && showTags()) && (
         <Box>
           <ReactECharts key={selectedTags.length} option={getOption()} style={{ height: '60vh' }} />
-          {mode == 'realtime' && (
+          {mode == 'realtime' &&
+          selectedExecution && 
+          selectedExecution.state === 'running' && (
             <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <IconButton onClick={handlePlayPause}>
                 {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
@@ -313,45 +416,43 @@ export default function TimeSeries() {
           )}
         </Box>
       )}
-      
-      
+      {showTags() && isPlaying && (
         <Box>
-        <Autocomplete
-          clearIcon={false}
-          multiple
-          disableCloseOnSelect
-          options={tags}
-          value={selectedTags}
-          onChange={handleTagChange}
-          getOptionLabel={(option) => plantState[plant]['tags'][option]}
-          renderTags={(value, getTagProps) =>
-            value.map((option, index) => (
-              <Chip
-                key={option}
-                label={plantState[plant]['tags'][option]}
-                color="primary"
-                onDelete={(_, clicked) => {
-                  if (clicked) {
-                    handleTagChange(null, value.filter((v) => v !== option));
-                  }
-                }}
-                {...getTagProps({ index })}
+          <Autocomplete
+            clearIcon={false}
+            multiple
+            disableCloseOnSelect
+            options={tags}
+            value={selectedTags}
+            onChange={handleTagChange}
+            getOptionLabel={(option) => plantState[plant]['tags'][option]}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip
+                  key={option}
+                  label={plantState[plant]['tags'][option]}
+                  color="primary"
+                  onDelete={(_, clicked) => {
+                    if (clicked) {
+                      handleTagChange(null, value.filter((v) => v !== option));
+                    }
+                  }}
+                  {...getTagProps({ index })}
+                />
+              ))
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                label="Selecciona los tags"
+                placeholder="Tags"
               />
-            ))
-          }
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              label="Selecciona los tags"
-              placeholder="Tags"
-            />
-          )}
-          fullWidth
-        />
-      </Box>
-      
-      
+            )}
+            fullWidth
+          />
+        </Box>
+      )}
     </Box>
   )
 }

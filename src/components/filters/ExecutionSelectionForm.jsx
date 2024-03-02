@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-function ExecutionSelectionForm({ executions }) {
+function ExecutionSelectionForm({ executions, onChange }) {
   const [selectedExecution, setSelectedExecution] = useState('');
 
   const handleChange = (event) => {
-    setSelectedExecution(event.target.value);
+    const selectedExecutionId = event.target.value;
+    const selectedExecutionDetails = executions.find(execution => execution.id === selectedExecutionId);
+
+    onChange(selectedExecutionDetails);
+    setSelectedExecution(selectedExecutionId);
   };
 
   return (
@@ -15,7 +19,7 @@ function ExecutionSelectionForm({ executions }) {
         labelId="execution-select-label"
         id="execution-select"
         value={selectedExecution}
-        onChange={handleChange}
+        onChange={handleChange}      
       >
         {executions.map((execution) => (
           <MenuItem key={execution.id} value={execution.id}>
