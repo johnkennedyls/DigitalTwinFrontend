@@ -34,9 +34,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
             );
             setMapSvgTag(newTags);
         } else {
-            // El SvgId no existe en la lista, puedes manejar esto de alguna manera si es necesario
             console.log(`SvgId ${value} no existe en la lista.`);
-            // O puedes optar por no hacer nada
         }
     };
 
