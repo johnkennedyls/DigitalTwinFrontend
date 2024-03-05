@@ -57,7 +57,7 @@ function DynamicTable({ tags, setTags, handleRemoveTag, handleChangeSvgId }) {
         }
         setTags(newTags);
         if (columnName === 'svgId') {
-            handleChangeSvgId(rowIndex, newValue);
+            handleChangeSvgId(newValue);
         }
     };
 
