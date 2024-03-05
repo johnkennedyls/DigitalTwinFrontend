@@ -13,6 +13,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
 
     useEffect(() => {
         console.log(mapSvgTag)
+        console.log(tags)
     }, [mapSvgTag]);
 
     const handleChange = useCallback((e, index) => {
@@ -28,15 +29,14 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                 ? {
                     ...tag,
                     svgId: value,
+                    idAsset: tags.find((tag) => tag.metadata && tag.metadata['svgId'] === value)?.assetId || '',
                     tagName: tags.find((tag) => tag.metadata && tag.metadata['svgId'] === value)?.name || '',
                 }
                 : tag
             );
             setMapSvgTag(newTags);
         } else {
-            // El SvgId no existe en la lista, puedes manejar esto de alguna manera si es necesario
             console.log(`SvgId ${value} no existe en la lista.`);
-            // O puedes optar por no hacer nada
         }
     };
 

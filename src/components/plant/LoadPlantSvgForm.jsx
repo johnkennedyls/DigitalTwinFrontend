@@ -47,10 +47,10 @@ export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, c
         const textElements = document.querySelectorAll('text[id^="text_"]');
         const ids = Array.from(textElements).map((textElement) => {
             let id = textElement.getAttribute('id');
-            if (prevMapSvgTag[id]) {
-                return { svgId: id, tagName: prevMapSvgTag[id].tagName }
-            }
-            return { svgId: id, tagName: '' };
+            if (prevMapSvgTag && prevMapSvgTag.some(tag => tag.svgId === id)) {
+                const matchingTag = prevMapSvgTag.find(tag => tag.svgId === id);
+                return { svgId: `${id}`, idAsset: matchingTag.idAsset, tagName: matchingTag.tagName };
+            }else return { svgId: id, tagName: '' };
         });
         return ids
     };
