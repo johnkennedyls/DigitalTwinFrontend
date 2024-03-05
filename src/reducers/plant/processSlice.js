@@ -4,9 +4,8 @@ export const processSlice = createSlice({
   name: 'processes',
   initialState: {},
   reducers: {
-    loadAllProcessesData: (state, action) => {
+    loadProcessesByPlant: (state, action) => {
       let newState = {};
-
       action.payload.forEach((process) => {
         newState[process.id] = {
           id: process.id,
@@ -26,6 +25,6 @@ export const processSlice = createSlice({
   },
 })
 
-export const { loadAllProcessesData, deleteProcess } = processSlice.actions
+export const { loadProcessesByPlant: loadProcessesByPlant, deleteProcess } = processSlice.actions
 
 export const processReducer = processSlice.reducer
