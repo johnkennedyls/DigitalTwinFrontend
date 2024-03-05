@@ -13,6 +13,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
 
     useEffect(() => {
         console.log(mapSvgTag)
+        console.log(tags)
     }, [mapSvgTag]);
 
     const handleChange = useCallback((e, index) => {
@@ -28,6 +29,7 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
                 ? {
                     ...tag,
                     svgId: value,
+                    idAsset: tags.find((tag) => tag.metadata && tag.metadata['svgId'] === value)?.assetId || '',
                     tagName: tags.find((tag) => tag.metadata && tag.metadata['svgId'] === value)?.name || '',
                 }
                 : tag

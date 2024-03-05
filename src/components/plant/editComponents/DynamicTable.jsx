@@ -108,7 +108,10 @@ function DynamicTable({ tags, setTags, handleRemoveTag, handleChangeSvgId }) {
                                     }}
                                 >
                                     <Tooltip title="Eliminar tag">
-                                        <IconButton onClick={() => handleRemoveTag(rowIndex)}>
+                                        <IconButton 
+                                            onClick={() => handleRemoveTag(rowIndex)}
+                                            size='small'
+                                        >
                                             <Delete />
                                         </IconButton>
                                     </Tooltip>
@@ -117,7 +120,6 @@ function DynamicTable({ tags, setTags, handleRemoveTag, handleChangeSvgId }) {
                                     editingCell?.rowIndex === rowIndex && editingCell?.columnIndex === columnIndex ? (
                                         <TextField
                                             inputRef={textFieldRef}
-                                            multiline
                                             size='medium'
                                             fullWidth
                                             value={(basicProperties.includes(column) && column !== 'svgId')? tags[rowIndex][tagProperties[columnIndex]] :
