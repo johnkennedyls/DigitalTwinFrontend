@@ -78,6 +78,19 @@ export const getExutionsByProcess = (id) => {
     });
 }
 
+export const getProcessByPlant = (assetId) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`processes/${assetId}/processes`)
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
 export const startProcess = (id) => {
     return new Promise((resolve, reject) => {
         axios.post(`processes/start/${id}`)
