@@ -21,11 +21,11 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
         setTags((prevTags) => prevTags.map((tag, i) => (i === index ? { ...tag, [name]: value } : tag)));
     }, []);
 
-    const handleChangeSvgId = (index, value) => {
+    const handleChangeSvgId = (value) => {
         const svgIdExists = mapSvgTag.some((tag) => tag.svgId === value);
         if (svgIdExists) {
             const newTags = mapSvgTag.map((tag, i) =>
-            i === index
+            tag.svgId === value
                 ? {
                     ...tag,
                     svgId: value,
