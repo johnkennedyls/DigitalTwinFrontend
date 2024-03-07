@@ -281,9 +281,13 @@ useEffect(() => {
         .then((data) => {
           const currentData = { date: [] }
           data.forEach((currentMeasures) => {
+            console.log(currentMeasures.measures)
             const tag = currentMeasures.assetId
             if (currentData[tag] == undefined) {
               currentData[tag] = []
+            }
+           if(currentMeasures.measures.length !== 0) {
+                currentMeasures.measures = currentMeasures.measures.slice().sort((a, b) => a.timeStamp - b.timeStamp);
             }
             currentMeasures.measures.forEach((current) => {
               const currentDate = moment(new Date(current.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
