@@ -31,6 +31,7 @@ import { getProcessByPlant } from "../../services/ProcessService";
 
 import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, SYMBOLS } from '../../services/utils/constants';
 import { use } from "echarts";
+import { set } from "date-fns";
 
 
 ECharts.use([
@@ -51,6 +52,8 @@ export default function TimeSeries() {
 
   // AXIOS DATA
   const [delimitedData, setDelimitedData] = useState({ date: [] })
+
+  
 
   // FORMS
   const [mode, setMode] = useState('');
@@ -89,7 +92,6 @@ export default function TimeSeries() {
 
 
   const handleProcessChange = (newProcess) => {
-    console.log(newProcess); // Check the structure of the newProcess object in the console
     setSelectedProcess(newProcess)
     getExecutionsOfProcess(newProcess.id)
     setIsProcessSelected(true);
@@ -113,39 +115,39 @@ export default function TimeSeries() {
       getProcessByPlant(plantId).then(setProcesses)
   }
 
-  useEffect(() => {
-    console.log(processes);
-  }, [processes]);
-
-  useEffect(() => {
-    console.log(selectedTags);
-  }, [processes]);
-
+  
   
 
   //EXECUTIONS
   const [executions, setExecutions] = useState([])
   const [selectedExecution, setSelectedExecution] = useState({})
 
-  const handleExecutionChange = (newExecution) => {  
-    setSelectedExecution(newExecution);
-    setDateRange({ start: formatDate(newExecution.startDate), end: formatDate(newExecution.endDate) });
-    if (newExecution.state === 'running') {
-      setMode('realtime');
-    }
-    if (newExecution.state === 'stoped') {
-      setMode('range');
+  const handleExecutionChange = (event) => {
+    const selectedExec = executions.find(exec => exec.id === event.target.value);
+    setSelectedExecution(selectedExec);
+    if (selectedExec) {
+      if (selectedExec.state === 'running') {
+        setMode('realtime');
+      } else if (selectedExec.state === 'stoped') {
+        setMode('range');
+      }
+      setDateRange({
+        start: formatDate(selectedExec.startDate),
+        end: formatDate(selectedExec.endDate)
+      });
     }
   };
+
+  useEffect(() => {
+    if(dateRange.start !== '' && dateRange.end !== '') {
+      handleDateChange();
+    }
+  }, [dateRange])
+
+  
   
 
-  useEffect(() => {
-    console.log(executions);
-  }, [executions]);
-
-  useEffect(() => {
-    console.log(selectedExecution);
-  }, [selectedExecution]);
+  
   
 
  const getExecutionsOfProcess = (processId) => {
@@ -165,9 +167,6 @@ const formatDate = (date) => {
   
 }
 
-useEffect(() => {
-  console.log(mode);
-}, [mode]);
 
  
 
@@ -179,7 +178,6 @@ useEffect(() => {
 
 
 useEffect(() => {
-  console.log(tags);
 }, [processes]);
   let currentOption = {}
 
@@ -265,11 +263,9 @@ useEffect(() => {
     setMode('realtime');
   };
 
-  const handleDateChange = (field, value) => {
-    console.log("ENTRO AQUI")
+  const handleDateChange = () => {
 
-
-    setDateRange((prev) => ({ ...prev, [field]: value }));
+    
     setTimeout(() => {
       if (mode == 'realtime' || plant == '' || dateRange.start == '' || dateRange.end == '') {
         return
@@ -281,10 +277,9 @@ useEffect(() => {
       if (startDateLong > endDateLong) {
         return
       }
-      console.log(plant, startDateLong, endDateLong)
       getDelimitedData(plant, startDateLong, endDateLong)
         .then((data) => {
-          const currentData = delimitedData
+          const currentData = { date: [] }
           data.forEach((currentMeasures) => {
             const tag = currentMeasures.assetId
             if (currentData[tag] == undefined) {
@@ -313,9 +308,7 @@ useEffect(() => {
     return selectedTags.length > 0
   }
 
-  const handleTest = () => {
-    console.log('Entered test handler') 
-  }
+  
 
   return (
     <Box style={{ maxWidth: '80%', margin: 'auto' }}>
@@ -343,12 +336,33 @@ useEffect(() => {
 
 <Box mt={2} /> 
 
-
 {isProcessSelected && (
-  <ExecutionSelectionForm
-    executions={executions}
-    onChange={handleExecutionChange}
-  />
+  <FormControl fullWidth>
+    <InputLabel id="execution-select-label">Ejecución</InputLabel>
+    <Select
+      labelId="execution-select-label"
+      id="execution-select"
+      value={selectedExecution.id}
+  onChange={handleExecutionChange}
+    >
+      {executions.map((execution) => {
+        const startDateL = moment(execution.startDate).format('DD/MM/YYYY HH:mm');
+        const endDateL = moment(execution.endDate).format('DD/MM/YYYY HH:mm');
+          if (execution.state === 'running') {
+            return (
+              <MenuItem key={execution.id} value={execution.id}>
+                {startDateL} - En curso
+              </MenuItem>
+            );
+          }
+        return (
+          <MenuItem key={execution.id} value={execution.id}>
+            {startDateL} - {endDateL}
+          </MenuItem>
+        );
+      })}
+    </Select>
+  </FormControl>
 )}
 
 
@@ -360,50 +374,16 @@ useEffect(() => {
           justifyContent="space-between"
           alignItems="center"
         >      
-        <FormControl variant="outlined" margin="normal" sx={mode == 'range' ? { flexGrow: 1, mr: 1, opacity:0} : { flexGrow: 1, mr: 0, opacity:0}}>
-            <InputLabel>Modo</InputLabel>
-            <Select value={"realtime"} onChange={handleModeChange} label="Modo">
-              <MenuItem value="realtime">Tiempo real</MenuItem>
-              <MenuItem value="range">Delimitado</MenuItem>
-            </Select>
-          </FormControl>
+        
 
-          {mode === "range"  &&
-          selectedExecution && 
-  selectedExecution.state === "stoped" && (
-            <Box display="flex" justifyContent="space-between" sx={{ flexGrow: 2 }}>
-              <TextField
-                label="Fecha inicio"
-                type="datetime-local"
-                value={formatDate(selectedExecution.startDate)}
-                onFocus={(e) => handleDateChange("start", formatDate(selectedExecution.startDate))}
 
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                margin="normal"
-                sx={{ flexGrow: 1, mr: 1 }}
-                
-              />
+         
               
-              <TextField
-                label="Fecha fin"
-                type="datetime-local"
-                value={formatDate(selectedExecution.endDate)}
-                onFocus={(e) => handleDateChange("end", formatDate(selectedExecution.endDate))}
-
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                margin="normal"
-                sx={{ flexGrow: 1 }}
-              />
-            </Box>
-          )}
+           
         </Box>
       </Box>
       {(showGraphic() && showTags()) && (
-        <Box>
+        <Box>                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
           <ReactECharts key={selectedTags.length} option={getOption()} style={{ height: '60vh' }} />
           {mode == 'realtime' &&
           selectedExecution && 
