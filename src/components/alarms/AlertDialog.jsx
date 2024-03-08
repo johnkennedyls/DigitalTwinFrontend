@@ -1,24 +1,24 @@
-import React from 'react';
+import React from 'react'
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography,
-} from '@mui/material';
+  Typography
+} from '@mui/material'
 
-function AlertDialog(props) {
-  const { open, onClose, onDelete, onConfirm, title, message, confirm } = props;
+function AlertDialog (props) {
+  const { open, onClose, onDelete, onConfirm, title, message, confirm } = props
 
   const handleAction = () => {
     if (confirm) {
-      onConfirm();
+      onConfirm()
     } else {
-      onDelete();
+      onDelete()
     }
-    onClose();
-  };
+    onClose()
+  }
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -31,11 +31,11 @@ function AlertDialog(props) {
           Cancelar
         </Button>
         <Button onClick={handleAction} color="secondary" autoFocus>
-          {confirm ? "Confirmar" : "Eliminar"}
+          {confirm ? 'Confirmar' : 'Eliminar'}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default AlertDialog;
+export default AlertDialog

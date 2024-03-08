@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { useState } from 'react'
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 
-function PlantSelectionForm({ plants }) {
-  const [selectedPlant, setSelectedPlant] = useState('');
+function PlantSelectionForm ({ plants }) {
+  const [selectedPlant, setSelectedPlant] = useState('')
 
   const handleChange = (event) => {
-    setSelectedPlant(event.target.value);
-  };
+    setSelectedPlant(event.target.value)
+  }
 
   return (
     <FormControl fullWidth>
@@ -24,7 +24,7 @@ function PlantSelectionForm({ plants }) {
         ))}
       </Select>
     </FormControl>
-  );
+  )
 }
 
-export default PlantSelectionForm;
+export default PlantSelectionForm

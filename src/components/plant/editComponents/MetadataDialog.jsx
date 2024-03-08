@@ -1,44 +1,45 @@
-import { useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@mui/material";
-import { toCamelCase } from "../../utils/TextConverter";
-import { ErrorAlert, SuccessAlert } from "../../utils/Alert";
+import { useState } from 'react'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
 
-function MetadataDialog({ tagProperties, setTagProperties }) {
-    const [open, setOpen] = useState(false);
-    const [error, setError] = useState(false);
-    const [metadata, setMetadata] = useState([]);
+import { toCamelCase } from '../../utils/TextConverter'
+import { ErrorAlert, SuccessAlert } from '../../utils/Alert'
 
-    const handleOpen = () => {
-        setOpen(true);
-    }
+function MetadataDialog ({ tagProperties, setTagProperties }) {
+  const [open, setOpen] = useState(false)
+  const [error, setError] = useState(false)
+  const [metadata, setMetadata] = useState([])
 
-    const handleClose = () => {
-        setOpen(false);
-        setError(false);
-        setMetadata('');
-    }
+  const handleOpen = () => {
+    setOpen(true)
+  }
 
-    const handleChangeMetadata = (e) => {
-        setMetadata(e.target.value);
-    }
+  const handleClose = () => {
+    setOpen(false)
+    setError(false)
+    setMetadata('')
+  }
 
-    const handleAddMetadata = () => {
-        if (metadata) {
-            if (!tagProperties.includes(toCamelCase(metadata))) {
-                setTagProperties([...tagProperties, toCamelCase(metadata)]);
-                setError(false);
-                setMetadata('');
-                SuccessAlert('Metadata agregada correctamente');
-            } else {
-                ErrorAlert('Ya existe una metadata con ese nombre');
-                setError(true);
-            }
-        } else setError(true);
-    }
+  const handleChangeMetadata = (e) => {
+    setMetadata(e.target.value)
+  }
 
-    return (
+  const handleAddMetadata = () => {
+    if (metadata) {
+      if (!tagProperties.includes(toCamelCase(metadata))) {
+        setTagProperties([...tagProperties, toCamelCase(metadata)])
+        setError(false)
+        setMetadata('')
+        SuccessAlert('Metadata agregada correctamente')
+      } else {
+        ErrorAlert('Ya existe una metadata con ese nombre')
+        setError(true)
+      }
+    } else setError(true)
+  }
+
+  return (
         <>
-            <Button variant="outlined" color="primary" onClick={handleOpen} sx={{ margin:1 }}>
+            <Button variant="outlined" color="primary" onClick={handleOpen} sx={{ margin: 1 }}>
                 Agregar Metadata
             </Button>
             <Dialog open={open} onClose={handleClose} style={{ minWidth: '80vw' }}>
@@ -67,7 +68,7 @@ function MetadataDialog({ tagProperties, setTagProperties }) {
                 </DialogActions>
             </Dialog>
         </>
-    )
+  )
 }
 
-export default MetadataDialog;
+export default MetadataDialog

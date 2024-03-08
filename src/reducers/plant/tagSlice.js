@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
+import moment from 'moment'
+
 import { LIMIT_STORED_DATA } from '../../config/config'
-import moment from 'moment';
 
 export const tagSlice = createSlice({
   name: 'tags',
@@ -12,7 +13,7 @@ export const tagSlice = createSlice({
       action.payload.forEach((tag) => {
         try {
           if (!state[tag.assetId]) {
-            state[tag.assetId] = [];
+            state[tag.assetId] = []
           }
 
           const currentDate = moment(new Date(tag.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
@@ -28,14 +29,13 @@ export const tagSlice = createSlice({
         } catch (err) {
           console.err(err)
         }
-
-      });
+      })
 
       if (state.date.length > LIMIT_STORED_DATA) {
         state.date.shift()
       }
     }
-  },
+  }
 })
 
 export const { updateTagData } = tagSlice.actions

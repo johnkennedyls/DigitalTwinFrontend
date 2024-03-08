@@ -1,45 +1,44 @@
-import { useEffect, useState } from 'react';
-import { Button, TextField, Grid, Paper, Typography, Avatar } from '@mui/material';
-
-import 'react-image-crop/dist/ReactCrop.css';
-import ImageIcon from '@mui/icons-material/Image';
-import PropTypes from "prop-types";
+import { useEffect, useState } from 'react'
+import { Button, TextField, Grid, Paper, Typography, Avatar } from '@mui/material'
+import 'react-image-crop/dist/ReactCrop.css'
+import ImageIcon from '@mui/icons-material/Image'
+import PropTypes from 'prop-types'
 
 const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPhoto = null, plantIp = '', plantSlot = '', processLabel = 'add' }) => {
-  const [plant, setPlant] = useState({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto, plantIp: plantIp, plantSlot: plantSlot });
-  const [valid, setValid] = useState(false);
+  const [plant, setPlant] = useState({ plantName, plantDescription, plantPhoto, plantIp, plantSlot })
+  const [valid, setValid] = useState(false)
 
   useEffect(() => {
-   setPlant({ plantName: plantName, plantDescription: plantDescription, plantPhoto: plantPhoto, plantIp: plantIp, plantSlot: plantSlot })
+    setPlant({ plantName, plantDescription, plantPhoto, plantIp, plantSlot })
   }, [plantName, plantDescription, plantPhoto, plantIp, plantSlot])
   // Elemento nombre de boton
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPlant({ ...plant, [name]: value });
-  };
+    const { name, value } = e.target
+    setPlant({ ...plant, [name]: value })
+  }
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      setPlant({ ...plant, plantPhoto: reader.result });
-    });
-    reader.readAsDataURL(file);
-  };
+    const file = e.target.files[0]
+    const reader = new FileReader()
+    reader.addEventListener('load', () => {
+      setPlant({ ...plant, plantPhoto: reader.result })
+    })
+    reader.readAsDataURL(file)
+  }
 
   const handleSubmit = (e) => {
     onNext(plant)
-    e.preventDefault();
-  };
+    e.preventDefault()
+  }
 
   const isValid = () => {
-    return plant.plantName !== '' && plant.plantDescription !== '' && plant.plantIp !== '' && plant.plantSlot !== '' && plant.plantPhoto !== null;
-  };
+    return plant.plantName !== '' && plant.plantDescription !== '' && plant.plantIp !== '' && plant.plantSlot !== '' && plant.plantPhoto !== null
+  }
 
   useEffect(() => {
-    setValid(isValid());
-  }, [plant]);
+    setValid(isValid())
+  }, [plant])
 
   return (
     <Grid container justifyContent="center">
@@ -49,7 +48,7 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
             {processLabel === 'add' ? 'Agregar planta' : 'Editar planta'}
           </Typography>
           <Avatar src={plant.plantPhoto} variant="rounded" style={{ width: '7vw', height: '7vw', margin: '15px auto' }} />
-         
+
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <label htmlFor="image-upload">
               <Button variant="outlined" component="span" startIcon={<ImageIcon />}>
@@ -58,7 +57,7 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
               </Button>
             </label>
             </div>
-         
+
           <form onSubmit={handleSubmit}>
             <TextField
               label="Nombre"
@@ -105,7 +104,6 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
               onChange={handleFileChange}
               style={{ display: 'none' }}
             />
-           
 
             <Button disabled={!valid} type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
               Siguiente
@@ -114,8 +112,8 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
         </Paper>
       </Grid>
     </Grid>
-  );
-};
+  )
+}
 
 MainPlantForm.propTypes = {
   onNext: PropTypes.func.isRequired,
@@ -125,7 +123,7 @@ MainPlantForm.propTypes = {
   plantIp: PropTypes.string,
   plantSlot: PropTypes.string,
   processLabel: PropTypes.string,
-  nameButtom: PropTypes.string,
-};
+  nameButtom: PropTypes.string
+}
 
-export default MainPlantForm;
+export default MainPlantForm

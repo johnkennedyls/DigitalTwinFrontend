@@ -1,9 +1,9 @@
-import * as ECharts from "echarts/core";
-import ReactECharts from 'echarts-for-react';
-import moment from 'moment';
-import { ToolboxComponent, DataZoomComponent, AxisPointerComponent, SingleAxisComponent } from 'echarts/components';
-import { LineChart } from 'echarts/charts';
-import { useState, useEffect } from "react";
+import * as ECharts from 'echarts/core'
+import ReactECharts from 'echarts-for-react'
+import moment from 'moment'
+import { ToolboxComponent, DataZoomComponent, AxisPointerComponent, SingleAxisComponent } from 'echarts/components'
+import { LineChart } from 'echarts/charts'
+import { useState, useEffect } from 'react'
 import {
   FormControl,
   InputLabel,
@@ -12,27 +12,18 @@ import {
   Box,
   TextField,
   Chip
-} from "@mui/material";
+  , Autocomplete
+} from '@mui/material'
+import IconButton from '@mui/material/IconButton'
+import PauseIcon from '@mui/icons-material/Pause'
+import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import { useSelector } from 'react-redux'
 
-import IconButton from '@mui/material/IconButton';
-import PauseIcon from '@mui/icons-material/Pause';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-
-import { Autocomplete } from '@mui/material'
-import { useSelector } from 'react-redux';
-import { deepCopy } from '../../services/utils/funtions';
-
-import { getDelimitedData } from '../../services/PlantService';
-import {getProcessesData} from '../../services/ProcessService';
-import ProcessSelectionForm from '../filters/ProcessSelectionForm';
-import ExecutionSelectionForm from '../filters/ExecutionSelectionForm';
-import { getExutionsByProcess } from "../../services/ProcessService";
-import { getProcessByPlant } from "../../services/ProcessService";
-
-import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, SYMBOLS } from '../../services/utils/constants';
-import { use } from "echarts";
-import { set } from "date-fns";
-
+import { deepCopy } from '../../services/utils/funtions'
+import { getDelimitedData } from '../../services/PlantService'
+import { getExutionsByProcess, getProcessByPlant } from '../../services/ProcessService'
+import ProcessSelectionForm from '../filters/ProcessSelectionForm'
+import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, SYMBOLS } from '../../services/utils/constants'
 
 ECharts.use([
   ToolboxComponent,
@@ -40,145 +31,107 @@ ECharts.use([
   AxisPointerComponent,
   LineChart,
   SingleAxisComponent
-]);
+])
 
-export default function TimeSeries() {
-
+export default function TimeSeries () {
   // REDUX DATA
   const plantState = useSelector(state => state.plants)
   const tagsState = useSelector(state => state.tags)
-  const processState = useSelector(state => state.processes)
-  const executionState = useSelector(state => state.executions)
 
   // AXIOS DATA
   const [delimitedData, setDelimitedData] = useState({ date: [] })
 
-
-
   // FORMS
-  const [mode, setMode] = useState('');
-  const [dateRange, setDateRange] = useState({ start: "", end: "" });
+  const [mode, setMode] = useState('')
+  const [dateRange, setDateRange] = useState({ start: '', end: '' })
 
   // PLANTS
-  const [plant, setPlant] = useState("");
+  const [plant, setPlant] = useState('')
   const [plants, setPlants] = useState([])
 
   useEffect(() => {
     const currentPlants = Object.keys(plantState)
     setPlants(currentPlants)
-  }, [plantState]);
+  }, [plantState])
 
   useEffect(() => {
-    if (plant === "") {
+    if (plant === '') {
       return
     }
     const data = plantState[plant].tags
     const currentTags = Object.keys(data)
     setSelectedTags([])
     setTags(currentTags)
-  }, [plant, plantState]);
+  }, [plant, plantState])
 
   // TAGS
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [tags, setTags] = useState([]);
-
-
-
+  const [selectedTags, setSelectedTags] = useState([])
+  const [tags, setTags] = useState([])
 
   // PROCESSES
   const [processes, setProcesses] = useState([])
   const [selectedProcess, setSelectedProcess] = useState({})
-  const [isProcessSelected, setIsProcessSelected] = useState(false);
-
+  const [isProcessSelected, setIsProcessSelected] = useState(false)
 
   const handleProcessChange = (newProcess) => {
     setSelectedProcess(newProcess)
     getExecutionsOfProcess(newProcess.id)
-    setIsProcessSelected(true);
-    setTags([]); // Reset tags when a new process is selected
-
-
+    setIsProcessSelected(true)
+    setTags([]) // Reset tags when a new process is selected
   }
 
   useEffect(() => {
     if (isProcessSelected) {
       // Update the tags array when a process is selected
-      const data = plantState[plant].tags;
-      const currentTags = Object.keys(data);
-      setSelectedTags([]);
-      setTags(currentTags);
+      const data = plantState[plant].tags
+      const currentTags = Object.keys(data)
+      setSelectedTags([])
+      setTags(currentTags)
     }
-  }, [isProcessSelected, plant, plantState]);
+  }, [isProcessSelected, plant, plantState])
 
   const getProcessesOfPlant = (plantId) => {
-
-      getProcessByPlant(plantId).then(setProcesses)
+    getProcessByPlant(plantId).then(setProcesses)
   }
 
-
-
-
-  //EXECUTIONS
+  // EXECUTIONS
   const [executions, setExecutions] = useState([])
   const [selectedExecution, setSelectedExecution] = useState({})
 
   const handleExecutionChange = (event) => {
-    const selectedExec = executions.find(exec => exec.id === event.target.value);
-    setSelectedExecution(selectedExec);
+    const selectedExec = executions.find(exec => exec.id === event.target.value)
+    setSelectedExecution(selectedExec)
     if (selectedExec) {
       if (selectedExec.state === 'running') {
-        setMode('realtime');
+        setMode('realtime')
       } else if (selectedExec.state === 'stoped') {
-        setMode('range');
+        setMode('range')
       }
       setDateRange({
         start: formatDate(selectedExec.startDate),
         end: formatDate(selectedExec.endDate)
-      });
+      })
     }
-  };
+  }
 
   useEffect(() => {
-    if(dateRange.start !== '' && dateRange.end !== '') {
-      handleDateChange();
+    if (dateRange.start !== '' && dateRange.end !== '') {
+      handleDateChange()
     }
   }, [dateRange])
 
-
-
-
-
-
-
- const getExecutionsOfProcess = (processId) => {
+  const getExecutionsOfProcess = (processId) => {
     getExutionsByProcess(processId).then(setExecutions)
+  }
 
- }
+  const formatDate = (date) => {
+    return moment(date).format('YYYY-MM-DDTHH:mm')
+  }
 
+  // Executions for graphics
 
-
-
-const isExecutionRunning = selectedExecution.state === 'running';
-
-
-
-const formatDate = (date) => {
-  return moment(date).format('YYYY-MM-DDTHH:mm');
-
-}
-
-
-
-
-
-
-
-
-//Executions for graphics
-
-
-useEffect(() => {
-}, [processes]);
+  useEffect(() => {
+  }, [processes])
   let currentOption = {}
 
   const getOption = () => {
@@ -189,15 +142,15 @@ useEffect(() => {
     const option = deepCopy(DEFAULT_TIME_SERIES_OPTION)
     option.legend.data = []
     selectedTags.forEach((tag) => {
-      option.legend.data.push(plantState[plant]['tags'][tag])
+      option.legend.data.push(plantState[plant].tags[tag])
     })
-    option.grid['left'] = `${OFFSET * selectedTags.length}px`
+    option.grid.left = `${OFFSET * selectedTags.length}px`
 
     option.xAxis[0].data = mode === 'realtime' ? tagsState.date : delimitedData.date
 
     for (let i = 0; i < selectedTags.length; i++) {
       const tag = selectedTags[i]
-      const tagName = plantState[plant]['tags'][tag]
+      const tagName = plantState[plant].tags[tag]
       const currentYaxis = deepCopy(DEFAULT_Y_AXIS_FORMAT)
       currentYaxis.offset = OFFSET * i
       currentYaxis.axisLine.lineStyle.color = option.color[i]
@@ -229,45 +182,36 @@ useEffect(() => {
       // };
       currentSeries.data = mode === 'realtime' ? tagsState[tag] : delimitedData[tag]
       currentSeries.symbol = SYMBOLS[i % SYMBOLS.length]
-      if (i != 0) {
-        currentSeries['yAxisIndex'] = i
+      if (i !== 0) {
+        currentSeries.yAxisIndex = i
       }
       option.series.push(currentSeries)
-
     }
 
     currentOption = option
-    return option;
+    return option
   }
 
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(true)
 
   const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
-  };
+    setIsPlaying(!isPlaying)
+  }
 
   const handleTagChange = (event, value) => {
-    setSelectedTags(value);
-  };
+    setSelectedTags(value)
+  }
 
   const handlePlantChange = (event) => {
     setSelectedTags([])
-    setPlant(event.target.value);
+    setPlant(event.target.value)
 
     getProcessesOfPlant(plantState[event.target.value].assetId)
-
-  };
-
-  const handleModeChange = (event) => {
-    setIsPlaying(true)
-    setMode('realtime');
-  };
+  }
 
   const handleDateChange = () => {
-
-
     setTimeout(() => {
-      if (mode == 'realtime' || plant == '' || dateRange.start == '' || dateRange.end == '') {
+      if (mode === 'realtime' || plant === '' || dateRange.start === '' || dateRange.end === '') {
         return
       }
 
@@ -283,11 +227,11 @@ useEffect(() => {
           data.forEach((currentMeasures) => {
             console.log(currentMeasures.measures)
             const tag = currentMeasures.assetId
-            if (currentData[tag] == undefined) {
+            if (currentData[tag] === undefined) {
               currentData[tag] = []
             }
-           if(currentMeasures.measures.length !== 0) {
-                currentMeasures.measures = currentMeasures.measures.slice().sort((a, b) => a.timeStamp - b.timeStamp);
+            if (currentMeasures.measures.length !== 0) {
+              currentMeasures.measures = currentMeasures.measures.slice().sort((a, b) => a.timeStamp - b.timeStamp)
             }
             currentMeasures.measures.forEach((current) => {
               const currentDate = moment(new Date(current.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
@@ -298,21 +242,19 @@ useEffect(() => {
           setDelimitedData(currentData)
         })
         .catch((error) => {
-          console.error(error);
-        });
+          console.error(error)
+        })
     }, 500)
-  };
+  }
 
   const showTags = () => {
-    return plant
-      && (mode === 'realtime'
-         || mode === 'range');
-  };
+    return plant &&
+      (mode === 'realtime' ||
+         mode === 'range')
+  }
   const showGraphic = () => {
     return selectedTags.length > 0
   }
-
-
 
   return (
     <Box style={{ maxWidth: '80%', margin: 'auto' }}>
@@ -322,7 +264,7 @@ useEffect(() => {
           <Select value={plant} onChange={handlePlantChange} label="Planta">
             {plants.map((currentPlant) => (
               <MenuItem key={currentPlant} value={currentPlant}>
-                {plantState[currentPlant]['plantName']}
+                {plantState[currentPlant].plantName}
               </MenuItem>
             ))}
           </Select>
@@ -350,26 +292,24 @@ useEffect(() => {
   onChange={handleExecutionChange}
     >
       {executions.map((execution) => {
-        const startDateL = moment(execution.startDate).format('DD/MM/YYYY HH:mm');
-        const endDateL = moment(execution.endDate).format('DD/MM/YYYY HH:mm');
-          if (execution.state === 'running') {
-            return (
+        const startDateL = moment(execution.startDate).format('DD/MM/YYYY HH:mm')
+        const endDateL = moment(execution.endDate).format('DD/MM/YYYY HH:mm')
+        if (execution.state === 'running') {
+          return (
               <MenuItem key={execution.id} value={execution.id}>
                 {startDateL} - En curso
               </MenuItem>
-            );
-          }
+          )
+        }
         return (
           <MenuItem key={execution.id} value={execution.id}>
             {startDateL} - {endDateL}
           </MenuItem>
-        );
+        )
       })}
     </Select>
   </FormControl>
 )}
-
-
 
 <Box mt={2} />
         <Box
@@ -379,17 +319,12 @@ useEffect(() => {
           alignItems="center"
         >
 
-
-
-
-
-
         </Box>
       </Box>
       {(showGraphic() && showTags()) && (
         <Box>
           <ReactECharts key={selectedTags.length} option={getOption()} style={{ height: '60vh' }} />
-          {mode == 'realtime' &&
+          {mode === 'realtime' &&
           selectedExecution &&
           selectedExecution.state === 'running' && (
             <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -409,16 +344,16 @@ useEffect(() => {
             options={tags}
             value={selectedTags}
             onChange={handleTagChange}
-            getOptionLabel={(option) => plantState[plant]['tags'][option]}
+            getOptionLabel={(option) => plantState[plant].tags[option]}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
                 <Chip
                   key={option}
-                  label={plantState[plant]['tags'][option]}
+                  label={plantState[plant].tags[option]}
                   color="primary"
                   onDelete={(_, clicked) => {
                     if (clicked) {
-                      handleTagChange(null, value.filter((v) => v !== option));
+                      handleTagChange(null, value.filter((v) => v !== option))
                     }
                   }}
                   {...getTagProps({ index })}

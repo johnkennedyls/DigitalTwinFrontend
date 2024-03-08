@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { useState } from 'react'
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 
 const TagSelectionForm = ({ tags }) => {
-  const [selectedTag, setSelectedTag] = useState('');
+  const [selectedTag, setSelectedTag] = useState('')
 
   const handleTagChange = (event) => {
-    setSelectedTag(event.target.value);
-  };
+    setSelectedTag(event.target.value)
+  }
 
   return (
     <FormControl fullWidth variant="outlined" margin="normal">
@@ -19,7 +19,7 @@ const TagSelectionForm = ({ tags }) => {
         ))}
       </Select>
     </FormControl>
-  );
-};
+  )
+}
 
-export default TagSelectionForm;
+export default TagSelectionForm

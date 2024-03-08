@@ -1,60 +1,60 @@
-import  { useState } from 'react';
-import { useHistory } from "react-router-dom";
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Logout from '@mui/icons-material/Logout';
-import { Menu,MenuItem} from '@mui/material';
-import icesi_logo from './assets/images/ICESI_logo.png';
-import logobioinc from './assets/logo_bioinc.png';
-import './MainToolbar.css';
+import { useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Logout from '@mui/icons-material/Logout'
+import { Menu, MenuItem } from '@mui/material'
 
+import icesiLogo from './assets/images/ICESI_logo.png'
+import logobioinc from './assets/logo_bioinc.png'
+import './MainToolbar.css'
 
 // import { hasAnyRole } from "./services/utils/funtions";
 
-export default function MainToolbar() {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const history = useHistory();
+export default function MainToolbar () {
+  const [anchorEl, setAnchorEl] = useState(null)
+  const history = useHistory()
 
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   const plantNavigate = (e) => {
-    e.preventDefault();
-    history.push(`/manage-plant`);
+    e.preventDefault()
+    history.push('/manage-plant')
   }
 
   const processNavigate = (e) => {
-    e.preventDefault();
-    history.push(`/manage-process`);
+    e.preventDefault()
+    history.push('/manage-process')
   }
 
   const typeAlarmNavigate = (e) => {
-    e.preventDefault();
-    history.push(`/manage-type-alarm`);
+    e.preventDefault()
+    history.push('/manage-type-alarm')
   }
 
   const alarmNavigate = (e) => {
-    e.preventDefault();
-    history.push(`/navegator-alarm-active`);
+    e.preventDefault()
+    history.push('/navegator-alarm-active')
   }
 
   const chartNavigate = (e) => {
-    e.preventDefault();
-    history.push(`/manage-charts`);
+    e.preventDefault()
+    history.push('/manage-charts')
   }
 
   const logout = (e) => {
-    e.preventDefault();
-    window.localStorage.removeItem('access_token');
-    history.push('/');
+    e.preventDefault()
+    window.localStorage.removeItem('access_token')
+    history.push('/')
   }
 
   return (
@@ -62,7 +62,7 @@ export default function MainToolbar() {
       <AppBar position="static" className="appBar">
       <Toolbar>
         <Box className="logoBox">
-          <img src={icesi_logo} alt="Icesi Logo" className="logo" />
+          <img src={icesiLogo} alt="Icesi Logo" className="logo" />
           <Box className="separatorBox">
             <div className="separator" />
           </Box>
@@ -117,5 +117,5 @@ export default function MainToolbar() {
       </Toolbar>
     </AppBar>
     </>
-  );
+  )
 }

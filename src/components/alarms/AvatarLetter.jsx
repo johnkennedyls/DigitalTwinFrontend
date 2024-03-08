@@ -1,32 +1,32 @@
-import React from 'react';
-import Avatar from '@mui/material/Avatar';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import getAvatarColor from '../../services/utils/ColorsAvatar';
-import { blue} from '@mui/material/colors';
+import React from 'react'
+import Avatar from '@mui/material/Avatar'
+import AvatarGroup from '@mui/material/AvatarGroup'
+import { blue } from '@mui/material/colors'
 
+import getAvatarColor from '../../services/utils/ColorsAvatar'
 
-function AvatarLetter({ names }) {
-  const displayedNames = names.slice(0, 2);
-  const remainingNames = names.slice(2);
+function AvatarLetter ({ names }) {
+  const displayedNames = names.slice(0, 2)
+  const remainingNames = names.slice(2)
   return (
     <AvatarGroup max={3}>
       {displayedNames.map((avatar, index) => {
-        console.log("OLAA",avatar)
-        const letter = avatar[0];
-        const color = getAvatarColor(avatar[0]);
+        console.log('OLAA', avatar)
+        const letter = avatar[0]
+        const color = getAvatarColor(avatar[0])
 
         return (
-          <Avatar 
-            key={index} 
+          <Avatar
+            key={index}
             sx={{ bgcolor: color }}
             title={avatar}
           >
             {letter}
           </Avatar>
-        );
+        )
       })}
       {remainingNames.length > 0 && (
-        <Avatar 
+        <Avatar
         sx={{ bgcolor: blue }}
           title={remainingNames.map(name => name).join(', ')}
         >
@@ -34,7 +34,7 @@ function AvatarLetter({ names }) {
         </Avatar>
       )}
     </AvatarGroup>
-  );
+  )
 }
 
 export default AvatarLetter

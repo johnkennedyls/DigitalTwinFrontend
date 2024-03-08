@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import {
   Box,
   Button,
@@ -9,66 +9,66 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { PlayCircleFilled, PauseCircleFilled, StopRounded } from '@mui/icons-material';
-import AddIcon from '@mui/icons-material/Add';
-import { DataGrid } from '@mui/x-data-grid';
+} from '@mui/material'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { PlayCircleFilled, PauseCircleFilled, StopRounded } from '@mui/icons-material'
+import AddIcon from '@mui/icons-material/Add'
+import { DataGrid } from '@mui/x-data-grid'
 
-import { getProcessesData, deleteProcess, startProcess, pauseProcess, stopProcess } from './services/ProcessService';
+import { getProcessesData, deleteProcess, startProcess, pauseProcess, stopProcess } from './services/ProcessService'
 
 const PROCESS_STATE = {
   STOPPED: 0,
   RUNNING: 1,
-  PAUSED: 2,
+  PAUSED: 2
 }
 
-export default function ListProcess() {
-  const [processes, setProcesses] = useState([]);
-  const [processState, setProcessState] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
+export default function ListProcess () {
+  const [processes, setProcesses] = useState([])
+  const [processState, setProcessState] = useState([])
+  const [openDialog, setOpenDialog] = useState(false)
+  const [deleteId, setDeleteId] = useState(null)
 
-  const history = useHistory();
+  const history = useHistory()
 
   const loadProcessData = () => {
     getProcessesData()
       .then((data) => {
-        setProcesses(data);
+        setProcesses(data)
         data.forEach((process) => {
           setProcessState((prevState) => {
             return {
               ...prevState,
-              [process.id]: process.state,
+              [process.id]: process.state
             }
           })
-        });
+        })
       })
       .catch((error) => {
-        console.error(error);
-      });
+        console.error(error)
+      })
   }
 
   useEffect(() => {
-    loadProcessData();
-  }, []);
+    loadProcessData()
+  }, [])
 
   const handleAdd = () => {
-    history.push("add-process");
-  };
+    history.push('add-process')
+  }
 
   const handlePlay = (id) => {
     startProcess(id).then(() => {
       setProcessState((prevState) => {
         return {
           ...prevState,
-          [id]: PROCESS_STATE.RUNNING,
+          [id]: PROCESS_STATE.RUNNING
         }
       })
     }).catch((error) => {
-      console.error(error);
-    });
+      console.error(error)
+    })
   }
 
   const handlePause = (id) => {
@@ -76,12 +76,12 @@ export default function ListProcess() {
       setProcessState((prevState) => {
         return {
           ...prevState,
-          [id]: PROCESS_STATE.PAUSED,
+          [id]: PROCESS_STATE.PAUSED
         }
       })
     }).catch((error) => {
-      console.error(error);
-    });
+      console.error(error)
+    })
   }
 
   const handleStop = (id) => {
@@ -89,42 +89,42 @@ export default function ListProcess() {
       setProcessState((prevState) => {
         return {
           ...prevState,
-          [id]: PROCESS_STATE.STOPPED,
+          [id]: PROCESS_STATE.STOPPED
         }
       })
     }).catch((error) => {
-      console.error(error);
-    });
+      console.error(error)
+    })
   }
 
   const handleSeeExecutions = (param, event) => {
-    if (event.target.closest('[role="cell"]').dataset.field === "actions") {
-      return;
+    if (event.target.closest('[role="cell"]').dataset.field === 'actions') {
+      return
     }
-    history.push(`process-executions/${param.row.id}`);
+    history.push(`process-executions/${param.row.id}`)
   }
 
   const handleEdit = (id) => {
-    history.push(`/edit-process/${id}`);
-  };
+    history.push(`/edit-process/${id}`)
+  }
 
   const handleDelete = (id) => {
-    setDeleteId(id);
-    setOpenDialog(true);
-  };
+    setDeleteId(id)
+    setOpenDialog(true)
+  }
 
   const handleClose = () => {
-    setOpenDialog(false);
-  };
+    setOpenDialog(false)
+  }
 
   const confirmDelete = () => {
-    setOpenDialog(false);
+    setOpenDialog(false)
     deleteProcess(deleteId).then(() => {
-      loadProcessData();
+      loadProcessData()
     }).catch((error) => {
-      console.error(error);
-    });
-  };
+      console.error(error)
+    })
+  }
 
   const columns = [
     { field: 'name', headerName: 'Nombre', width: 200 },
@@ -134,19 +134,19 @@ export default function ListProcess() {
       headerName: 'Equipos',
       flex: 1,
       sortable: false,
-      valueGetter: (params) => params.row.assets.map(asset => asset.name).join(", "),
+      valueGetter: (params) => params.row.assets.map(asset => asset.name).join(', '),
       renderCell: (params) => {
-        const assetNames = params.value.split(", ");
-        const displayAssets = assetNames.slice(0, 3).join(", ");
+        const assetNames = params.value.split(', ')
+        const displayAssets = assetNames.slice(0, 3).join(', ')
         return (
           <span>
-            {assetNames.length > 3 ? 
-              `${displayAssets}, ...` : 
-              displayAssets
+            {assetNames.length > 3
+              ? `${displayAssets}, ...`
+              : displayAssets
             }
           </span>
-        );
-      },
+        )
+      }
     },
     {
       field: 'actions',
@@ -191,10 +191,10 @@ export default function ListProcess() {
               <DeleteIcon />
             </IconButton>
           </div>
-        );
-      },
-    },
-  ];
+        )
+      }
+    }
+  ]
 
   return (
     <Box m={3} maxWidth={1000} mx="auto">
@@ -224,7 +224,7 @@ export default function ListProcess() {
         autoHeight
         disableSelectionOnClick
         localeText={{
-          noRowsLabel: 'No hay elementos disponibles',
+          noRowsLabel: 'No hay elementos disponibles'
         }}
         className="clickable-row"
         onRowClick={handleSeeExecutions}
@@ -240,5 +240,5 @@ export default function ListProcess() {
         </Button>
       </Box>
     </Box>
-  );
+  )
 }

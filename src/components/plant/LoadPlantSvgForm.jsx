@@ -1,61 +1,61 @@
-import { useState } from 'react';
-import { Button, Typography, Grid, Paper, Box } from '@mui/material';
-import PropTypes from "prop-types";
-import ReactMde from "react-mde";
-import ReactMarkdown from "react-markdown";
+import { useState } from 'react'
+import { Button, Typography, Grid, Paper, Box } from '@mui/material'
+import PropTypes from 'prop-types'
+import ReactMde from 'react-mde'
+import ReactMarkdown from 'react-markdown'
 
-import { isValidSVG } from './services/utils/funtions';
+import { isValidSVG } from './services/utils/funtions'
 
-import 'react-mde/lib/styles/css/react-mde-all.css';
+import 'react-mde/lib/styles/css/react-mde-all.css'
 
 import './styles/LoadPlantSvg.css'
 
-export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, conventions = "", prevMapSvgTag = {} }) {
-    const [previewUrl, setPreviewUrl] = useState(svgImageUrl);
-    const [value, setValue] = useState(conventions);
-    const [selectedTab, setSelectedTab] = useState("write");
+export default function LoadPlantSvgForm ({ onNext, onBack, svgImageUrl = null, conventions = '', prevMapSvgTag = {} }) {
+  const [previewUrl, setPreviewUrl] = useState(svgImageUrl)
+  const [value, setValue] = useState(conventions)
+  const [selectedTab, setSelectedTab] = useState('write')
 
-    const handleImageChange = (event) => {
-        const file = event.target.files[0];
-        if (file && file.type === 'image/svg+xml') {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                if (!isValidSVG(e.target.result)) {
-                    alert('El archivo no es un SVG válido');
-                    return;
-                }
-                setPreviewUrl(e.target.result);
-                parseTextIds();
-            };
-            reader.readAsText(file);
-        } else {
-            setPreviewUrl(null);
+  const handleImageChange = (event) => {
+    const file = event.target.files[0]
+    if (file && file.type === 'image/svg+xml') {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        if (!isValidSVG(e.target.result)) {
+          alert('El archivo no es un SVG válido')
+          return
         }
-    };
-
-    const handleSubmit = (e) => {
-        console.log("SDAD")
-        onNext({ svgImage: previewUrl, mapSvgTag: parseTextIds(), conventions: value });
-        e.preventDefault();
+        setPreviewUrl(e.target.result)
+        parseTextIds()
+      }
+      reader.readAsText(file)
+    } else {
+      setPreviewUrl(null)
     }
+  }
 
-    const handleBack = () => {
-        onBack({ svgImage: previewUrl, mapSvgTag: parseTextIds(), conventions: value });
-    }
+  const handleSubmit = (e) => {
+    console.log('SDAD')
+    onNext({ svgImage: previewUrl, mapSvgTag: parseTextIds(), conventions: value })
+    e.preventDefault()
+  }
 
-    const parseTextIds = () => {
-        const textElements = document.querySelectorAll('text[id^="text_"]');
-        const ids = Array.from(textElements).map((textElement) => {
-            let id = textElement.getAttribute('id');
-            if (prevMapSvgTag && prevMapSvgTag.some(tag => tag.svgId === id)) {
-                const matchingTag = prevMapSvgTag.find(tag => tag.svgId === id);
-                return { svgId: `${id}`, idAsset: matchingTag.idAsset, tagName: matchingTag.tagName };
-            }else return { svgId: id, tagName: '' };
-        });
-        return ids
-    };
+  const handleBack = () => {
+    onBack({ svgImage: previewUrl, mapSvgTag: parseTextIds(), conventions: value })
+  }
 
-    return (
+  const parseTextIds = () => {
+    const textElements = document.querySelectorAll('text[id^="text_"]')
+    const ids = Array.from(textElements).map((textElement) => {
+      const id = textElement.getAttribute('id')
+      if (prevMapSvgTag && prevMapSvgTag.some(tag => tag.svgId === id)) {
+        const matchingTag = prevMapSvgTag.find(tag => tag.svgId === id)
+        return { svgId: `${id}`, idAsset: matchingTag.idAsset, tagName: matchingTag.tagName }
+      } else return { svgId: id, tagName: '' }
+    })
+    return ids
+  }
+
+  return (
         <Grid container justifyContent="center">
             <Grid item xs={12} sm={10} md={6} >
                 <form >
@@ -95,7 +95,7 @@ export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, c
                                 selectedTab={selectedTab}
                                 onTabChange={setSelectedTab}
                                 generateMarkdownPreview={markdown =>
-                                    Promise.resolve(<ReactMarkdown >{markdown}</ReactMarkdown>)
+                                  Promise.resolve(<ReactMarkdown >{markdown}</ReactMarkdown>)
                                 }
                             />
                         </Grid>
@@ -115,14 +115,14 @@ export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, c
                 </form>
             </Grid>
         </Grid>
-    )
+  )
 }
 
 LoadPlantSvgForm.propTypes = {
-    onNext: PropTypes.func.isRequired,
-    onBack: PropTypes.func.isRequired,
-    svgImageUrl: PropTypes.string,
-    conventions: PropTypes.string,
-    processLabel: PropTypes.string,
-    prevMapSvgTag: PropTypes.object
-};
+  onNext: PropTypes.func.isRequired,
+  onBack: PropTypes.func.isRequired,
+  svgImageUrl: PropTypes.string,
+  conventions: PropTypes.string,
+  processLabel: PropTypes.string,
+  prevMapSvgTag: PropTypes.object
+}

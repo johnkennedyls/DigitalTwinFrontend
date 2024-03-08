@@ -5,7 +5,7 @@ export const processSlice = createSlice({
   initialState: {},
   reducers: {
     loadProcessesByPlant: (state, action) => {
-      let newState = {};
+      const newState = {}
       action.payload.forEach((process) => {
         newState[process.id] = {
           id: process.id,
@@ -13,18 +13,18 @@ export const processSlice = createSlice({
           description: process.description,
           workSpaceId: process.workSpaceId,
           instructions: process.instructions,
-          assets: process.assets,
-        };
-      });
+          assets: process.assets
+        }
+      })
 
-      return newState;
+      return newState
     },
     deleteProcess: (state, action) => {
       delete state[action.payload]
     }
-  },
+  }
 })
 
-export const { loadProcessesByPlant: loadProcessesByPlant, deleteProcess } = processSlice.actions
+export const { loadProcessesByPlant, deleteProcess } = processSlice.actions
 
 export const processReducer = processSlice.reducer
