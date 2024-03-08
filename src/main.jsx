@@ -24,7 +24,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 
-import rootReducer from '/src/reducers'; // the value from combineReducers
+import rootReducer from './reducers'; // the value from combineReducers
 import { PersistGate } from 'redux-persist/integration/react';
 
 

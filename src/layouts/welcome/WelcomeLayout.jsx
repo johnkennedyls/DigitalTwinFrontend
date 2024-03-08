@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import LoginIcon from '@mui/icons-material/Login';
-import icesi_logo_black from '/src/assets/images/ICESI_logo_black.png';
+import icesi_logo_black from './assets/images/ICESI_logo_black.png';
 import './WelcomeLayout.css';
 import { useHistory } from 'react-router-dom';
 

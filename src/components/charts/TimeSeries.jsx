@@ -53,7 +53,7 @@ export default function TimeSeries() {
   // AXIOS DATA
   const [delimitedData, setDelimitedData] = useState({ date: [] })
 
-  
+
 
   // FORMS
   const [mode, setMode] = useState('');
@@ -82,7 +82,7 @@ export default function TimeSeries() {
   const [selectedTags, setSelectedTags] = useState([]);
   const [tags, setTags] = useState([]);
 
-  
+
 
 
   // PROCESSES
@@ -111,12 +111,12 @@ export default function TimeSeries() {
   }, [isProcessSelected, plant, plantState]);
 
   const getProcessesOfPlant = (plantId) => {
-    
+
       getProcessByPlant(plantId).then(setProcesses)
   }
 
-  
-  
+
+
 
   //EXECUTIONS
   const [executions, setExecutions] = useState([])
@@ -144,34 +144,34 @@ export default function TimeSeries() {
     }
   }, [dateRange])
 
-  
-  
 
-  
-  
+
+
+
+
 
  const getExecutionsOfProcess = (processId) => {
     getExutionsByProcess(processId).then(setExecutions)
-    
+
  }
 
- 
 
-    
+
+
 const isExecutionRunning = selectedExecution.state === 'running';
 
 
 
 const formatDate = (date) => {
-  return moment(date).format('YYYY-MM-DDTHH:mm'); 
-  
+  return moment(date).format('YYYY-MM-DDTHH:mm');
+
 }
 
 
- 
 
 
- 
+
+
 
 
 //Executions for graphics
@@ -255,7 +255,7 @@ useEffect(() => {
     setPlant(event.target.value);
 
     getProcessesOfPlant(plantState[event.target.value].assetId)
-   
+
   };
 
   const handleModeChange = (event) => {
@@ -265,7 +265,7 @@ useEffect(() => {
 
   const handleDateChange = () => {
 
-    
+
     setTimeout(() => {
       if (mode == 'realtime' || plant == '' || dateRange.start == '' || dateRange.end == '') {
         return
@@ -304,15 +304,15 @@ useEffect(() => {
   };
 
   const showTags = () => {
-    return plant 
-      && (mode === 'realtime'  
-         || mode === 'range'); 
+    return plant
+      && (mode === 'realtime'
+         || mode === 'range');
   };
   const showGraphic = () => {
     return selectedTags.length > 0
   }
 
-  
+
 
   return (
     <Box style={{ maxWidth: '80%', margin: 'auto' }}>
@@ -330,15 +330,15 @@ useEffect(() => {
 
 {
   plant && (
-    <ProcessSelectionForm 
+    <ProcessSelectionForm
       processes={processes}
-      onChange={handleProcessChange} 
+      onChange={handleProcessChange}
     />
 
-  ) 
+  )
 }
 
-<Box mt={2} /> 
+<Box mt={2} />
 
 {isProcessSelected && (
   <FormControl fullWidth>
@@ -371,26 +371,26 @@ useEffect(() => {
 
 
 
-<Box mt={2} /> 
+<Box mt={2} />
         <Box
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
           alignItems="center"
-        >      
-        
+        >
 
 
-         
-              
-           
+
+
+
+
         </Box>
       </Box>
       {(showGraphic() && showTags()) && (
-        <Box>                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+        <Box>
           <ReactECharts key={selectedTags.length} option={getOption()} style={{ height: '60vh' }} />
           {mode == 'realtime' &&
-          selectedExecution && 
+          selectedExecution &&
           selectedExecution.state === 'running' && (
             <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <IconButton onClick={handlePlayPause}>

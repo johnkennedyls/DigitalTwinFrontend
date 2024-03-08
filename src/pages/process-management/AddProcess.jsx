@@ -1,5 +1,5 @@
 import { useHistory } from "react-router-dom";
-import MainProcessForm from "/src/components/process/forms/MainProcessForm"
+import MainProcessForm from "./components/process/forms/MainProcessForm"
 
 import { addProcess } from "../../services/ProcessService"
 

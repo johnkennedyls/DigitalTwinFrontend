@@ -11,10 +11,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 
-import { getPlantsData, deletePlant } from '/src/services/PlantService'
-import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '/src/reducers/plant/plantSlice';
+import { getPlantsData, deletePlant } from './services/PlantService'
+import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from './reducers/plant/plantSlice';
 import { useSelector, useDispatch } from "react-redux";
-import { hasAnyRole } from "/src/services/utils/funtions";
+import { hasAnyRole } from "./services/utils/funtions";
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -22,7 +22,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { useMessage } from '/src/providers/MessageContext';
+import { useMessage } from './providers/MessageContext';
 
 export default function ListPlant() {
   const [plants, setPlants] = useState([]);

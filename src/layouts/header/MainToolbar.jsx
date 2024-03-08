@@ -7,12 +7,12 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Logout from '@mui/icons-material/Logout';
 import { Menu,MenuItem} from '@mui/material';
-import icesi_logo from '/src/assets/images/ICESI_logo.png';
-import logobioinc from '/src/assets/logo_bioinc.png';
+import icesi_logo from './assets/images/ICESI_logo.png';
+import logobioinc from './assets/logo_bioinc.png';
 import './MainToolbar.css';
 
 
-// import { hasAnyRole } from "/src/services/utils/funtions";
+// import { hasAnyRole } from "./services/utils/funtions";
 
 export default function MainToolbar() {
   const [anchorEl, setAnchorEl] = useState(null);

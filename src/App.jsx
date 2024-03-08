@@ -16,7 +16,7 @@ import { esES } from '@mui/x-date-pickers/locales';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { MessageProvider } from '/src/providers/MessageContext';
+import { MessageProvider } from './providers/MessageContext';
 
 import './assets/styles/global.css'
 

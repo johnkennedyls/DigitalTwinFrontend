@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { getExutionsByProcess } from '/src/services/ProcessService';
+import { getExutionsByProcess } from './services/ProcessService';
 import { format } from 'date-fns'; 
 
 export default function ListExecutionsProcess() {

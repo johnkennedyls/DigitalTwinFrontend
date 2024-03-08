@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Box, Grid } from "@mui/material";
-import PlantSVG from "/src/components/utils/SVGRender";
-import { getPlantData } from "/src/services/PlantService";
+import PlantSVG from "./components/utils/SVGRender";
+import { getPlantData } from "./services/PlantService";
 import ReactMarkdown from 'react-markdown';
 
 import CircularProgress from '@mui/material/CircularProgress';
