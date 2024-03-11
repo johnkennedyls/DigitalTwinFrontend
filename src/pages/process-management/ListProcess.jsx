@@ -16,7 +16,10 @@ import { PlayCircleFilled, PauseCircleFilled, StopRounded } from '@mui/icons-mat
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 
-import { getProcessesData, deleteProcess, startProcess, pauseProcess, stopProcess } from './services/ProcessService';
+import {
+  getProcessesData, deleteProcess, startProcess,
+  pauseProcess, stopProcess
+} from '../../services/ProcessService';
 
 const PROCESS_STATE = {
   STOPPED: 0,

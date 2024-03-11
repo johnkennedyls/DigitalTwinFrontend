@@ -17,10 +17,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { hasAnyRole } from './services/utils/funtions';
-import { getPlantsData, deletePlant } from './services/PlantService';
-import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from './reducers/plant/plantSlice';
-import { useMessage } from './providers/MessageContext';
+import { hasAnyRole } from '../../services/utils/funtions';
+import { getPlantsData, deletePlant } from '../../services/PlantService';
+import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '../../reducers/plant/plantSlice';
+import { useMessage } from '../../providers/MessageContext';
 
 export default function ListPlant () {
   const [plants, setPlants] = useState([]);

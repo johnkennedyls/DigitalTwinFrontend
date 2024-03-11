@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { format } from 'date-fns';
 
-import { getExutionsByProcess } from './services/ProcessService';
+import { getExutionsByProcess } from '../../services/ProcessService';
 
 export default function ListExecutionsProcess () {
   const [executions, setExecutions] = useState([]);

@@ -4,8 +4,8 @@ import { Box, Grid } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import PlantSVG from './components/utils/SVGRender';
-import { getPlantData } from './services/PlantService';
+import PlantSVG from '../../components/utils/SVGRender';
+import { getPlantData } from '../../services/PlantService';
 
 export default function Plant () {
   const { plantId } = useParams();

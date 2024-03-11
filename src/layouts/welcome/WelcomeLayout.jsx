@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import LoginIcon from '@mui/icons-material/Login';
 import { useHistory } from 'react-router-dom';
 
-import icesiLogoBlack from './assets/images/ICESI_logo_black.png';
+import icesiLogoBlack from '../../assets/images/ICESI_logo_black.png';
 
 import './WelcomeLayout.css';
 

@@ -8,8 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import Logout from '@mui/icons-material/Logout';
 import { Menu, MenuItem } from '@mui/material';
 
-import icesiLogo from './assets/images/ICESI_logo.png';
-import logobioinc from './assets/logo_bioinc.png';
+import icesiLogo from '../../assets/images/ICESI_logo.png';
+import logobioinc from '../../assets/logo_bioinc.png';
 import './MainToolbar.css';
 
 // import { hasAnyRole } from "./services/utils/funtions";

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 
-import { isValidSVG } from './services/utils/funtions';
+import { isValidSVG } from '../../services/utils/funtions';
 
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
