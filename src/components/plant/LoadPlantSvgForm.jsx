@@ -10,7 +10,7 @@ import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import './styles/LoadPlantSvg.css'
 
-export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, conventions = "", prevMapSvgTag = {} }) {
+export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, conventions = "", prevMapSvgTag = null }) {
     const [previewUrl, setPreviewUrl] = useState(svgImageUrl);
     const [value, setValue] = useState(conventions);
     const [selectedTab, setSelectedTab] = useState("write");
@@ -34,7 +34,6 @@ export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, c
     };
 
     const handleSubmit = (e) => {
-        console.log("SDAD")
         onNext({ svgImage: previewUrl, mapSvgTag: parseTextIds(), conventions: value });
         e.preventDefault();
     }
@@ -47,7 +46,7 @@ export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, c
         const textElements = document.querySelectorAll('text[id^="text_"]');
         const ids = Array.from(textElements).map((textElement) => {
             let id = textElement.getAttribute('id');
-            if (prevMapSvgTag && prevMapSvgTag.some(tag => tag.svgId === id)) {
+            if (prevMapSvgTag !== null && prevMapSvgTag.some(tag => tag.svgId === id)) {
                 const matchingTag = prevMapSvgTag.find(tag => tag.svgId === id);
                 return { svgId: `${id}`, idAsset: matchingTag.idAsset, tagName: matchingTag.tagName };
             }else return { svgId: id, tagName: '' };
