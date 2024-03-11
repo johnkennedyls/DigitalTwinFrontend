@@ -6,12 +6,17 @@ import { ErrorAlert } from "../../utils/Alert";
 import { toCamelCase, toTitleCase } from "../../utils/TextConverter";
 
 function ImportDialog({ tags, setTags }) {
+    const [filteredPrevTags, setFilteredPrevTags] = useState();
     const [open, setOpen] = useState(false);
     const [fileLoaded, setFileLoaded] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [headers, setHeaders] = useState([]);
     const [rows, setRows] = useState([]);
     const fileInput = useRef(null);
+
+    useEffect(() => {
+        setFilteredPrevTags(tags.filter(tag => tag.name !== ''));
+    }, [tags])
 
     const handleOpen = () => {
         setOpen(true);
@@ -22,6 +27,7 @@ function ImportDialog({ tags, setTags }) {
         setFileLoaded(false);
         setDisabled(true);
         setHeaders([]);
+        setRows([]);
     }
 
     const generateTemplate = () => {
@@ -33,9 +39,6 @@ function ImportDialog({ tags, setTags }) {
     };
 
     const handleImport = () => {
-        setOpen(false);
-        setFileLoaded(false);
-        setDisabled(true);
         const newTags = [];
         for (let i = 0; i < rows.length; i++) {
             const tag = {};
@@ -67,7 +70,12 @@ function ImportDialog({ tags, setTags }) {
                 newTags.push(tag);
             }
         }
-        setTags([...tags, ...newTags]);
+        setTags([...filteredPrevTags, ...newTags]);
+        setOpen(false);
+        setFileLoaded(false);
+        setDisabled(true);
+        setHeaders([]);
+        setRows([]);
     }
 
     const handleFileUpload = (e) => {
