@@ -205,28 +205,6 @@ useEffect(() => {
 
       const currentSeries = deepCopy(DEFAULT_SERIES_FORMAT)
       currentSeries.name = tagName
-      currentSeries.data = tagsState[tag]
-      currentSeries.symbol = SYMBOLS[i % SYMBOLS.length]
-      // currentSeries.markLine = {
-      //   data: [
-      //     {
-      //       type: 'min',
-      //       name: 'Mínimo',
-      //       lineStyle: {
-      //         width: 2,
-      //         type: 'dotted'
-      //       }
-      //     },
-      //     {
-      //       type: 'max',
-      //       name: 'Máximo',
-      //       lineStyle: {
-      //         width: 2,
-      //         type: 'dashed'
-      //       }
-      //     }
-      //   ]
-      // };
       currentSeries.data = mode === 'realtime' ? tagsState[tag] : delimitedData[tag]
       currentSeries.symbol = SYMBOLS[i % SYMBOLS.length]
       if (i != 0) {
