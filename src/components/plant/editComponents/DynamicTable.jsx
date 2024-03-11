@@ -12,14 +12,11 @@ function DynamicTable({ tags, setTags, handleRemoveTag, handleChangeSvgId }) {
     const [tagProperties, setTagProperties] = useState(basicProperties);
     const [editingCell, setEditingCell] = useState(null);
     const textFieldRef = useRef(null);
-    const isInitialLoad = useRef(true);
 
     useEffect(() => {
-        if (isInitialLoad.current) {
-            const uniqueMetadataNames = getUniqueMetadataNames(tags);
-            const filteredMetadataNames = Array.from(uniqueMetadataNames).filter(name => !basicProperties.includes(name));
-            setTagProperties([...basicProperties, ...filteredMetadataNames]);
-            isInitialLoad.current = false;
+        if (editingCell === null) { 
+            const uniqueMetadataNames = getUniqueMetadataNames(tags, tagProperties);
+            setTagProperties([...basicProperties, ...uniqueMetadataNames]);
         }
     }, [tags]);
 

@@ -4,6 +4,7 @@ import { Button, Typography, Paper, Box, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DynamicTable from './editComponents/DynamicTable';
 import ImportDialog from './editComponents/ImportDialog';
+import { InfoAlert } from '../utils/Alert';
 
 export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '', description: '' }], svgIds, mapSvgTagPrev = null, processLabel = 'add' }) {
     const [tags, setTags] = useState(currentTags);
@@ -41,8 +42,13 @@ export default function TagsPlantForm({ onNext, onBack, currentTags = [{ name: '
     };
 
     const handleAddTag = useCallback(() => {
-        setTags((prevTags) => [...prevTags, { name: '', description: '' }]);
-    }, []);
+        const hasEmptyTag = tags.some(tag => tag.name === '');
+        if (!hasEmptyTag) {
+            setTags((prevTags) => [...prevTags, { name: '', description: '' }]);
+        } else {
+            InfoAlert('Asegurate de no tener un tag vacio.');
+        }
+    }, [tags, setTags]);
 
     const handleRemoveTag = useCallback((index) => {
         const tag = tags[index];

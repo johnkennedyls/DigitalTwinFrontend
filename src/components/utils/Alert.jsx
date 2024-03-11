@@ -25,3 +25,7 @@ export function ErrorAlert(title) {
 export function SuccessAlert(title) {
     ToastAlert(title, 'success');
 }
+
+export function InfoAlert(title) {
+    ToastAlert(title, 'info');
+}
