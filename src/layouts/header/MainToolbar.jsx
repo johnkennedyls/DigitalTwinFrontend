@@ -53,7 +53,8 @@ export default function MainToolbar () {
 
   const logout = (e) => {
     e.preventDefault();
-    window.localStorage.removeItem('access_token');
+    // window.localStorage.removeItem('access_token');
+    window.localStorage.clear();
     history.push('/');
   };
 

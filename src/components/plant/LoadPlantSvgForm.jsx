@@ -10,10 +10,10 @@ import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import './styles/LoadPlantSvg.css';
 
-export default function LoadPlantSvgForm ({ onNext, onBack, svgImageUrl = null, conventions = '', prevMapSvgTag = {} }) {
-  const [previewUrl, setPreviewUrl] = useState(svgImageUrl);
-  const [value, setValue] = useState(conventions);
-  const [selectedTab, setSelectedTab] = useState('write');
+export default function LoadPlantSvgForm({ onNext, onBack, svgImageUrl = null, conventions = "", prevMapSvgTag = null }) {
+    const [previewUrl, setPreviewUrl] = useState(svgImageUrl);
+    const [value, setValue] = useState(conventions);
+    const [selectedTab, setSelectedTab] = useState("write");
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -44,15 +44,15 @@ export default function LoadPlantSvgForm ({ onNext, onBack, svgImageUrl = null, 
   };
 
   const parseTextIds = () => {
-    const textElements = document.querySelectorAll('text[id^="text_"]');
-    const ids = Array.from(textElements).map((textElement) => {
-      const id = textElement.getAttribute('id');
-      if (prevMapSvgTag && prevMapSvgTag.some(tag => tag.svgId === id)) {
-        const matchingTag = prevMapSvgTag.find(tag => tag.svgId === id);
-        return { svgId: `${id}`, idAsset: matchingTag.idAsset, tagName: matchingTag.tagName };
-      } else return { svgId: id, tagName: '' };
-    });
-    return ids;
+      const textElements = document.querySelectorAll('text[id^="text_"]');
+      const ids = Array.from(textElements).map((textElement) => {
+          let id = textElement.getAttribute('id');
+          if (prevMapSvgTag !== null && prevMapSvgTag.some(tag => tag.svgId === id)) {
+              const matchingTag = prevMapSvgTag.find(tag => tag.svgId === id);
+              return { svgId: `${id}`, idAsset: matchingTag.idAsset, tagName: matchingTag.tagName };
+          }else return { svgId: id, tagName: '' };
+      });
+      return ids
   };
 
   return (
@@ -89,7 +89,6 @@ export default function LoadPlantSvgForm ({ onNext, onBack, svgImageUrl = null, 
                         </Typography>
                         <Grid container spacing={2} style={{ marginTop: '1rem' }} justifyContent="center">
                             <ReactMde
-
                                 value={value}
                                 onChange={setValue}
                                 selectedTab={selectedTab}

@@ -69,7 +69,7 @@ const AddPlant = () => {
           plantSlot={plant.plantSlot}
         />;
       case 1:
-        return <LoadPlantSvgForm onNext={handleNext} onBack={handleBack} svgImageUrl={plant.svgImage} conventions={plant.conventions} />;
+        return <LoadPlantSvgForm onNext={handleNext} onBack={handleBack} svgImageUrl={plant.svgImage} conventions={plant.conventions} prevMapSvgTag={plant['mapSvgTag']} />;
       case 2:
         return <TagsPlantForm onNext={handleNext} onBack={handleBack} currentTags={plant.tags} svgIds={plant.mapSvgTag}/>;
       default:

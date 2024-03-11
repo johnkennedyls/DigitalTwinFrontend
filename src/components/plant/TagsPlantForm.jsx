@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 import DynamicTable from './editComponents/DynamicTable';
 import ImportDialog from './editComponents/ImportDialog';
+import { InfoAlert } from '../utils/Alert';
 
 export default function TagsPlantForm ({
   onNext, onBack, currentTags = [{ name: '', description: '' }],
@@ -40,14 +41,19 @@ export default function TagsPlantForm ({
   };
 
   const handleAddTag = useCallback(() => {
-    setTags((prevTags) => [...prevTags, { name: '', description: '' }]);
-  }, []);
+    const hasEmptyTag = tags.some(tag => tag.name === '');
+    if (!hasEmptyTag) {
+        setTags((prevTags) => [...prevTags, { name: '', description: '' }]);
+    } else {
+        InfoAlert('Asegurate de no tener un tag vacio.');
+    }
+  }, [tags, setTags]);
 
   const handleRemoveTag = useCallback((index) => {
     const tag = tags[index];
     if (tag.assetId !== undefined) {
-      const newTag = { ...tag, state: 'R' };
-      setRemovedTags((prevRemovedTags) => [...prevRemovedTags, newTag]);
+        const newTag = { ...tag, state: 'R' };
+        setRemovedTags((prevRemovedTags) => [...prevRemovedTags, newTag]);
     }
     setTags((prevTags) => [...prevTags.slice(0, index), ...prevTags.slice(index + 1)]);
   }, [tags, removedTags]);
