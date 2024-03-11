@@ -1,91 +1,91 @@
-import { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Box,
   Button,
   IconButton,
   Avatar
-} from '@mui/material'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
-import AddIcon from '@mui/icons-material/Add'
-import { DataGrid } from '@mui/x-data-grid'
-import { useSelector, useDispatch } from 'react-redux'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import { DataGrid } from '@mui/x-data-grid';
+import { useSelector, useDispatch } from 'react-redux';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
-import { hasAnyRole } from './services/utils/funtions'
-import { getPlantsData, deletePlant } from './services/PlantService'
-import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from './reducers/plant/plantSlice'
-import { useMessage } from './providers/MessageContext'
+import { hasAnyRole } from './services/utils/funtions';
+import { getPlantsData, deletePlant } from './services/PlantService';
+import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from './reducers/plant/plantSlice';
+import { useMessage } from './providers/MessageContext';
 
 export default function ListPlant () {
-  const [plants, setPlants] = useState([])
+  const [plants, setPlants] = useState([]);
 
-  const plantState = useSelector(state => state.plants)
-  const dispatch = useDispatch()
+  const plantState = useSelector(state => state.plants);
+  const dispatch = useDispatch();
 
-  const [openDialog, setOpenDialog] = useState(false)
-  const [deleteId, setDeleteId] = useState(null)
+  const [openDialog, setOpenDialog] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
-  const history = useHistory()
-  const { showMessage } = useMessage()
+  const history = useHistory();
+  const { showMessage } = useMessage();
 
   useEffect(() => {
     getPlantsData()
       .then((data) => {
-        dispatch(loadAllPlantsData(data))
+        dispatch(loadAllPlantsData(data));
       })
       .catch((error) => {
-        console.error(error)
-        showMessage('Algo salio mal, por favor intente mas tarde', 'error')
-      })
-  }, [dispatch, showMessage])
+        console.error(error);
+        showMessage('Algo salio mal, por favor intente mas tarde', 'error');
+      });
+  }, [dispatch, showMessage]);
 
   useEffect(() => {
-    const currentPlants = []
-    console.log(plantState)
+    const currentPlants = [];
+    console.log(plantState);
     Object.keys(plantState).forEach((plant) => {
       currentPlants.push({
         plantId: plantState[plant].assetId,
         plantName: plantState[plant].plantName,
         plantDescription: plantState[plant].plantDescription,
         plantPhoto: plantState[plant].plantPhoto
-      })
-    })
+      });
+    });
 
-    setPlants(currentPlants)
-  }, [plantState])
+    setPlants(currentPlants);
+  }, [plantState]);
 
   const handleAdd = () => {
-    history.push('/add-plant')
-  }
+    history.push('/add-plant');
+  };
 
   const handleEdit = (id) => {
-    history.push(`/edit-plant/${id}`)
-  }
+    history.push(`/edit-plant/${id}`);
+  };
 
   const handleDelete = (id) => {
-    setDeleteId(id)
-    setOpenDialog(true)
-  }
+    setDeleteId(id);
+    setOpenDialog(true);
+  };
 
   const handleClose = () => {
-    setOpenDialog(false)
-  }
+    setOpenDialog(false);
+  };
 
   const confirmDelete = () => {
-    setOpenDialog(false)
+    setOpenDialog(false);
     deletePlant(deleteId).then(() => {
-      dispatch(deletePlantFromRedux(deleteId))
+      dispatch(deletePlantFromRedux(deleteId));
     }).catch((error) => {
-      console.error(error)
-      showMessage('Algo salió mal al intentar borrar la planta, por favor intenta de nuevo más tarde', 'error')
-    })
-  }
+      console.error(error);
+      showMessage('Algo salió mal al intentar borrar la planta, por favor intenta de nuevo más tarde', 'error');
+    });
+  };
 
   const columns = [
     {
@@ -123,17 +123,17 @@ export default function ListPlant () {
               <DeleteIcon />
             </IconButton>
           </div>
-        )
+        );
       }
     }
-  ]
+  ];
 
   const handleRowClick = (param, event) => {
     if (event.target.closest('[role="cell"]').dataset.field === 'actions') {
-      return
+      return;
     }
-    history.push(`/detail-plant/${param.row.plantId}`)
-  }
+    history.push(`/detail-plant/${param.row.plantId}`);
+  };
 
   return (
     <Box m={4} maxWidth={1000} mx="auto">
@@ -183,5 +183,5 @@ export default function ListPlant () {
         </Button>
       </Box>
     </Box>
-  )
+  );
 }

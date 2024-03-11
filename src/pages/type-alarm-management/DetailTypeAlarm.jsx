@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
-import { makeStyles } from '@mui/styles'
-import { Typography } from '@mui/material'
-import Paper from '@mui/material/Paper'
-import { useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@mui/styles';
+import { Typography } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import { useParams } from 'react-router-dom';
 
-import ListAvatar from '../../components/alarms/ListAvatar'
-import { getTypeAlarmById } from '../../services/TypeAlarmService'
+import ListAvatar from '../../components/alarms/ListAvatar';
+import { getTypeAlarmById } from '../../services/TypeAlarmService';
 
 const useStyles = makeStyles({
   root: {
@@ -60,27 +60,27 @@ const useStyles = makeStyles({
     textOverflow: 'ellipsis'
   }
 
-})
+});
 
 const DetaiTypelAlarm = () => {
-  const classes = useStyles()
-  const [typeAlarm, setTypeAlarm] = useState([])
-  const { id } = useParams()
+  const classes = useStyles();
+  const [typeAlarm, setTypeAlarm] = useState([]);
+  const { id } = useParams();
 
   useEffect(() => {
-    getInformation()
-  }, [])
+    getInformation();
+  }, []);
 
   const getInformation = () => {
     getTypeAlarmById(id)
       .then((data) => {
-        setTypeAlarm(data)
-        console.log(data)
+        setTypeAlarm(data);
+        console.log(data);
       })
       .catch((error) => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
 
   return (
         <div className={classes.paperContainer}>
@@ -115,6 +115,6 @@ const DetaiTypelAlarm = () => {
         </div>
         </Paper>
       </div>
-  )
-}
-export default DetaiTypelAlarm
+  );
+};
+export default DetaiTypelAlarm;

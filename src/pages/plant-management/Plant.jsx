@@ -1,31 +1,31 @@
-import { useEffect, useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import { Box, Grid } from '@mui/material'
-import ReactMarkdown from 'react-markdown'
-import CircularProgress from '@mui/material/CircularProgress'
+import { useEffect, useState } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
+import { Box, Grid } from '@mui/material';
+import ReactMarkdown from 'react-markdown';
+import CircularProgress from '@mui/material/CircularProgress';
 
-import PlantSVG from './components/utils/SVGRender'
-import { getPlantData } from './services/PlantService'
+import PlantSVG from './components/utils/SVGRender';
+import { getPlantData } from './services/PlantService';
 
 export default function Plant () {
-  const { plantId } = useParams()
-  const [plant, setPlant] = useState(null)
-  const history = useHistory()
+  const { plantId } = useParams();
+  const [plant, setPlant] = useState(null);
+  const history = useHistory();
 
   useEffect(() => {
     getPlantData(plantId)
       .then((data) => {
-        setPlant(data)
+        setPlant(data);
       })
       .catch((error) => {
-        console.error(error)
-        history.push('/manage-plant')
-      })
-  }, [plantId, history])
+        console.error(error);
+        history.push('/manage-plant');
+      });
+  }, [plantId, history]);
 
   useEffect(() => {
-    console.log(plant)
-  }, [plant])
+    console.log(plant);
+  }, [plant]);
 
   return (
     <>
@@ -48,5 +48,5 @@ export default function Plant () {
       }
     </>
 
-  )
+  );
 }

@@ -1,9 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit';
 
-import { plantReducer } from './reducers/plant/plantSlice'
-import { tagReducer } from './reducers/plant/tagSlice'
-import { executionReducer } from './reducers/plant/executionSlice'
-import { processReducer } from './reducers/plant/processSlice'
+import { plantReducer } from './reducers/plant/plantSlice';
+import { tagReducer } from './reducers/plant/tagSlice';
+import { executionReducer } from './reducers/plant/executionSlice';
+import { processReducer } from './reducers/plant/processSlice';
 export const store = configureStore({
   reducer: {
     plants: plantReducer,
@@ -11,4 +11,4 @@ export const store = configureStore({
     executions: executionReducer,
     processes: processReducer
   }
-})
+});

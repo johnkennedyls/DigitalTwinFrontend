@@ -1,67 +1,67 @@
-import { useEffect, useRef, useState } from 'react'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, IconButton, Tooltip } from '@mui/material'
-import PropTypes from 'prop-types'
-import { Delete } from '@mui/icons-material'
+import { useEffect, useRef, useState } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, IconButton, Tooltip } from '@mui/material';
+import PropTypes from 'prop-types';
+import { Delete } from '@mui/icons-material';
 
-import { toTitleCase } from '../../utils/TextConverter'
-import { compareMetadata, getUniqueMetadataNames } from '../../utils/MetadataSearch'
+import { toTitleCase } from '../../utils/TextConverter';
+import { compareMetadata, getUniqueMetadataNames } from '../../utils/MetadataSearch';
 
-import MetadataDialog from './MetadataDialog'
+import MetadataDialog from './MetadataDialog';
 
-const basicProperties = ['svgId', 'name', 'description']
+const basicProperties = ['svgId', 'name', 'description'];
 
 function DynamicTable ({ tags, setTags, handleRemoveTag, handleChangeSvgId }) {
-  const [tagProperties, setTagProperties] = useState(basicProperties)
-  const [editingCell, setEditingCell] = useState(null)
-  const textFieldRef = useRef(null)
-  const isInitialLoad = useRef(true)
+  const [tagProperties, setTagProperties] = useState(basicProperties);
+  const [editingCell, setEditingCell] = useState(null);
+  const textFieldRef = useRef(null);
+  const isInitialLoad = useRef(true);
 
   useEffect(() => {
     if (isInitialLoad.current) {
-      const uniqueMetadataNames = getUniqueMetadataNames(tags)
-      const filteredMetadataNames = Array.from(uniqueMetadataNames).filter(name => !basicProperties.includes(name))
-      setTagProperties([...basicProperties, ...filteredMetadataNames])
-      isInitialLoad.current = false
+      const uniqueMetadataNames = getUniqueMetadataNames(tags);
+      const filteredMetadataNames = Array.from(uniqueMetadataNames).filter(name => !basicProperties.includes(name));
+      setTagProperties([...basicProperties, ...filteredMetadataNames]);
+      isInitialLoad.current = false;
     }
-  }, [tags])
+  }, [tags]);
 
   useEffect(() => {
     if (textFieldRef.current) {
-      textFieldRef.current.focus()
+      textFieldRef.current.focus();
     }
-  }, [editingCell])
+  }, [editingCell]);
 
   const handleCellClick = (rowIndex, columnIndex) => {
-    setEditingCell({ rowIndex, columnIndex })
-  }
+    setEditingCell({ rowIndex, columnIndex });
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Escape' || e.key === 'Enter') {
-      setEditingCell(null)
+      setEditingCell(null);
     }
-  }
+  };
 
   const handleCellChange = (rowIndex, columnIndex, newValue) => {
-    const newTags = [...tags]
-    const columnName = tagProperties[columnIndex]
+    const newTags = [...tags];
+    const columnName = tagProperties[columnIndex];
     if (basicProperties.includes(columnName) && columnName !== 'svgId') {
       newTags[rowIndex] = {
         ...newTags[rowIndex],
         [columnName]: newValue
-      }
+      };
     } else {
-      newTags[rowIndex].metadata = newTags[rowIndex].metadata || {}
+      newTags[rowIndex].metadata = newTags[rowIndex].metadata || {};
       if (newTags[rowIndex].metadata.hasOwnProperty(columnName)) {
-        newTags[rowIndex].metadata[columnName] = newValue
+        newTags[rowIndex].metadata[columnName] = newValue;
       } else {
-        newTags[rowIndex].metadata[columnName] = newValue
+        newTags[rowIndex].metadata[columnName] = newValue;
       }
     }
-    setTags(newTags)
+    setTags(newTags);
     if (columnName === 'svgId') {
-      handleChangeSvgId(newValue)
+      handleChangeSvgId(newValue);
     }
-  }
+  };
 
   return (
         <>
@@ -158,11 +158,11 @@ function DynamicTable ({ tags, setTags, handleRemoveTag, handleChangeSvgId }) {
                 </Table>
             </TableContainer>
         </>
-  )
+  );
 }
 
 DynamicTable.propTypes = {
   tags: PropTypes.array.isRequired
-}
+};
 
-export default DynamicTable
+export default DynamicTable;

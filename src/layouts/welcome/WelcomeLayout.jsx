@@ -1,37 +1,37 @@
-import { useRef, useState, useEffect } from 'react'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
-import LoginIcon from '@mui/icons-material/Login'
-import { useHistory } from 'react-router-dom'
+import { useRef, useState, useEffect } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import LoginIcon from '@mui/icons-material/Login';
+import { useHistory } from 'react-router-dom';
 
-import icesiLogoBlack from './assets/images/ICESI_logo_black.png'
+import icesiLogoBlack from './assets/images/ICESI_logo_black.png';
 
-import './WelcomeLayout.css'
+import './WelcomeLayout.css';
 
 const WelcomeLayout = () => {
-  const saamfiUrl = import.meta.env.VITE_SAAMFI_FRONTEND_URL
+  const saamfiUrl = import.meta.env.VITE_SAAMFI_FRONTEND_URL;
 
-  const [logoWidth, setLogoWidth] = useState(null)
-  const titleRef = useRef()
+  const [logoWidth, setLogoWidth] = useState(null);
+  const titleRef = useRef();
 
-  const history = useHistory()
+  const history = useHistory();
 
   useEffect(() => {
     if (titleRef.current) {
-      setLogoWidth(titleRef.current.offsetWidth)
+      setLogoWidth(titleRef.current.offsetWidth);
     }
-    const params = new URLSearchParams(window.location.search)
-    const token = params.get('token')
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
     if (token) {
-      localStorage.setItem('access_token', token)
-      history.push('/manage-plant')
+      localStorage.setItem('access_token', token);
+      history.push('/manage-plant');
     }
-  }, [])
+  }, []);
 
   const handleLogin = () => {
-    window.location.href = saamfiUrl
-  }
+    window.location.href = saamfiUrl;
+  };
 
   return (
     <Box className={'container'}>
@@ -70,7 +70,7 @@ const WelcomeLayout = () => {
     </div>
 
     </Box>
-  )
-}
+  );
+};
 
-export default WelcomeLayout
+export default WelcomeLayout;

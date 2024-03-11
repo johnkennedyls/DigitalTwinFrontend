@@ -3,7 +3,7 @@ import {
   pink, red, teal, yellow, indigo,
   lightBlue, amber, purple, blueGrey,
   lightGreen, grey, cyan
-} from '@mui/material/colors'
+} from '@mui/material/colors';
 
 const colors = {
   a: deepOrange[500],
@@ -32,10 +32,10 @@ const colors = {
   x: indigo[300],
   y: green[300],
   z: deepPurple[300]
-}
+};
 
 function getAvatarColor (letter) {
-  return colors[letter.toLowerCase()] || blue[500]
+  return colors[letter.toLowerCase()] || blue[500];
 }
 
-export default getAvatarColor
+export default getAvatarColor;

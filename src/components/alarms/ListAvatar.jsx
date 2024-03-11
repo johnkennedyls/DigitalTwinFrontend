@@ -1,12 +1,12 @@
-import * as React from 'react'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
-import Avatar from '@mui/material/Avatar'
-import ListItemText from '@mui/material/ListItemText'
-import { makeStyles } from '@mui/styles'
+import * as React from 'react';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import ListItemText from '@mui/material/ListItemText';
+import { makeStyles } from '@mui/styles';
 
-import getAvatarColor from '../../services/utils/ColorsAvatar'
+import getAvatarColor from '../../services/utils/ColorsAvatar';
 
 const useStyles = makeStyles({
   root: {
@@ -45,10 +45,10 @@ const useStyles = makeStyles({
     marginLeft: 10,
     marginRight: 10
   }
-})
+});
 
 function ListAvatar ({ items }) {
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
       <div className={classes.usersContainer}>
@@ -75,7 +75,7 @@ function ListAvatar ({ items }) {
           ))}
         </List>
       </div>
-  )
+  );
 }
 
-export default ListAvatar
+export default ListAvatar;

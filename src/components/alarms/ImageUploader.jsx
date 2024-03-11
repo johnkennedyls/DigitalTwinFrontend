@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { Box, Button, Dialog, DialogActions, DialogContent } from '@mui/material'
-import ImageIcon from '@mui/icons-material/Image'
-import 'react-image-crop/dist/ReactCrop.css'
-import PropTypes from 'prop-types'
+import { useState } from 'react';
+import { Box, Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import ImageIcon from '@mui/icons-material/Image';
+import 'react-image-crop/dist/ReactCrop.css';
+import PropTypes from 'prop-types';
 
 const ImageDialog = ({ open, imageSrc, onAccept, onCancel }) => {
   return (
@@ -15,31 +15,31 @@ const ImageDialog = ({ open, imageSrc, onAccept, onCancel }) => {
                 <Button onClick={onAccept}>Aceptar</Button>
             </DialogActions>
         </Dialog>
-  )
-}
+  );
+};
 
 const ImageUploader = ({ onImageAccepted }) => {
-  const [imageSrc, setImageSrc] = useState(null)
-  const [open, setOpen] = useState(false)
+  const [imageSrc, setImageSrc] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0]
-    const reader = new FileReader()
+    const file = e.target.files[0];
+    const reader = new FileReader();
     reader.addEventListener('load', () => {
-      setImageSrc(reader.result)
-      setOpen(true)
-    })
-    reader.readAsDataURL(file)
-  }
+      setImageSrc(reader.result);
+      setOpen(true);
+    });
+    reader.readAsDataURL(file);
+  };
 
   const handleAccepted = () => {
-    onImageAccepted(imageSrc)
-    setOpen(false)
-  }
+    onImageAccepted(imageSrc);
+    setOpen(false);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   return (
         <Box>
@@ -65,16 +65,16 @@ const ImageUploader = ({ onImageAccepted }) => {
                 </ImageDialog>
             )}
         </Box>
-  )
-}
+  );
+};
 ImageDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   imageSrc: PropTypes.string.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired
-}
+};
 ImageUploader.propTypes = {
   onImageAccepted: PropTypes.func.isRequired
-}
+};
 
-export default ImageUploader
+export default ImageUploader;

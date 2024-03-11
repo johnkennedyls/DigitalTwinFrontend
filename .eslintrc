@@ -57,6 +57,7 @@
         "max": 1
       }
     ],
-    "block-spacing": "error"
+    "block-spacing": "error",
+    "semi": ["error", "always"]
   }
 }

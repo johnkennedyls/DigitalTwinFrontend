@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
+import { useState } from 'react';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 function ExecutionSelectionForm ({ executions, onChange }) {
-  const [selectedExecution, setSelectedExecution] = useState('')
+  const [selectedExecution, setSelectedExecution] = useState('');
 
   const handleChange = (event) => {
-    const selectedExecutionId = event.target.value
-    const selectedExecutionDetails = executions.find(execution => execution.id === selectedExecutionId)
+    const selectedExecutionId = event.target.value;
+    const selectedExecutionDetails = executions.find(execution => execution.id === selectedExecutionId);
 
-    onChange(selectedExecutionDetails)
-    setSelectedExecution(selectedExecutionId)
-  }
+    onChange(selectedExecutionDetails);
+    setSelectedExecution(selectedExecutionId);
+  };
 
   return (
     <FormControl fullWidth>
@@ -28,7 +28,7 @@ function ExecutionSelectionForm ({ executions, onChange }) {
         ))}
       </Select>
     </FormControl>
-  )
+  );
 }
 
-export default ExecutionSelectionForm
+export default ExecutionSelectionForm;

@@ -1,21 +1,21 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   IconButton, Table, TableBody,
   TableCell, TableHead, TableRow,
   TableContainer, TableFooter, TablePagination,
   Paper, FormControl, InputLabel,
   Select, MenuItem
-} from '@mui/material'
-import { Visibility } from '@mui/icons-material'
-import { makeStyles } from '@mui/styles'
-import { useSelector } from 'react-redux'
+} from '@mui/material';
+import { Visibility } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
+import { useSelector } from 'react-redux';
 
-import ChipState from '../../components/alarms/ChipState.jsx'
-import { formatDate } from '../../services/utils/FormatterDate'
-import AvatarLetter from '../../components/alarms/AvatarLetter.jsx'
-import { getAlarmsHistory, getAllAlarmsClosedByPlantId } from '../../services/AlarmService'
+import ChipState from '../../components/alarms/ChipState.jsx';
+import { formatDate } from '../../services/utils/FormatterDate';
+import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
+import { getAlarmsHistory, getAllAlarmsClosedByPlantId } from '../../services/AlarmService';
 
 const useStyles = makeStyles({
   tableContainer: {
@@ -104,38 +104,38 @@ const useStyles = makeStyles({
     width: '150px',
     textAlign: 'center !important'
   }
-})
+});
 
 const ListAlarmHistory = () => {
-  const classes = useStyles()
-  const [alarms, setAlarms] = useState([])
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL
-  const detailAlarmPath = '/detail-alarm/'
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(3)
-  const plantState = useSelector(state => state.plants)
-  const [plants, setPlants] = useState([])
-  const [selectedPlant, setSelectedPlant] = useState(null)
+  const classes = useStyles();
+  const [alarms, setAlarms] = useState([]);
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const detailAlarmPath = '/detail-alarm/';
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(3);
+  const plantState = useSelector(state => state.plants);
+  const [plants, setPlants] = useState([]);
+  const [selectedPlant, setSelectedPlant] = useState(null);
 
-  const history = useHistory()
-  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH
+  const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
   useEffect(() => {
-    const currentPlants = Object.values(plantState)
-    setPlants(currentPlants)
-  }, [])
+    const currentPlants = Object.values(plantState);
+    setPlants(currentPlants);
+  }, []);
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - alarms.length) : 0
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - alarms.length) : 0;
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
+    setPage(newPage);
+  };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const columns = [
     {
@@ -150,36 +150,36 @@ const ListAlarmHistory = () => {
       title: 'Fecha de Activación',
       field: 'activationDate'
     }
-  ]
+  ];
 
   const handleShowDetail = (row) => {
-    history.push(`/${detailAlarmPath}${row.alarmid}`)
-  }
+    history.push(`/${detailAlarmPath}${row.alarmid}`);
+  };
   useEffect(() => {
     if (selectedPlant !== null) {
       getAllAlarmsClosedByPlantId(selectedPlant)
         .then((response) => {
-          setAlarms(response)
+          setAlarms(response);
         })
         .catch((error) => {
-          console.error(error)
-        })
+          console.error(error);
+        });
     }
-  }, [selectedPlant])
+  }, [selectedPlant]);
 
   useEffect(() => {
-    getAlarms()
-  }, [])
+    getAlarms();
+  }, []);
 
   const getAlarms = () => {
     getAlarmsHistory()
       .then((data) => {
-        setAlarms(data)
+        setAlarms(data);
       })
       .catch((error) => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
 
   return (
     <div className={classes.tableContainer}>
@@ -235,13 +235,13 @@ const ListAlarmHistory = () => {
                           <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
                             {formatDate(row[column.field])}
                           </TableCell>
-                        )
+                        );
                       }
                       return (
                         <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
                           {row[column.field]}
                         </TableCell>
-                      )
+                      );
                     })}
                     <TableCell className={classes.centeredCell}>
                       <ChipState state={row.stateAlarmName} />
@@ -282,7 +282,7 @@ const ListAlarmHistory = () => {
       </TableContainer>
 
     </div>
-  )
-}
+  );
+};
 
-export default ListAlarmHistory
+export default ListAlarmHistory;

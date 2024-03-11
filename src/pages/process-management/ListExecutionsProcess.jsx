@@ -1,36 +1,36 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { Box } from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid'
-import { format } from 'date-fns'
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Box } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { format } from 'date-fns';
 
-import { getExutionsByProcess } from './services/ProcessService'
+import { getExutionsByProcess } from './services/ProcessService';
 
 export default function ListExecutionsProcess () {
-  const [executions, setExecutions] = useState([])
-  const { processId } = useParams()
+  const [executions, setExecutions] = useState([]);
+  const { processId } = useParams();
 
   useEffect(() => {
-    loadExecutionsData()
-  }, [])
+    loadExecutionsData();
+  }, []);
 
   const loadExecutionsData = () => {
     getExutionsByProcess(processId)
       .then((data) => {
-        setExecutions(data)
+        setExecutions(data);
       })
       .catch((error) => {
-        console.error(error)
+        console.error(error);
         // Manejar el error adecuadamente
-      })
-  }
+      });
+  };
 
   const formatDate = (date) => {
     if (date === -1) {
-      return ''
+      return '';
     }
-    return format(new Date(date), 'dd/MM/yyyy HH:mm:ss') // Formato de fecha deseado
-  }
+    return format(new Date(date), 'dd/MM/yyyy HH:mm:ss'); // Formato de fecha deseado
+  };
 
   const columns = [
     { field: 'processName', headerName: 'Proceso', width: 200 },
@@ -48,7 +48,7 @@ export default function ListExecutionsProcess () {
     },
     { field: 'state', headerName: 'Estado', width: 150 },
     { field: 'operName', headerName: 'Operador', width: 200 }
-  ]
+  ];
 
   return (
     <Box m={4} maxWidth={1000} mx="auto">
@@ -66,5 +66,5 @@ export default function ListExecutionsProcess () {
         }}
       />
     </Box>
-  )
+  );
 }

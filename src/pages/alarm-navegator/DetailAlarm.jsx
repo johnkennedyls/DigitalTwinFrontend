@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react'
-import { makeStyles } from '@mui/styles'
-import { Select, FormControl, MenuItem, Typography, InputLabel } from '@mui/material'
-import Paper from '@mui/material/Paper'
-import { useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@mui/styles';
+import { Select, FormControl, MenuItem, Typography, InputLabel } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import { useParams } from 'react-router-dom';
 
-import CommentBox from '../../components/alarms/CommentBox'
-import ListAvatar from '../../components/alarms/ListAvatar'
-import { getAlarmById } from '../../services/AlarmService'
-import { changeStateAlarm } from '../../services/StateAlarm'
-import { formatDate } from '../../services/utils/FormatterDate'
-import AlertMessage from '../../components/messages/AlertMessage'
-import AlertDialog from '../../components/alarms/AlertDialog'
+import CommentBox from '../../components/alarms/CommentBox';
+import ListAvatar from '../../components/alarms/ListAvatar';
+import { getAlarmById } from '../../services/AlarmService';
+import { changeStateAlarm } from '../../services/StateAlarm';
+import { formatDate } from '../../services/utils/FormatterDate';
+import AlertMessage from '../../components/messages/AlertMessage';
+import AlertDialog from '../../components/alarms/AlertDialog';
 
 const useStyles = makeStyles({
   root: {
@@ -70,79 +70,79 @@ const useStyles = makeStyles({
     textOverflow: 'ellipsis'
   }
 
-})
+});
 
 const DetailAlarm = () => {
-  const classes = useStyles()
-  const [alarm, setAlarm] = useState([])
-  const { id } = useParams()
-  const [selectedState, setSelectedState] = useState('')
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [dialogMessage, setDialogMessage] = useState('')
-  const [isSelectDisabled, setIsSelectDisabled] = useState(false)
-  const [alert, setAlert] = useState({ show: false, message: '', severity: '' })
+  const classes = useStyles();
+  const [alarm, setAlarm] = useState([]);
+  const { id } = useParams();
+  const [selectedState, setSelectedState] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
+  const [isSelectDisabled, setIsSelectDisabled] = useState(false);
+  const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
 
   useEffect(() => {
-    getAlarm()
-  }, [])
+    getAlarm();
+  }, []);
 
   const getAlarm = () => {
     getAlarmById(id)
       .then((data) => {
-        setAlarm(data)
-        setSelectedState(data.stateAlarmName)
-        console.log(data)
+        setAlarm(data);
+        setSelectedState(data.stateAlarmName);
+        console.log(data);
       })
       .catch((error) => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
 
   const handleStateChange = (e) => {
-    setSelectedState(e.target.value)
-    const newState = e.target.value
-    let message = 'Seguro que quieres cambiar el estado? Una vez lo hagas no podrá ser cambiado'
+    setSelectedState(e.target.value);
+    const newState = e.target.value;
+    let message = 'Seguro que quieres cambiar el estado? Una vez lo hagas no podrá ser cambiado';
     if (newState === 'Cerrado') {
-      message = 'Si cambia el estado de la alarma a Cerrado se cambiaran todas las demás alarmas asociadas al tipo de alarma'
+      message = 'Si cambia el estado de la alarma a Cerrado se cambiaran todas las demás alarmas asociadas al tipo de alarma';
     }
-    setDialogMessage(message)
-    setDialogOpen(true)
-  }
+    setDialogMessage(message);
+    setDialogOpen(true);
+  };
 
   const handleDialogClose = () => {
-    setDialogOpen(false)
-  }
+    setDialogOpen(false);
+  };
 
   const handleConfirmChange = () => {
     const requestBody = {
       stateAlarmName: selectedState
-    }
+    };
     changeStateAlarm(requestBody, id)
       .then((data) => {
-        handleShowAlert('El estado fue cambiado exitosamente', 'success')
+        handleShowAlert('El estado fue cambiado exitosamente', 'success');
       })
       .catch((error) => {
-        console.log(error)
-        handleShowAlert('El estado no pudo ser cambiado', 'error')
-      })
-    setIsSelectDisabled(true)
-    setDialogOpen(false)
-  }
+        console.log(error);
+        handleShowAlert('El estado no pudo ser cambiado', 'error');
+      });
+    setIsSelectDisabled(true);
+    setDialogOpen(false);
+  };
 
   const handleShowAlert = (message, severity) => {
     setAlert({
       show: true,
       message,
       severity
-    })
-  }
+    });
+  };
 
   const handleCloseAlert = (event, reason) => {
     if (reason === 'clickaway') {
-      return
+      return;
     }
-    setAlert({ ...alert, show: false })
-  }
+    setAlert({ ...alert, show: false });
+  };
 
   return (
       <>
@@ -213,6 +213,6 @@ const DetailAlarm = () => {
           />
         </div>
       </>
-  )
-}
-export default DetailAlarm
+  );
+};
+export default DetailAlarm;

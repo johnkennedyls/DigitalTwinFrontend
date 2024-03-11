@@ -1,27 +1,27 @@
-import { useCallback, useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { Button, Typography, Paper, Box, Grid } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
+import { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { Button, Typography, Paper, Box, Grid } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
-import DynamicTable from './editComponents/DynamicTable'
-import ImportDialog from './editComponents/ImportDialog'
+import DynamicTable from './editComponents/DynamicTable';
+import ImportDialog from './editComponents/ImportDialog';
 
 export default function TagsPlantForm ({
   onNext, onBack, currentTags = [{ name: '', description: '' }],
   svgIds, mapSvgTagPrev = null, processLabel = 'add'
 }) {
-  const [tags, setTags] = useState(currentTags)
-  const [removedTags, setRemovedTags] = useState([])
-  const [mapSvgTag, setMapSvgTag] = useState(mapSvgTagPrev == null ? svgIds : mapSvgTagPrev)
-  const [isValid, setIsValid] = useState(false)
+  const [tags, setTags] = useState(currentTags);
+  const [removedTags, setRemovedTags] = useState([]);
+  const [mapSvgTag, setMapSvgTag] = useState(mapSvgTagPrev == null ? svgIds : mapSvgTagPrev);
+  const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
-    console.log(mapSvgTag)
-    console.log(tags)
-  }, [mapSvgTag])
+    console.log(mapSvgTag);
+    console.log(tags);
+  }, [mapSvgTag]);
 
   const handleChangeSvgId = (value) => {
-    const svgIdExists = mapSvgTag.some((tag) => tag.svgId === value)
+    const svgIdExists = mapSvgTag.some((tag) => tag.svgId === value);
     if (svgIdExists) {
       const newTags = mapSvgTag.map((tag, i) =>
         tag.svgId === value
@@ -32,35 +32,35 @@ export default function TagsPlantForm ({
               tagName: tags.find((tag) => tag.metadata && tag.metadata.svgId === value)?.name || ''
             }
           : tag
-      )
-      setMapSvgTag(newTags)
+      );
+      setMapSvgTag(newTags);
     } else {
-      console.log(`SvgId ${value} no existe en la lista.`)
+      console.log(`SvgId ${value} no existe en la lista.`);
     }
-  }
+  };
 
   const handleAddTag = useCallback(() => {
-    setTags((prevTags) => [...prevTags, { name: '', description: '' }])
-  }, [])
+    setTags((prevTags) => [...prevTags, { name: '', description: '' }]);
+  }, []);
 
   const handleRemoveTag = useCallback((index) => {
-    const tag = tags[index]
+    const tag = tags[index];
     if (tag.assetId !== undefined) {
-      const newTag = { ...tag, state: 'R' }
-      setRemovedTags((prevRemovedTags) => [...prevRemovedTags, newTag])
+      const newTag = { ...tag, state: 'R' };
+      setRemovedTags((prevRemovedTags) => [...prevRemovedTags, newTag]);
     }
-    setTags((prevTags) => [...prevTags.slice(0, index), ...prevTags.slice(index + 1)])
-  }, [tags, removedTags])
+    setTags((prevTags) => [...prevTags.slice(0, index), ...prevTags.slice(index + 1)]);
+  }, [tags, removedTags]);
 
   const handleSubmit = useCallback((e) => {
-    e.preventDefault()
+    e.preventDefault();
     const nonEmptyTags = tags.filter(tag =>
       !(tag.name === '' || tag.name === undefined || tag.name === null) ||
             !(tag.description === '' || tag.description === undefined || tag.description === null) ||
             !(tag.dataType === '' || tag.dataType === undefined || tag.dataType === null)
-    )
-    onNext({ tags: nonEmptyTags, removedTags, mapSvgTag }, true)
-  }, [tags, removedTags, onNext])
+    );
+    onNext({ tags: nonEmptyTags, removedTags, mapSvgTag }, true);
+  }, [tags, removedTags, onNext]);
 
   const validateForm = useCallback(() => {
     setIsValid(tags.every(tag =>
@@ -68,12 +68,12 @@ export default function TagsPlantForm ({
             (tag.description === '' || tag.description === undefined || tag.description === null) ||
             (tag.name !== '' && tag.name !== undefined && tag.name !== null) &&
             (tag.description !== '' && tag.description !== undefined && tag.description !== null)
-    ))
-  }, [tags])
+    ));
+  }, [tags]);
 
   useEffect(() => {
-    validateForm()
-  }, [tags, validateForm])
+    validateForm();
+  }, [tags, validateForm]);
 
   return (
         <Grid container justifyContent="center">
@@ -129,7 +129,7 @@ export default function TagsPlantForm ({
 
                         <Grid container spacing={2}>
                             <Grid item xs={12} md={6}>
-                                <Button variant="outlined" color="secondary" fullWidth onClick={() => { onBack({ tags }) }}>
+                                <Button variant="outlined" color="secondary" fullWidth onClick={() => { onBack({ tags }); }}>
                                     Atras
                                 </Button>
                             </Grid>
@@ -143,7 +143,7 @@ export default function TagsPlantForm ({
                 </form>
             </Grid>
         </Grid>
-  )
+  );
 }
 
 TagsPlantForm.propTypes = {
@@ -151,4 +151,4 @@ TagsPlantForm.propTypes = {
   onBack: PropTypes.func.isRequired,
   currentTags: PropTypes.arrayOf(PropTypes.object),
   processLabel: PropTypes.string
-}
+};

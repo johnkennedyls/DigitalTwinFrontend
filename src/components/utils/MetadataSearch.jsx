@@ -1,20 +1,20 @@
 export function getUniqueMetadataNames (tags) {
-  const uniqueMetadataNames = new Set()
+  const uniqueMetadataNames = new Set();
   tags.forEach((tag) => {
     if (tag && tag !== null) {
-      const metadata = tag.metadata
+      const metadata = tag.metadata;
       if (metadata && metadata !== null) {
         Object.keys(metadata).forEach((name) => {
-          uniqueMetadataNames.add(name)
-        })
+          uniqueMetadataNames.add(name);
+        });
       }
     }
-  })
-  return uniqueMetadataNames
+  });
+  return uniqueMetadataNames;
 }
 
 export function compareMetadata (metadata, property) {
   if (metadata.hasOwnProperty(property)) {
-    return metadata[property]
-  } else return ''
+    return metadata[property];
+  } else return '';
 }

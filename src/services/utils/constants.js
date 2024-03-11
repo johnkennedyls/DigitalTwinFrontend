@@ -1,4 +1,4 @@
-import { generateRandomDarkColorsArray } from './funtions'
+import { generateRandomDarkColorsArray } from './funtions';
 
 export const DEFAULT_TIME_SERIES_OPTION = {
   color: [
@@ -74,7 +74,7 @@ export const DEFAULT_TIME_SERIES_OPTION = {
   ],
   yAxis: [],
   series: []
-}
+};
 export const DEFAULT_Y_AXIS_FORMAT = {
   type: 'value',
   name: '',
@@ -90,13 +90,13 @@ export const DEFAULT_Y_AXIS_FORMAT = {
   axisLabel: {
     formatter: '{value}'
   }
-}
+};
 export const DEFAULT_SERIES_FORMAT = {
   name: '',
   type: 'line',
   Symbol: 'circle',
   data: []
-}
+};
 export const DEFAULT_MARK_LINE_FORMAT = {
   data: [
     {
@@ -113,5 +113,5 @@ export const DEFAULT_MARK_LINE_FORMAT = {
       }
     }
   ]
-}
-export const SYMBOLS = ['emptyCircle', 'rect', 'triangle', 'diamond', 'circle', 'roundRect', 'pin', 'arrow']
+};
+export const SYMBOLS = ['emptyCircle', 'rect', 'triangle', 'diamond', 'circle', 'roundRect', 'pin', 'arrow'];

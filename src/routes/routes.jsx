@@ -1,22 +1,22 @@
-import { Route, Switch } from 'react-router'
+import { Route, Switch } from 'react-router';
 
-import WelcomeLayout from '../layouts/welcome/WelcomeLayout'
-import AddPlant from '../pages/plant-management/AddPlant'
-import EditPlant from '../pages/plant-management/EditPlant'
-import ListPlant from '../pages/plant-management/ListPlant'
-import DetailTypeAlarm from '../pages/type-alarm-management/DetailTypeAlarm'
-import ListTimeSeries from '../pages/charts-management/ListTimeSeries'
-import Plant from '../pages/plant-management/Plant'
-import AddTypeAlarm from '../pages/type-alarm-management/AddTypeAlarm'
-import EditTypeAlarm from '../pages/type-alarm-management/EditTypeAlarm'
-import ListTypeAlarm from '../pages/type-alarm-management/ListTypeAlarm'
-import ListAlarmGenerate from '../pages/alarm-navegator/ListAlarmGenerate'
-import ListAlarmHistory from '../pages/alarm-navegator/ListAlarmHistory'
-import DetailAlarm from '../pages/alarm-navegator/DetailAlarm'
-import ListProcess from '../pages/process-management/ListProcess'
-import AddProcess from '../pages/process-management/AddProcess'
-import ListExecutionsProcess from '../pages/process-management/ListExecutionsProcess'
-import App from '../App'
+import WelcomeLayout from '../layouts/welcome/WelcomeLayout';
+import AddPlant from '../pages/plant-management/AddPlant';
+import EditPlant from '../pages/plant-management/EditPlant';
+import ListPlant from '../pages/plant-management/ListPlant';
+import DetailTypeAlarm from '../pages/type-alarm-management/DetailTypeAlarm';
+import ListTimeSeries from '../pages/charts-management/ListTimeSeries';
+import Plant from '../pages/plant-management/Plant';
+import AddTypeAlarm from '../pages/type-alarm-management/AddTypeAlarm';
+import EditTypeAlarm from '../pages/type-alarm-management/EditTypeAlarm';
+import ListTypeAlarm from '../pages/type-alarm-management/ListTypeAlarm';
+import ListAlarmGenerate from '../pages/alarm-navegator/ListAlarmGenerate';
+import ListAlarmHistory from '../pages/alarm-navegator/ListAlarmHistory';
+import DetailAlarm from '../pages/alarm-navegator/DetailAlarm';
+import ListProcess from '../pages/process-management/ListProcess';
+import AddProcess from '../pages/process-management/AddProcess';
+import ListExecutionsProcess from '../pages/process-management/ListExecutionsProcess';
+import App from '../App';
 
 // eslint-disable-next-line react-refresh/only-export-components
 const MainLayoutRoutes = () => (
@@ -39,7 +39,7 @@ const MainLayoutRoutes = () => (
       <Route path="/add-process" component={AddProcess} />
     </Switch>
   </App>
-)
+);
 
 const routes = () => (
   <Switch>
@@ -47,6 +47,6 @@ const routes = () => (
     <Route component={(MainLayoutRoutes)} />
     <Route path="*" component={WelcomeLayout} />
   </Switch>
-)
+);
 
-export default routes
+export default routes;

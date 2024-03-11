@@ -1,46 +1,46 @@
-import { useState } from 'react'
-import { Button, TextField, Grid, Paper, Typography, Accordion, AccordionSummary, AccordionDetails, FormControlLabel, Checkbox } from '@mui/material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
+import { useState } from 'react';
+import { Button, TextField, Grid, Paper, Typography, Accordion, AccordionSummary, AccordionDetails, FormControlLabel, Checkbox } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', initialSelected = [] }) => {
-  const plantState = useSelector(state => state.plants)
+  const plantState = useSelector(state => state.plants);
 
-  const [name, setName] = useState(initialName)
-  const [description, setDescription] = useState(initialDescription)
-  const [selectedAssets, setSelectedAssets] = useState(initialSelected)
+  const [name, setName] = useState(initialName);
+  const [description, setDescription] = useState(initialDescription);
+  const [selectedAssets, setSelectedAssets] = useState(initialSelected);
 
   const handleCheck = (assetId) => {
-    const alreadySelected = selectedAssets.includes(assetId)
+    const alreadySelected = selectedAssets.includes(assetId);
     if (alreadySelected) {
-      setSelectedAssets(selectedAssets.filter(s => s !== assetId))
+      setSelectedAssets(selectedAssets.filter(s => s !== assetId));
     } else {
-      setSelectedAssets([...selectedAssets, assetId])
+      setSelectedAssets([...selectedAssets, assetId]);
     }
-  }
+  };
 
   const handleSubmit = e => {
-    e.preventDefault()
+    e.preventDefault();
 
     const selectedPlantsAssetId = Object.keys(plantState)
       .filter(plantId => selectedAssets.includes(plantState[plantId].assetId))
-      .map(plantId => plantState[plantId].assetId)
+      .map(plantId => plantState[plantId].assetId);
 
-    const filteredTags = []
+    const filteredTags = [];
     Object.keys(plantState).forEach(plantId => {
       Object.keys(plantState[plantId].tags).forEach(assetId => {
         if (selectedAssets.includes(Number(assetId)) && !selectedPlantsAssetId.includes(plantState[plantId].assetId)) {
-          filteredTags.push(Number(assetId))
+          filteredTags.push(Number(assetId));
         }
-      })
-    })
+      });
+    });
 
-    let finalSelectedAssets = [...new Set([...selectedPlantsAssetId, ...filteredTags])]
-    finalSelectedAssets = finalSelectedAssets.map(assetId => parseInt(assetId))
+    let finalSelectedAssets = [...new Set([...selectedPlantsAssetId, ...filteredTags])];
+    finalSelectedAssets = finalSelectedAssets.map(assetId => parseInt(assetId));
 
-    onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets })
-  }
+    onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets });
+  };
 
   return (
         <Grid container justifyContent="center">
@@ -111,14 +111,14 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                 </Paper>
             </Grid>
         </Grid>
-  )
-}
+  );
+};
 
 MainProcessForm.propTypes = {
   onNext: PropTypes.func.isRequired,
   initialName: PropTypes.string,
   initialDescription: PropTypes.string,
   initialSelected: PropTypes.arrayOf(PropTypes.number)
-}
+};
 
-export default MainProcessForm
+export default MainProcessForm;

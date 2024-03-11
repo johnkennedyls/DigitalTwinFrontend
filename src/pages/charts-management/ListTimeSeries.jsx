@@ -1,23 +1,23 @@
-import { useState } from 'react'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import AddIcon from '@mui/icons-material/Add'
-import DeleteIcon from '@mui/icons-material/Delete'
-import IconButton from '@mui/material/IconButton'
+import { useState } from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 
-import TimeSeries from '../../components/charts/TimeSeries'
+import TimeSeries from '../../components/charts/TimeSeries';
 
 export default function ListTimeSeries () {
-  const [charts, setCharts] = useState([])
+  const [charts, setCharts] = useState([]);
 
   const handleAddChart = () => {
-    setCharts([...charts, <TimeSeries key={charts.length} />])
-  }
+    setCharts([...charts, <TimeSeries key={charts.length} />]);
+  };
 
   const handleDeleteChart = (index) => {
-    setCharts(charts.filter((_, i) => i !== index))
-    console.log('Eliminar gráfica:', index)
-  }
+    setCharts(charts.filter((_, i) => i !== index));
+    console.log('Eliminar gráfica:', index);
+  };
 
   return (
         <Box>
@@ -72,5 +72,5 @@ export default function ListTimeSeries () {
                 </Button>
             </Box>
         </Box>
-  )
+  );
 }

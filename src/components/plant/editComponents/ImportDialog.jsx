@@ -1,124 +1,124 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react';
 import {
   Button, Dialog, DialogActions,
   DialogContent, DialogTitle, Paper,
   Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow,
   Typography
-} from '@mui/material'
-import { Box } from '@mui/system'
-import * as XLSX from 'xlsx'
+} from '@mui/material';
+import { Box } from '@mui/system';
+import * as XLSX from 'xlsx';
 
-import { ErrorAlert } from '../../utils/Alert'
-import { toCamelCase, toTitleCase } from '../../utils/TextConverter'
+import { ErrorAlert } from '../../utils/Alert';
+import { toCamelCase, toTitleCase } from '../../utils/TextConverter';
 
 function ImportDialog ({ tags, setTags }) {
-  const [open, setOpen] = useState(false)
-  const [fileLoaded, setFileLoaded] = useState(false)
-  const [disabled, setDisabled] = useState(true)
-  const [headers, setHeaders] = useState([])
-  const [rows, setRows] = useState([])
-  const fileInput = useRef(null)
+  const [open, setOpen] = useState(false);
+  const [fileLoaded, setFileLoaded] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+  const [headers, setHeaders] = useState([]);
+  const [rows, setRows] = useState([]);
+  const fileInput = useRef(null);
 
   const handleOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-    setFileLoaded(false)
-    setDisabled(true)
-    setHeaders([])
-  }
+    setOpen(false);
+    setFileLoaded(false);
+    setDisabled(true);
+    setHeaders([]);
+  };
 
   const generateTemplate = () => {
-    const data = [['Svg Id', 'Name', 'Description']]
-    const ws = XLSX.utils.aoa_to_sheet(data)
-    const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1')
-    XLSX.writeFile(wb, 'Plantilla para tags.xlsx')
-  }
+    const data = [['Svg Id', 'Name', 'Description']];
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1');
+    XLSX.writeFile(wb, 'Plantilla para tags.xlsx');
+  };
 
   const handleImport = () => {
-    setOpen(false)
-    setFileLoaded(false)
-    setDisabled(true)
-    const newTags = []
+    setOpen(false);
+    setFileLoaded(false);
+    setDisabled(true);
+    const newTags = [];
     for (let i = 0; i < rows.length; i++) {
-      const tag = {}
-      let tagExists = false
+      const tag = {};
+      let tagExists = false;
       for (const existingTag of tags) {
         if (existingTag.name === rows[i][headers.indexOf('name')]) {
-          tagExists = true
+          tagExists = true;
           Object.assign(existingTag.metadata, {
             ...existingTag.metadata,
             ...rows[i].reduce((acc, value, index) => {
               if (headers[index] !== 'name' && headers[index] !== 'description') {
-                acc[headers[index]] = value
+                acc[headers[index]] = value;
               }
-              return acc
+              return acc;
             }, {})
-          })
-          break
+          });
+          break;
         }
       }
       if (!tagExists) {
         for (let j = 0; j < headers.length; j++) {
           if (headers[j] === 'name' || headers[j] === 'description') {
-            tag[headers[j]] = rows[i][j]
+            tag[headers[j]] = rows[i][j];
           } else {
-            tag.metadata = tag.metadata || {}
-            tag.metadata[headers[j]] = rows[i][j]
+            tag.metadata = tag.metadata || {};
+            tag.metadata[headers[j]] = rows[i][j];
           }
         }
-        newTags.push(tag)
+        newTags.push(tag);
       }
     }
-    setTags([...tags, ...newTags])
-  }
+    setTags([...tags, ...newTags]);
+  };
 
   const handleFileUpload = (e) => {
-    const reader = new FileReader()
-    const file = e.target.files[0]
+    const reader = new FileReader();
+    const file = e.target.files[0];
 
     reader.onload = (e) => {
-      const data = new Uint8Array(e.target.result)
-      const workbook = XLSX.read(data, { type: 'array' })
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
 
-      const firstSheetName = workbook.SheetNames[0]
-      const worksheet = workbook.Sheets[firstSheetName]
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
 
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-      const [currentHeaders] = jsonData.slice(0, 1)
+      const [currentHeaders] = jsonData.slice(0, 1);
 
-      setHeaders(currentHeaders.map((header) => toCamelCase(header)))
-      setRows(jsonData.slice(1))
-      setFileLoaded(true)
-    }
-    reader.readAsArrayBuffer(file)
-  }
+      setHeaders(currentHeaders.map((header) => toCamelCase(header)));
+      setRows(jsonData.slice(1));
+      setFileLoaded(true);
+    };
+    reader.readAsArrayBuffer(file);
+  };
 
   useEffect(() => {
     if (headers.length > 0) {
-      checkIfHaveSubheaders()
-    } else setDisabled(true)
-  }, [headers])
+      checkIfHaveSubheaders();
+    } else setDisabled(true);
+  }, [headers]);
 
   function checkIfHaveSubheaders () {
     for (let i = 0; i < headers.length; i++) {
       if (headers[i] === undefined) {
-        ErrorAlert('No se puede importar un archivo con subencabezados.')
-        setDisabled(true)
-        setFileLoaded(false)
-        return
+        ErrorAlert('No se puede importar un archivo con subencabezados.');
+        setDisabled(true);
+        setFileLoaded(false);
+        return;
       }
     }
     if (!headers.includes('name', 'description') && !headers.includes('Name', 'Description')) {
-      ErrorAlert(headers.includes('Name'))
-      setDisabled(true)
+      ErrorAlert(headers.includes('Name'));
+      setDisabled(true);
     }
-    setDisabled(false)
+    setDisabled(false);
   }
 
   const renderOnFileNotLoaded = () => {
@@ -129,8 +129,8 @@ function ImportDialog ({ tags, setTags }) {
                     Seleccionar Archivo
                 </Button>
             </>
-    )
-  }
+    );
+  };
 
   const renderOnFileLoaded = () => {
     return (
@@ -165,19 +165,19 @@ function ImportDialog ({ tags, setTags }) {
                     </Table>
                 </TableContainer>
             </>
-    )
-  }
+    );
+  };
 
   function checkEmptyCells (row) {
-    const result = []
+    const result = [];
     for (let i = 0; i < headers.length; i++) {
       if (row[i] === undefined || row[i] === '') {
-        result.push(<TableCell/>)
+        result.push(<TableCell/>);
       } else {
-        result.push(<TableCell align="center">{row[i]}</TableCell>)
+        result.push(<TableCell align="center">{row[i]}</TableCell>);
       }
     }
-    return result
+    return result;
   }
 
   return (
@@ -207,7 +207,7 @@ function ImportDialog ({ tags, setTags }) {
                 </DialogActions>
             </Dialog>
         </>
-  )
+  );
 }
 
-export default ImportDialog
+export default ImportDialog;

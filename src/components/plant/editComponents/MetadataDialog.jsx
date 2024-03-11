@@ -1,41 +1,41 @@
-import { useState } from 'react'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
+import { useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 
-import { toCamelCase } from '../../utils/TextConverter'
-import { ErrorAlert, SuccessAlert } from '../../utils/Alert'
+import { toCamelCase } from '../../utils/TextConverter';
+import { ErrorAlert, SuccessAlert } from '../../utils/Alert';
 
 function MetadataDialog ({ tagProperties, setTagProperties }) {
-  const [open, setOpen] = useState(false)
-  const [error, setError] = useState(false)
-  const [metadata, setMetadata] = useState([])
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState(false);
+  const [metadata, setMetadata] = useState([]);
 
   const handleOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-    setError(false)
-    setMetadata('')
-  }
+    setOpen(false);
+    setError(false);
+    setMetadata('');
+  };
 
   const handleChangeMetadata = (e) => {
-    setMetadata(e.target.value)
-  }
+    setMetadata(e.target.value);
+  };
 
   const handleAddMetadata = () => {
     if (metadata) {
       if (!tagProperties.includes(toCamelCase(metadata))) {
-        setTagProperties([...tagProperties, toCamelCase(metadata)])
-        setError(false)
-        setMetadata('')
-        SuccessAlert('Metadata agregada correctamente')
+        setTagProperties([...tagProperties, toCamelCase(metadata)]);
+        setError(false);
+        setMetadata('');
+        SuccessAlert('Metadata agregada correctamente');
       } else {
-        ErrorAlert('Ya existe una metadata con ese nombre')
-        setError(true)
+        ErrorAlert('Ya existe una metadata con ese nombre');
+        setError(true);
       }
-    } else setError(true)
-  }
+    } else setError(true);
+  };
 
   return (
         <>
@@ -68,7 +68,7 @@ function MetadataDialog ({ tagProperties, setTagProperties }) {
                 </DialogActions>
             </Dialog>
         </>
-  )
+  );
 }
 
-export default MetadataDialog
+export default MetadataDialog;

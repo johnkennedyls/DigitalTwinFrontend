@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit'
-import moment from 'moment'
+import { createSlice } from '@reduxjs/toolkit';
+import moment from 'moment';
 
-import { LIMIT_STORED_DATA } from '../../config/config'
+import { LIMIT_STORED_DATA } from '../../config/config';
 
 export const tagSlice = createSlice({
   name: 'tags',
@@ -13,31 +13,31 @@ export const tagSlice = createSlice({
       action.payload.forEach((tag) => {
         try {
           if (!state[tag.assetId]) {
-            state[tag.assetId] = []
+            state[tag.assetId] = [];
           }
 
-          const currentDate = moment(new Date(tag.timeStamp)).format('YYYY-MM-DD HH:mm:ss')
+          const currentDate = moment(new Date(tag.timeStamp)).format('YYYY-MM-DD HH:mm:ss');
 
           if (Number.isFinite(tag.value)) { // Verifica si tag.value es un número
-            state[tag.assetId].push([currentDate, tag.value])
-            state.date.push(currentDate)
+            state[tag.assetId].push([currentDate, tag.value]);
+            state.date.push(currentDate);
             if (state[tag.assetId].length > LIMIT_STORED_DATA) {
-              state[tag.assetId].shift()
-              state.date.shift()
+              state[tag.assetId].shift();
+              state.date.shift();
             }
           }
         } catch (err) {
-          console.err(err)
+          console.err(err);
         }
-      })
+      });
 
       if (state.date.length > LIMIT_STORED_DATA) {
-        state.date.shift()
+        state.date.shift();
       }
     }
   }
-})
+});
 
-export const { updateTagData } = tagSlice.actions
+export const { updateTagData } = tagSlice.actions;
 
-export const tagReducer = tagSlice.reducer
+export const tagReducer = tagSlice.reducer;

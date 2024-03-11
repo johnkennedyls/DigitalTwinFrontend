@@ -1,24 +1,24 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   IconButton, Table, TableBody,
   TableCell, TableHead, TableRow,
   InputLabel, Select, MenuItem,
   FormControl, Button
-} from '@mui/material'
-import { Delete, Edit, Add, Visibility } from '@mui/icons-material'
-import { makeStyles } from '@mui/styles'
-import Paper from '@mui/material/Paper'
-import TableContainer from '@mui/material/TableContainer'
-import TableFooter from '@mui/material/TableFooter'
-import TablePagination from '@mui/material/TablePagination'
-import { useSelector } from 'react-redux'
+} from '@mui/material';
+import { Delete, Edit, Add, Visibility } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
+import Paper from '@mui/material/Paper';
+import TableContainer from '@mui/material/TableContainer';
+import TableFooter from '@mui/material/TableFooter';
+import TablePagination from '@mui/material/TablePagination';
+import { useSelector } from 'react-redux';
 
-import AlertDialog from '../../components/alarms/AlertDialog.jsx'
-import AlertMessage from '../../components/messages/AlertMessage'
-import AvatarLetter from '../../components/alarms/AvatarLetter.jsx'
-import { getTypeAlarms, deleteTypeAlarm, getTypeAlarmsByPlant } from '../../services/TypeAlarmService'
+import AlertDialog from '../../components/alarms/AlertDialog.jsx';
+import AlertMessage from '../../components/messages/AlertMessage';
+import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
+import { getTypeAlarms, deleteTypeAlarm, getTypeAlarmsByPlant } from '../../services/TypeAlarmService';
 
 const useStyles = makeStyles({
   tableContainer: {
@@ -82,47 +82,47 @@ const useStyles = makeStyles({
     position: 'sticky',
     bottom: 0
   }
-})
+});
 
 const ListTypeAlarm = () => {
-  const history = useHistory()
-  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH
-  const plantState = useSelector(state => state.plants)
-  const [plants, setPlants] = useState([])
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL
-  const classes = useStyles()
+  const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
+  const plantState = useSelector(state => state.plants);
+  const [plants, setPlants] = useState([]);
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const classes = useStyles();
 
-  const showTypeAlarmPath = '/detail-type-alarm/'
-  const addTypeAlarmPath = '/add-type-alarm'
-  const editTypeAlarmPath = '/edit-type-alarm/'
+  const showTypeAlarmPath = '/detail-type-alarm/';
+  const addTypeAlarmPath = '/add-type-alarm';
+  const editTypeAlarmPath = '/edit-type-alarm/';
 
-  const [alarms, setAlarms] = useState([])
-  const [open, setOpen] = useState(false)
-  const [currentRow, setCurrentRow] = useState(null)
-  const [selectedPlant, setSelectedPlant] = useState(null)
-  const [alert, setAlert] = useState({ show: false, message: '', severity: '' })
+  const [alarms, setAlarms] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [currentRow, setCurrentRow] = useState(null);
+  const [selectedPlant, setSelectedPlant] = useState(null);
+  const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
 
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(3)
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
+    setPage(newPage);
+  };
 
   useEffect(() => {
-    const currentPlants = Object.values(plantState)
-    setPlants(currentPlants)
-  }, [plantState])
+    const currentPlants = Object.values(plantState);
+    setPlants(currentPlants);
+  }, [plantState]);
 
   useEffect(() => {
-    const currentPlants = Object.values(plantState)
-    setPlants(currentPlants)
-  }, [])
+    const currentPlants = Object.values(plantState);
+    setPlants(currentPlants);
+  }, []);
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const columns = [
     {
@@ -145,89 +145,89 @@ const ListTypeAlarm = () => {
       title: 'Condición',
       field: 'condition'
     }
-  ]
+  ];
 
   const handleOpenDialog = (row) => {
-    setCurrentRow(row)
-    setOpen(true)
-  }
+    setCurrentRow(row);
+    setOpen(true);
+  };
 
   const handleCloseDialog = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleEdit = (row) => {
-    history.push(`/edit-type-alarm/${row.typeAlarmId}`)
-  }
+    history.push(`/edit-type-alarm/${row.typeAlarmId}`);
+  };
 
   const handleShow = (row) => {
-    history.push(`/detail-type-alarm/${row.typeAlarmId}`)
-  }
+    history.push(`/detail-type-alarm/${row.typeAlarmId}`);
+  };
 
   const handleDelete = () => {
     if (currentRow) {
       deleteTypeAlarm(currentRow.typeAlarmId)
         .then(() => {
-          const message = 'Se ha eliminado exitosamente el tipo de alarma'
-          const severity = 'success'
-          setAlert({ show: true, message, severity })
-          const newAlarms = alarms.filter(alarm => alarm.typeAlarmId !== currentRow.typeAlarmId)
-          setAlarms(newAlarms)
+          const message = 'Se ha eliminado exitosamente el tipo de alarma';
+          const severity = 'success';
+          setAlert({ show: true, message, severity });
+          const newAlarms = alarms.filter(alarm => alarm.typeAlarmId !== currentRow.typeAlarmId);
+          setAlarms(newAlarms);
         })
         .catch((error) => {
-          console.log(error)
-          const message = 'No se ha podido eliminar la alarma'
-          const severity = 'error'
-          setAlert({ show: true, message, severity })
-        })
+          console.log(error);
+          const message = 'No se ha podido eliminar la alarma';
+          const severity = 'error';
+          setAlert({ show: true, message, severity });
+        });
     }
-    setOpen(false)
-  }
+    setOpen(false);
+  };
   const handleCloseAlert = () => {
-    setAlert(prevState => ({ ...prevState, show: false }))
-  }
+    setAlert(prevState => ({ ...prevState, show: false }));
+  };
 
   useEffect(() => {
-    getAlarms()
-  }, [])
+    getAlarms();
+  }, []);
 
   const getAlarms = () => {
-    console.log('OLAAAAAAAAAAAAA')
+    console.log('OLAAAAAAAAAAAAA');
     getTypeAlarms()
       .then((data) => {
-        setAlarms(data)
+        setAlarms(data);
       })
       .catch((error) => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
 
   const addTypeAlarmNavidate = (e) => {
-    e.preventDefault()
-    history.push(addTypeAlarmPath)
-  }
+    e.preventDefault();
+    history.push(addTypeAlarmPath);
+  };
 
   const handleChange = (e) => {
-    const plantId = e.target.value
-    setSelectedPlant(plantId)
+    const plantId = e.target.value;
+    setSelectedPlant(plantId);
     if (plantId === 'all') {
       getTypeAlarms()
         .then((data) => {
-          setAlarms(data)
+          setAlarms(data);
         })
         .catch((error) => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     } else {
       getTypeAlarmsByPlant(plantId)
         .then((response) => {
-          setAlarms(response)
+          setAlarms(response);
         })
         .catch((error) => {
-          console.error(error)
-        })
+          console.error(error);
+        });
     }
-  }
+  };
 
   return (
     <>
@@ -354,7 +354,7 @@ const ListTypeAlarm = () => {
         />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default ListTypeAlarm
+export default ListTypeAlarm;

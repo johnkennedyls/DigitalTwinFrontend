@@ -1,21 +1,21 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   IconButton, Table, TableBody,
   TableCell, TableHead, TableRow,
   TableContainer, TableFooter,
   TablePagination, Paper, FormControl,
   InputLabel, Select, MenuItem
-} from '@mui/material'
-import { Visibility } from '@mui/icons-material'
-import { makeStyles } from '@mui/styles'
-import { useSelector } from 'react-redux'
+} from '@mui/material';
+import { Visibility } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
+import { useSelector } from 'react-redux';
 
-import ChipState from '../../components/alarms/ChipState.jsx'
-import { formatDate } from '../../services/utils/FormatterDate'
-import AvatarLetter from '../../components/alarms/AvatarLetter.jsx'
-import { getAlarmsGenerate, getAllAlarmsActiveByPlantId } from '../../services/AlarmService'
+import ChipState from '../../components/alarms/ChipState.jsx';
+import { formatDate } from '../../services/utils/FormatterDate';
+import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
+import { getAlarmsGenerate, getAllAlarmsActiveByPlantId } from '../../services/AlarmService';
 
 const useStyles = makeStyles({
   tableContainer: {
@@ -109,35 +109,35 @@ const useStyles = makeStyles({
     bottom: 0,
     backgroundColor: 'white'
   }
-})
+});
 
 const ListAlarmGenerate = () => {
-  const history = useHistory()
-  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH
+  const history = useHistory();
+  const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
 
-  const classes = useStyles()
-  const [alarms, setAlarms] = useState([])
-  const publicUrl = import.meta.env.VITE_PUBLIC_URL
-  const detailAlarmPath = '/detail-alarm/'
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(3)
-  const plantState = useSelector(state => state.plants)
-  const [plants, setPlants] = useState([])
-  const [selectedPlant, setSelectedPlant] = useState(null)
+  const classes = useStyles();
+  const [alarms, setAlarms] = useState([]);
+  const publicUrl = import.meta.env.VITE_PUBLIC_URL;
+  const detailAlarmPath = '/detail-alarm/';
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(3);
+  const plantState = useSelector(state => state.plants);
+  const [plants, setPlants] = useState([]);
+  const [selectedPlant, setSelectedPlant] = useState(null);
 
   useEffect(() => {
-    const currentPlants = Object.values(plantState)
-    setPlants(currentPlants)
-  }, [])
+    const currentPlants = Object.values(plantState);
+    setPlants(currentPlants);
+  }, []);
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
+    setPage(newPage);
+  };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const columns = [
     {
@@ -152,37 +152,37 @@ const ListAlarmGenerate = () => {
       title: 'Fecha de Activación',
       field: 'activationDate'
     }
-  ]
+  ];
 
   const handleShowDetail = (row) => {
-    history.push(`/${detailAlarmPath}${row.alarmId}`)
-  }
+    history.push(`/${detailAlarmPath}${row.alarmId}`);
+  };
   useEffect(() => {
     if (selectedPlant !== null) {
       getAllAlarmsActiveByPlantId(selectedPlant)
         .then((response) => {
-          setAlarms(response)
+          setAlarms(response);
         })
         .catch((error) => {
-          console.error(error)
-        })
+          console.error(error);
+        });
     }
-  }, [selectedPlant])
+  }, [selectedPlant]);
 
   useEffect(() => {
-    getAlarms()
-  }, [])
+    getAlarms();
+  }, []);
 
   const getAlarms = () => {
     getAlarmsGenerate()
       .then((data) => {
-        setAlarms(data)
-        console.log('PREUBAxd', data)
+        setAlarms(data);
+        console.log('PREUBAxd', data);
       })
       .catch((error) => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
 
   return (
     <div className={classes.tableContainer}>
@@ -235,13 +235,13 @@ const ListAlarmGenerate = () => {
                           <TableCell className={classes.centeredCell} key={`${row.alarmId}-${column.field}`} width={column.width}>
                             {formatDate(row[column.field])}
                           </TableCell>
-                        )
+                        );
                       }
                       return (
                         <TableCell className={classes.centeredCell} key={`${row.alarmId}-${column.field}`} width={column.width}>
                           {row[column.field]}
                         </TableCell>
-                      )
+                      );
                     })}
                     <TableCell className={classes.centeredCell}>
                       <ChipState state={row.stateAlarmName} />
@@ -281,7 +281,7 @@ const ListAlarmGenerate = () => {
         </Table>
       </TableContainer>
     </div>
-  )
-}
+  );
+};
 
-export default ListAlarmGenerate
+export default ListAlarmGenerate;

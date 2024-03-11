@@ -1,5 +1,5 @@
-import * as React from 'react'
-import Chip from '@mui/material/Chip'
+import * as React from 'react';
+import Chip from '@mui/material/Chip';
 
 function ChipState ({ state }) {
   return (
@@ -35,7 +35,7 @@ function ChipState ({ state }) {
         }}
       data-state={state}
     />
-  )
+  );
 }
 
-export default ChipState
+export default ChipState;

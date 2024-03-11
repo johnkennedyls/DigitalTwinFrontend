@@ -1,31 +1,31 @@
-import { createContext, useContext, useState } from 'react'
-import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
-import PropTypes from 'prop-types'
+import { createContext, useContext, useState } from 'react';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import PropTypes from 'prop-types';
 
-const MessageContext = createContext()
+const MessageContext = createContext();
 
 export const useMessage = () => {
-  return useContext(MessageContext)
-}
+  return useContext(MessageContext);
+};
 
 export const MessageProvider = ({ children }) => {
-  const [message, setMessage] = useState(null)
-  const [type, setType] = useState('success')
-  const [open, setOpen] = useState(false)
+  const [message, setMessage] = useState(null);
+  const [type, setType] = useState('success');
+  const [open, setOpen] = useState(false);
 
   const showMessage = (msg, msgType = 'success', duration = 6000) => {
-    setMessage(msg)
-    setType(msgType)
-    setOpen(true)
+    setMessage(msg);
+    setType(msgType);
+    setOpen(true);
     setTimeout(() => {
-      setOpen(false)
-    }, duration)
-  }
+      setOpen(false);
+    }, duration);
+  };
 
   const contextValue = {
     showMessage
-  }
+  };
 
   return (
         <MessageContext.Provider value={contextValue}>
@@ -37,9 +37,9 @@ export const MessageProvider = ({ children }) => {
             }
             {children}
         </MessageContext.Provider>
-  )
-}
+  );
+};
 
 MessageProvider.propTypes = {
   children: PropTypes.node.isRequired
-}
+};

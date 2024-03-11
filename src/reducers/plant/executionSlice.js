@@ -1,12 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit'
-import moment from 'moment'
+import { createSlice } from '@reduxjs/toolkit';
+import moment from 'moment';
 
 export const executionSlice = createSlice({
   name: 'executions',
   initialState: {},
   reducers: {
     loadAllExecutionsData: (state, action) => {
-      const newState = {}
+      const newState = {};
 
       action.payload.forEach((execution) => {
         newState[execution.id] = {
@@ -18,17 +18,17 @@ export const executionSlice = createSlice({
           endDate: moment(new Date(execution.endDate)).format('YYYY-MM-DD HH:mm:ss'),
           state: execution.state,
           logs: execution.logs
-        }
-      })
+        };
+      });
 
-      return newState
+      return newState;
     },
     deleteExecution: (state, action) => {
-      delete state[action.payload]
+      delete state[action.payload];
     }
   }
-})
+});
 
-export const { loadAllExecutionsData, deleteExecution } = executionSlice.actions
+export const { loadAllExecutionsData, deleteExecution } = executionSlice.actions;
 
-export const executionReducer = executionSlice.reducer
+export const executionReducer = executionSlice.reducer;

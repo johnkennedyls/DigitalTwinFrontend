@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { makeStyles } from '@mui/styles'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import Divider from '@mui/material/Divider'
-import ListItemText from '@mui/material/ListItemText'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
-import Avatar from '@mui/material/Avatar'
-import Typography from '@mui/material/Typography'
-import { TextField } from '@mui/material'
-import Button from '@mui/material/Button'
-import { Add } from '@mui/icons-material'
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@mui/styles';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import { TextField } from '@mui/material';
+import Button from '@mui/material/Button';
+import { Add } from '@mui/icons-material';
 
-import getAvatarColor from '../../services/utils/ColorsAvatar'
-import { formatDate } from '../../services/utils/FormatterDate'
-import { addHistoryAction, getAllActionsHistoryByAlarm } from '../../services/AlarmService'
+import getAvatarColor from '../../services/utils/ColorsAvatar';
+import { formatDate } from '../../services/utils/FormatterDate';
+import { addHistoryAction, getAllActionsHistoryByAlarm } from '../../services/AlarmService';
 
 const useStyles = makeStyles({
   commentContainer: {
@@ -71,52 +71,52 @@ const useStyles = makeStyles({
     alignItems: 'center',
     height: '100%' // Ajusta la altura según tus necesidades
   }
-})
+});
 
 function CommentBox ({ alarmId, handleShowAlert }) {
-  const classes = useStyles()
+  const classes = useStyles();
 
-  const [currentComment, setCurrentComment] = useState('')
-  const [commentList, setCommentList] = useState([])
-  const [isButtonEnabled, setIsButtonEnabled] = useState(false)
+  const [currentComment, setCurrentComment] = useState('');
+  const [commentList, setCommentList] = useState([]);
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
 
   const handleCommentChange = (event) => {
-    const value = event.target.value
-    setCurrentComment(value)
-    setIsButtonEnabled(value !== '')
-  }
+    const value = event.target.value;
+    setCurrentComment(value);
+    setIsButtonEnabled(value !== '');
+  };
 
   useEffect(() => {
-    getHistoryActions()
-  }, [])
+    getHistoryActions();
+  }, []);
 
   const getHistoryActions = () => {
     getAllActionsHistoryByAlarm(alarmId)
       .then((data) => {
-        setCommentList(data)
+        setCommentList(data);
       })
       .catch((error) => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
 
   const handleAddComment = () => {
     if (currentComment !== '') {
       const newComment = {
         actionHistoryDescription: currentComment
-      }
+      };
       addHistoryAction(newComment, alarmId)
         .then(response => {
-          handleShowAlert('Comentario agregado con éxito', 'success')
-          setCurrentComment('')
-          setIsButtonEnabled(false)
-          getHistoryActions()
+          handleShowAlert('Comentario agregado con éxito', 'success');
+          setCurrentComment('');
+          setIsButtonEnabled(false);
+          getHistoryActions();
         })
         .catch(error => {
-          handleShowAlert('Error al agregar el comentario', 'error')
-        })
+          handleShowAlert('Error al agregar el comentario', 'error');
+        });
     }
-  }
+  };
 
   return (
         <>
@@ -189,7 +189,7 @@ function CommentBox ({ alarmId, handleShowAlert }) {
             </Button>
           </div>
         </>
-  )
+  );
 }
 
-export default CommentBox
+export default CommentBox;

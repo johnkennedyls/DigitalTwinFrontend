@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import { TextField, Button, Badge, Select, MenuItem, Checkbox, FormControl, Chip } from '@mui/material'
-import { useSelector } from 'react-redux'
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import InputLabel from '@mui/material/InputLabel'
-import Autocomplete from '@mui/material/Autocomplete'
-import { Save, Cancel } from '@mui/icons-material'
-import validate from 'validate.js'
-import Paper from '@mui/material/Paper'
-import { makeStyles } from '@mui/styles'
+import { useState, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { TextField, Button, Badge, Select, MenuItem, Checkbox, FormControl, Chip } from '@mui/material';
+import { useSelector } from 'react-redux';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import InputLabel from '@mui/material/InputLabel';
+import Autocomplete from '@mui/material/Autocomplete';
+import { Save, Cancel } from '@mui/icons-material';
+import validate from 'validate.js';
+import Paper from '@mui/material/Paper';
+import { makeStyles } from '@mui/styles';
 
-import { getTypeAlarmById, updateTypeAlarm, getEmails, getEvents } from '../../services/TypeAlarmService'
-import AlertMessage from '../../components/messages/AlertMessage'
+import { getTypeAlarmById, updateTypeAlarm, getEmails, getEvents } from '../../services/TypeAlarmService';
+import AlertMessage from '../../components/messages/AlertMessage';
 const useStyles = makeStyles({
 
   root: {
@@ -84,7 +84,7 @@ const useStyles = makeStyles({
     fontSize: 45,
     justifyContent: 'center'
   }
-})
+});
 
 const alarm = {
   typeAlarmName: {
@@ -112,28 +112,28 @@ const alarm = {
   usersAssigned: {
     presence: { allowEmpty: false, message: 'Seleccione al menos una opción' }
   }
-}
+};
 
 function EditTypeAlarm () {
-  const history = useHistory()
+  const history = useHistory();
 
-  const classes = useStyles()
-  const typeAlarmListPath = '/manage-type-alarm'
-  const [alert, setAlert] = useState({ show: false, message: '', severity: '' })
+  const classes = useStyles();
+  const typeAlarmListPath = '/manage-type-alarm';
+  const [alert, setAlert] = useState({ show: false, message: '', severity: '' });
 
-  const plantState = useSelector(state => state.plants)
-  const { id } = useParams()
-  const [events, setEvents] = useState([])
-  const [emails, setEmails] = useState([])
-  const [typeAlarmData, setTypeAlarmData] = useState([])
-  const [tags, setTags] = useState([])
-  const [plants, setPlants] = useState([])
+  const plantState = useSelector(state => state.plants);
+  const { id } = useParams();
+  const [events, setEvents] = useState([]);
+  const [emails, setEmails] = useState([]);
+  const [typeAlarmData, setTypeAlarmData] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [plants, setPlants] = useState([]);
 
   const [conditionalValues, setConditionalValues] = useState({
     tag: '',
     condition: '',
     value: ''
-  })
+  });
 
   const [dataForm, setDataForm] = useState({
     isValid: false,
@@ -142,7 +142,7 @@ function EditTypeAlarm () {
     values: {
       usersAssigned: typeAlarmData.usersAssigned || []
     }
-  })
+  });
 
   useEffect(() => {
     setDataForm({
@@ -160,51 +160,51 @@ function EditTypeAlarm () {
           : '',
         usersAssigned: typeAlarmData.usersAssigned || []
       }
-    })
-  }, [typeAlarmData])
+    });
+  }, [typeAlarmData]);
 
   useEffect(() => {
     if (dataForm.values.plant_id) {
-      const selectedPlant = plants.find(plant => plant.plantName === typeAlarmData.plantName)
-      const selectedPlantTags = selectedPlant ? selectedPlant.tags : []
-      setTags(selectedPlantTags)
+      const selectedPlant = plants.find(plant => plant.plantName === typeAlarmData.plantName);
+      const selectedPlantTags = selectedPlant ? selectedPlant.tags : [];
+      setTags(selectedPlantTags);
     }
-  }, [dataForm.values.plant_id, typeAlarmData.plantName])
+  }, [dataForm.values.plant_id, typeAlarmData.plantName]);
 
   const hasError = (field) => {
     if (field === 'typeAlarmName' || field === 'typeAlarmDescription' ||
     field === 'numberAlarmsMax' || field === 'event_id' ||
     field === 'usersAssigned' || field === 'condition' || field === 'plant_id') {
       if (dataForm.values[field] === '') {
-        return false
+        return false;
       }
     }
-    return !!(dataForm.touched[field] && dataForm.errors[field])
-  }
+    return !!(dataForm.touched[field] && dataForm.errors[field]);
+  };
 
   useEffect(() => {
-    handleErrors()
-  }, [dataForm.values])
+    handleErrors();
+  }, [dataForm.values]);
 
   const handleErrors = () => {
-    const errors = validate(dataForm.values, alarm)
+    const errors = validate(dataForm.values, alarm);
     setDataForm((dataForm) => ({
       ...dataForm,
       isValid: !errors,
       errors: errors || {}
-    }))
-  }
+    }));
+  };
 
   const handleChange = (event) => {
     if (Object.prototype.hasOwnProperty.call(dataForm, event.target.id)) {
-      dataForm[event.target.id] = event.target.value
-      setDataForm(dataForm)
+      dataForm[event.target.id] = event.target.value;
+      setDataForm(dataForm);
     } else {
-      const newAttribute = { [event.target.id]: event.target.value }
-      const newDataForm = Object.assign(dataForm, newAttribute)
-      setDataForm(newDataForm)
+      const newAttribute = { [event.target.id]: event.target.value };
+      const newDataForm = Object.assign(dataForm, newAttribute);
+      setDataForm(newDataForm);
     }
-    event.persist()
+    event.persist();
     setDataForm((dataForm) => ({
       ...dataForm,
       values: {
@@ -215,24 +215,24 @@ function EditTypeAlarm () {
         ...dataForm.touched,
         [event.target.name]: true
       }
-    }))
-  }
+    }));
+  };
 
   useEffect(() => {
-    const currentPlants = Object.values(plantState)
-    setPlants(currentPlants)
-  }, [])
+    const currentPlants = Object.values(plantState);
+    setPlants(currentPlants);
+  }, []);
 
   const concatenateValues = () => {
     if (conditionalValues.tag && conditionalValues.condition && conditionalValues.value) {
-      const condition = `${conditionalValues.tag} ${conditionalValues.condition} ${conditionalValues.value}`
+      const condition = `${conditionalValues.tag} ${conditionalValues.condition} ${conditionalValues.value}`;
       setDataForm((dataForm) => ({
         ...dataForm,
         values: {
           ...dataForm.values,
           condition
         }
-      }))
+      }));
     } else {
       setDataForm((dataForm) => ({
         ...dataForm,
@@ -240,42 +240,42 @@ function EditTypeAlarm () {
           ...dataForm.values,
           condition: ''
         }
-      }))
+      }));
     }
-    handleErrors()
-  }
+    handleErrors();
+  };
   useEffect(() => {
-    getEmailsSystem()
-  }, [])
+    getEmailsSystem();
+  }, []);
 
   const getEmailsSystem = () => {
     getEmails()
       .then((data) => {
-        const userEmails = data.map((item) => item.userEmail)
-        setEmails(userEmails)
+        const userEmails = data.map((item) => item.userEmail);
+        setEmails(userEmails);
       })
       .catch((error) => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
-    getEventsDashboard()
-  }, [])
+    getEventsDashboard();
+  }, []);
 
   const getEventsDashboard = () => {
     getEvents()
       .then((data) => {
-        setEvents(data)
+        setEvents(data);
       })
       .catch((error) => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
-    concatenateValues()
-  }, [conditionalValues])
+    concatenateValues();
+  }, [conditionalValues]);
 
   const handleAutocompleteChange = (value) => {
     setDataForm((dataForm) => ({
@@ -288,55 +288,55 @@ function EditTypeAlarm () {
         ...dataForm.touched,
         usersAssigned: true
       }
-    }))
-  }
+    }));
+  };
 
   useEffect(() => {
     getTypeAlarmById(id)
       .then(data => {
-        setTypeAlarmData(data)
+        setTypeAlarmData(data);
         if (data?.condition) {
-          const parts = data.condition.split(/(>=|<=|>|<|=)/)
+          const parts = data.condition.split(/(>=|<=|>|<|=)/);
           setConditionalValues({
             tag: parts[0].trim(),
             condition: parts[1].trim(),
             value: parts[2].trim()
-          })
+          });
         }
       })
-      .catch(error => console.log(error))
-  }, [id])
+      .catch(error => console.log(error));
+  }, [id]);
 
   const handleCloseAlert = () => {
-    setAlert(prevState => ({ ...prevState, show: false }))
-  }
+    setAlert(prevState => ({ ...prevState, show: false }));
+  };
 
   const typeAlarmNavigate = (e) => {
-    e.preventDefault()
-    history.push(typeAlarmListPath)
-  }
+    e.preventDefault();
+    history.push(typeAlarmListPath);
+  };
 
   const editTypeAlarm = async (event) => {
     updateTypeAlarm(id, dataForm.values).then((data) => {
-      const message = 'Se ha editado exitosamente el tipo de alarma'
-      const severity = 'success'
-      setAlert({ show: true, message, severity })
-      history.push(typeAlarmListPath)
+      const message = 'Se ha editado exitosamente el tipo de alarma';
+      const severity = 'success';
+      setAlert({ show: true, message, severity });
+      history.push(typeAlarmListPath);
     })
       .catch((error) => {
-        let message = ''
-        const severity = 'error'
+        let message = '';
+        const severity = 'error';
         if (error.response) {
           if (error.response.data === 'El nombre del tipo de alarma ya existe') {
-            message = error.response.data
-            setAlert({ show: true, message, severity })
+            message = error.response.data;
+            setAlert({ show: true, message, severity });
           } else {
-            message = error.response.data
-            setAlert({ show: true, message, severity })
+            message = error.response.data;
+            setAlert({ show: true, message, severity });
           }
         }
-      })
-  }
+      });
+  };
 
   return (
     <>
@@ -360,9 +360,9 @@ function EditTypeAlarm () {
                         ...dataForm.values,
                         plant_id: event.target.value
                       }
-                    })
-                    const selectedPlant = plants.find(plant => plant.plantId === event.target.value)
-                    setTags(selectedPlant ? selectedPlant.tags : [])
+                    });
+                    const selectedPlant = plants.find(plant => plant.plantId === event.target.value);
+                    setTags(selectedPlant ? selectedPlant.tags : []);
                   }}
                 >
                   {plants.map((plant) => (
@@ -397,7 +397,7 @@ function EditTypeAlarm () {
                     label="Tag"
                     value={conditionalValues.tag}
                     onChange={(event) => {
-                      setConditionalValues({ ...conditionalValues, tag: event.target.value })
+                      setConditionalValues({ ...conditionalValues, tag: event.target.value });
                     }}
                     className={classes.selectTag}
                   >
@@ -414,7 +414,7 @@ function EditTypeAlarm () {
                     labelId='conditionalInput'
                     value={conditionalValues.condition}
                     onChange={(event) => {
-                      setConditionalValues({ ...conditionalValues, conditional: event.target.value })
+                      setConditionalValues({ ...conditionalValues, conditional: event.target.value });
                     }}
                     className={classes.selectConditional}
                   >
@@ -430,7 +430,7 @@ function EditTypeAlarm () {
                   type="number"
                   value={conditionalValues.value}
                   onChange={(event) => {
-                    setConditionalValues({ ...conditionalValues, value: event.target.value })
+                    setConditionalValues({ ...conditionalValues, value: event.target.value });
                   }}
                   className={classes.valueTextField}
                   error={hasError('condition')}
@@ -579,7 +579,7 @@ function EditTypeAlarm () {
         />
       </div>
     </>
-  )
+  );
 }
 
-export default EditTypeAlarm
+export default EditTypeAlarm;
