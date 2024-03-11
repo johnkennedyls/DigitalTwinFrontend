@@ -3,7 +3,7 @@ import SockJS from 'sockjs-client';
 import * as webstomp from 'webstomp-client';
 
 export class StompClient {
-  constructor(url, onConnect, onDisconnect) {
+  constructor (url, onConnect, onDisconnect) {
     this.url = url;
     this.onConnect = onConnect;
     this.onDisconnect = onDisconnect;
@@ -12,7 +12,7 @@ export class StompClient {
     this.client = null;
   }
 
-  connect(headers = {}) {
+  connect (headers = {}) {
     if (this.connected) {
       return;
     }
@@ -35,7 +35,7 @@ export class StompClient {
     );
   }
 
-  disconnect() {
+  disconnect () {
     if (!this.connected) {
       return;
     }
@@ -44,14 +44,14 @@ export class StompClient {
     });
   }
 
-  subscribe(destination, callback) {
+  subscribe (destination, callback) {
     if (!this.connected) {
       throw new Error('Client not connected');
     }
     return this.client.subscribe(destination, callback);
   }
 
-  send(destination, body, headers = {}) {
+  send (destination, body, headers = {}) {
     if (!this.connected) {
       throw new Error('Client not connected');
     }

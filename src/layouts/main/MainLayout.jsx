@@ -1,5 +1,6 @@
-import PropTypes from 'prop-types'
-import MainToolbar from '../header/MainToolbar'
+import PropTypes from 'prop-types';
+
+import MainToolbar from '../header/MainToolbar';
 
 const MainLayout = ({ children }) => {
   return (
@@ -11,7 +12,7 @@ const MainLayout = ({ children }) => {
 };
 
 MainLayout.propTypes = {
-  children: PropTypes.element,
-}
+  children: PropTypes.element
+};
 
 export default MainLayout;

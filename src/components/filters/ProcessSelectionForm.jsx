@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-
-function ProcessSelectionForm({ processes, onChange }) {
+function ProcessSelectionForm ({ processes, onChange }) {
   const [selectedProcess, setSelectedProcess] = useState('');
 
   const handleChange = (event) => {
     setSelectedProcess(event.target.value);
     onChange(processes.find(process => process.id === event.target.value));
   };
-  
-
-
 
   return (
     <FormControl fullWidth>
@@ -25,7 +21,7 @@ function ProcessSelectionForm({ processes, onChange }) {
         {processes.map((process) => (
           <MenuItem key={process.id} value={process.id}>
             {process.name}
-            
+
           </MenuItem>
         ))}
       </Select>

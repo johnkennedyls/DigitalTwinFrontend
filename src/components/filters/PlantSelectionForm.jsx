@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-function PlantSelectionForm({ plants }) {
+function PlantSelectionForm ({ plants }) {
   const [selectedPlant, setSelectedPlant] = useState('');
 
   const handleChange = (event) => {

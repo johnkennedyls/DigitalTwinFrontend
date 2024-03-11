@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Container, Stepper, Step, StepLabel } from '@mui/material';
+
 import MainPlantForm from '../../components/plant/MainPlantForm';
 import TagsPlantForm from '../../components/plant/TagsPlantForm';
 import LoadPlantSvgForm from '../../components/plant/LoadPlantSvgForm';
-import { editPlant, getPlantData } from '../../services/PlantService'
+import { editPlant, getPlantData } from '../../services/PlantService';
 import { ErrorAlert, SuccessAlert } from '../../components/utils/Alert';
 
-const steps = [ 'INFORMACIÓN GENERAL', 'REPRESENTACIÓN GRAFICA', 'TAGS' ];
+const steps = ['INFORMACIÓN GENERAL', 'REPRESENTACIÓN GRAFICA', 'TAGS'];
 
 const EditPlant = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -18,8 +19,8 @@ const EditPlant = () => {
 
   useEffect(() => {
     getPlantData(plantId).then((data) => {
-      console.log("DATA", data)
-      setPlant(data)
+      console.log('DATA', data);
+      setPlant(data);
     }).catch((error) => {
       console.error(error);
     });
@@ -27,23 +28,23 @@ const EditPlant = () => {
 
   const handleBack = (currentForm = undefined) => {
     if (currentForm) {
-      const currentPlant = { ...plant }
+      const currentPlant = { ...plant };
       Object.keys(currentForm).forEach((key) => {
-        currentPlant[key] = currentForm[key]
+        currentPlant[key] = currentForm[key];
       });
-      setPlant(currentPlant)
+      setPlant(currentPlant);
     }
     setActiveStep((prevStep) => prevStep - 1);
   };
 
   const handleNext = (currentForm, submit = false) => {
-    const currentPlant = { ...plant }
-    console.log("RECEIVED ", currentForm)
+    const currentPlant = { ...plant };
+    console.log('RECEIVED ', currentForm);
     Object.keys(currentForm).forEach((key) => {
-      currentPlant[key] = currentForm[key]
+      currentPlant[key] = currentForm[key];
     });
-    console.log("CURRENT PLANT", currentPlant)
-    setPlant(currentPlant)
+    console.log('CURRENT PLANT', currentPlant);
+    setPlant(currentPlant);
     if (!submit) {
       setActiveStep((prevStep) => prevStep + 1);
     } else {
@@ -52,29 +53,40 @@ const EditPlant = () => {
   };
 
   const handleSubmit = (currentPlant) => {
-    currentPlant.tags = [...currentPlant.tags, ...currentPlant.removedTags]
-    console.log("SUBMIT", currentPlant)
+    currentPlant.tags = [...currentPlant.tags, ...currentPlant.removedTags];
+    console.log('SUBMIT', currentPlant);
     editPlant(currentPlant, plantId).then(() => {
       SuccessAlert('Planta editada correctamente');
-      history.push(`/manage-plant`);
+      history.push('/manage-plant');
     }).catch((error) => {
       console.error(error);
       ErrorAlert('Ha ocurrido un error. No se ha podido editar la planta');
     });
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        return <MainPlantForm processLabel='edit' onNext={handleNext} plantName={plant.plantName} plantDescription={plant.plantDescription} plantPhoto={plant.plantPhoto} plantIp={plant.plantIp} plantSlot={plant.plantSlot} />;
+        return <MainPlantForm
+          processLabel='edit'
+          onNext={handleNext}
+          plantName={plant.plantName}
+          plantDescription={plant.plantDescription}
+          plantPhoto={plant.plantPhoto}
+          plantIp={plant.plantIp}
+          plantSlot={plant.plantSlot}
+        />;
       case 1:
-        return <LoadPlantSvgForm processLabel='edit' onNext={handleNext} onBack={handleBack} svgImageUrl={plant.svgImage} conventions={plant.conventions} prevMapSvgTag={plant['mapSvgTag']}/>;
+        return <LoadPlantSvgForm
+          processLabel='edit'
+          onNext={handleNext}
+          onBack={handleBack}
+          svgImageUrl={plant.svgImage}
+          conventions={plant.conventions}
+          prevMapSvgTag={plant.mapSvgTag}
+        />;
       case 2:
-        return <TagsPlantForm processLabel='edit' onNext={handleNext} onBack={handleBack} currentTags={plant.tags} svgIds={plant['mapSvgTag']} />;
+        return <TagsPlantForm processLabel='edit' onNext={handleNext} onBack={handleBack} currentTags={plant.tags} svgIds={plant.mapSvgTag} />;
       default:
         throw new Error('Unknown step');
     }

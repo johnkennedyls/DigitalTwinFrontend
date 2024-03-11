@@ -1,28 +1,23 @@
-import PropTypes from 'prop-types'
-import MainLayout from './layouts/main/MainLayout'
-
+import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { StompClient } from './services/utils/stompClient';
-// import * as Stomp from "stompjs";
-// import * as SockJS from "sockjs-client";
-
-import { updateTagData } from './reducers/plant/tagSlice'
+// import * as Stomp from "stompjs"
+// import * as SockJS from "sockjs-client"
 import { useDispatch } from 'react-redux';
-
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { es } from 'date-fns/locale';
 import { esES } from '@mui/x-date-pickers/locales';
-
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { MessageProvider } from '/src/providers/MessageContext';
 
-import './assets/styles/global.css'
+import { updateTagData } from './reducers/plant/tagSlice';
+import { StompClient } from './services/utils/stompClient';
+import MainLayout from './layouts/main/MainLayout';
+import { MessageProvider } from './providers/MessageContext';
+
+import './assets/styles/global.css';
 
 const theme = createTheme({}, esES);
-
-
 
 const App = ({ children }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -34,7 +29,7 @@ const App = ({ children }) => {
 
   useEffect(() => {
     if (!token) {
-      history.push(``);
+      history.push('');
     }
   }, []);
 
@@ -60,7 +55,7 @@ const App = ({ children }) => {
 
   useEffect(() => {
     stompClient.connect({
-      'Authorization': 'Bearer ' + token
+      Authorization: 'Bearer ' + token
     });
     return () => {
       stompClient.disconnect();
@@ -77,12 +72,11 @@ const App = ({ children }) => {
         </LocalizationProvider>
       </MessageProvider>
     </MainLayout>
-  )
-}
+  );
+};
 
 App.propTypes = {
-  children: PropTypes.element,
-}
-
+  children: PropTypes.element
+};
 
 export default App;

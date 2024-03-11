@@ -1,10 +1,11 @@
 import { useState } from 'react';
+
 import PlantSelectionForm from './PlantSelectionForm';
 import ProcessSelectionForm from './ProcessSelectionForm';
 import ExecutionSelectionForm from './ExecutionSelectionForm';
 import TagSelectionForm from './TagSelectionForm';
 
-function FilterForm({ plants, processes, executions, tags }) {
+function FilterForm ({ plants, processes, executions, tags }) {
   const [selectedPlant, setSelectedPlant] = useState('');
   const [selectedProcess, setSelectedProcess] = useState('');
   const [selectedExecution, setSelectedExecution] = useState('');

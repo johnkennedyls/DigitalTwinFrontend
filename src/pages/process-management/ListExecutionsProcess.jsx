@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { getExutionsByProcess } from '/src/services/ProcessService';
-import { format } from 'date-fns'; 
+import { format } from 'date-fns';
 
-export default function ListExecutionsProcess() {
+import { getExutionsByProcess } from '../../services/ProcessService';
+
+export default function ListExecutionsProcess () {
   const [executions, setExecutions] = useState([]);
   const { processId } = useParams();
 
@@ -22,7 +23,7 @@ export default function ListExecutionsProcess() {
         console.error(error);
         // Manejar el error adecuadamente
       });
-  }
+  };
 
   const formatDate = (date) => {
     if (date === -1) {
@@ -37,16 +38,16 @@ export default function ListExecutionsProcess() {
       field: 'startDate',
       headerName: 'Fecha de inicio',
       width: 200,
-      valueFormatter: (params) => formatDate(params.value), // Formatear la fecha de inicio
+      valueFormatter: (params) => formatDate(params.value) // Formatear la fecha de inicio
     },
     {
       field: 'endDate',
       headerName: 'Fecha de fin',
       width: 200,
-      valueFormatter: (params) => formatDate(params.value), // Formatear la fecha de fin
+      valueFormatter: (params) => formatDate(params.value) // Formatear la fecha de fin
     },
     { field: 'state', headerName: 'Estado', width: 150 },
-    { field: 'operName', headerName: 'Operador', width: 200 },
+    { field: 'operName', headerName: 'Operador', width: 200 }
   ];
 
   return (
@@ -61,7 +62,7 @@ export default function ListExecutionsProcess() {
         autoHeight
         disableSelectionOnClick
         localeText={{
-          noRowsLabel: 'No hay elementos disponibles',
+          noRowsLabel: 'No hay elementos disponibles'
         }}
       />
     </Box>

@@ -11,13 +11,13 @@ export function getUniqueMetadataNames(tags, tagProperties) {
                 })
             }
         }
-        
+
     })
     return uniqueMetadataNames
 }
 
-export function compareMetadata(metadata, property) {
-    if (metadata.hasOwnProperty(property)) {
-        return metadata[property]
-    } else return ''
+export function compareMetadata (metadata, property) {
+  if (metadata.hasOwnProperty(property)) {
+    return metadata[property];
+  } else return '';
 }

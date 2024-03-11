@@ -1,8 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import {plantReducer} from './plant/plantSlice';
-import {tagReducer} from './plant/tagSlice';
-import {executionReducer} from './plant/executionSlice';
-import {processReducer} from './plant/processSlice';
+
+import { plantReducer } from './plant/plantSlice';
+import { tagReducer } from './plant/tagSlice';
+import { executionReducer } from './plant/executionSlice';
+import { processReducer } from './plant/processSlice';
 
 const rootReducer = combineReducers({
   plants: plantReducer,

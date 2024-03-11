@@ -1,38 +1,35 @@
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Box,
   Button,
   IconButton,
-  Avatar,
+  Avatar
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
-
-import { getPlantsData, deletePlant } from '/src/services/PlantService'
-import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '/src/reducers/plant/plantSlice';
-import { useSelector, useDispatch } from "react-redux";
-import { hasAnyRole } from "/src/services/utils/funtions";
-
+import { useSelector, useDispatch } from 'react-redux';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { useMessage } from '/src/providers/MessageContext';
+import { hasAnyRole } from '../../services/utils/funtions';
+import { getPlantsData, deletePlant } from '../../services/PlantService';
+import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '../../reducers/plant/plantSlice';
+import { useMessage } from '../../providers/MessageContext';
 
-export default function ListPlant() {
+export default function ListPlant () {
   const [plants, setPlants] = useState([]);
 
-  const plantState = useSelector(state => state.plants)
+  const plantState = useSelector(state => state.plants);
   const dispatch = useDispatch();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
-
 
   const history = useHistory();
   const { showMessage } = useMessage();
@@ -44,28 +41,27 @@ export default function ListPlant() {
       })
       .catch((error) => {
         console.error(error);
-        showMessage("Algo salio mal, por favor intente mas tarde", 'error')
+        showMessage('Algo salio mal, por favor intente mas tarde', 'error');
       });
   }, [dispatch, showMessage]);
 
   useEffect(() => {
-
-    const currentPlants = []
-    console.log(plantState)
+    const currentPlants = [];
+    console.log(plantState);
     Object.keys(plantState).forEach((plant) => {
       currentPlants.push({
         plantId: plantState[plant].assetId,
         plantName: plantState[plant].plantName,
         plantDescription: plantState[plant].plantDescription,
-        plantPhoto: plantState[plant].plantPhoto,
-      })
+        plantPhoto: plantState[plant].plantPhoto
+      });
     });
 
     setPlants(currentPlants);
   }, [plantState]);
 
   const handleAdd = () => {
-    history.push(`/add-plant`);
+    history.push('/add-plant');
   };
 
   const handleEdit = (id) => {
@@ -87,10 +83,9 @@ export default function ListPlant() {
       dispatch(deletePlantFromRedux(deleteId));
     }).catch((error) => {
       console.error(error);
-      showMessage("Algo salió mal al intentar borrar la planta, por favor intenta de nuevo más tarde", 'error')
+      showMessage('Algo salió mal al intentar borrar la planta, por favor intenta de nuevo más tarde', 'error');
     });
   };
-
 
   const columns = [
     {
@@ -100,7 +95,7 @@ export default function ListPlant() {
       width: 120,
       renderCell: (params) => (
         <Avatar src={params.value} alt={params.row.name} />
-      ),
+      )
     },
     { field: 'plantName', headerName: 'Nombre', width: 200 },
     { field: 'plantDescription', headerName: 'Descripción', flex: 1 },
@@ -129,12 +124,12 @@ export default function ListPlant() {
             </IconButton>
           </div>
         );
-      },
-    },
+      }
+    }
   ];
 
   const handleRowClick = (param, event) => {
-    if (event.target.closest('[role="cell"]').dataset.field === "actions") {
+    if (event.target.closest('[role="cell"]').dataset.field === 'actions') {
       return;
     }
     history.push(`/detail-plant/${param.row.plantId}`);
@@ -163,7 +158,7 @@ export default function ListPlant() {
       </Dialog>
       <DataGrid
         rows={plants}
-        getRowId={(row) => row.plantId}        
+        getRowId={(row) => row.plantId}
         columns={columns}
         pageSize={10}
         rowsPerPageOptions={[10, 25, 50]}
@@ -171,7 +166,7 @@ export default function ListPlant() {
         autoHeight
         disableSelectionOnClick
         localeText={{
-          noRowsLabel: 'No hay elementos disponibles',
+          noRowsLabel: 'No hay elementos disponibles'
         }}
         className="clickable-row"
         onRowClick={handleRowClick}

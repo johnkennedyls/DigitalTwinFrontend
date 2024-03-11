@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 import moment from 'moment';
 
 export const executionSlice = createSlice({
@@ -6,7 +6,7 @@ export const executionSlice = createSlice({
   initialState: {},
   reducers: {
     loadAllExecutionsData: (state, action) => {
-      let newState = {};
+      const newState = {};
 
       action.payload.forEach((execution) => {
         newState[execution.id] = {
@@ -17,18 +17,18 @@ export const executionSlice = createSlice({
           startDate: moment(new Date(execution.startDate)).format('YYYY-MM-DD HH:mm:ss'),
           endDate: moment(new Date(execution.endDate)).format('YYYY-MM-DD HH:mm:ss'),
           state: execution.state,
-          logs: execution.logs,
+          logs: execution.logs
         };
       });
 
       return newState;
     },
     deleteExecution: (state, action) => {
-      delete state[action.payload]
+      delete state[action.payload];
     }
-  },
-})
+  }
+});
 
-export const { loadAllExecutionsData, deleteExecution } = executionSlice.actions
+export const { loadAllExecutionsData, deleteExecution } = executionSlice.actions;
 
-export const executionReducer = executionSlice.reducer
+export const executionReducer = executionSlice.reducer;

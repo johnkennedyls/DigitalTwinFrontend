@@ -1,4 +1,6 @@
-export function generateRandomColor() {
+import jwtDecode from 'jwt-decode';
+
+export function generateRandomColor () {
   const letters = '0123456789ABCDEF';
   let color = '#';
   for (let i = 0; i < 6; i++) {
@@ -7,7 +9,7 @@ export function generateRandomColor() {
   return color;
 }
 
-export function generateRandomDarkColor() {
+export function generateRandomDarkColor () {
   const letters = '0123456789ABCDEF';
   let color = '#';
   for (let i = 0; i < 6; i++) {
@@ -22,7 +24,7 @@ export function generateRandomDarkColor() {
   return color;
 }
 
-export function generateRandomDarkColorsArray(numColors) {
+export function generateRandomDarkColorsArray (numColors) {
   const colorsArray = [];
   for (let i = 0; i < numColors; i++) {
     colorsArray.push(generateRandomDarkColor());
@@ -30,12 +32,10 @@ export function generateRandomDarkColorsArray(numColors) {
   return colorsArray;
 }
 
-export function deepCopy(oldObject) {
+export function deepCopy (oldObject) {
   return JSON.parse(JSON.stringify(oldObject));
 }
-
-import jwtDecode from 'jwt-decode';
-export function hasAnyRole(rolesToCheck) {
+export function hasAnyRole (rolesToCheck) {
   const token = localStorage.getItem('access_token');
   if (!token) return false;
 
@@ -49,13 +49,13 @@ export function hasAnyRole(rolesToCheck) {
   return rolesToCheck.some(roleToCheck => lowerCaseUserRoles.includes(roleToCheck.toLowerCase()));
 }
 
-export function isValidSVG(svgText) {
+export function isValidSVG (svgText) {
   try {
     const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(svgText, "image/svg+xml");
+    const xmlDoc = parser.parseFromString(svgText, 'image/svg+xml');
 
     // Verificamos si se ha producido algún error de análisis
-    if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
+    if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
       throw new Error('Error de análisis SVG');
     }
 

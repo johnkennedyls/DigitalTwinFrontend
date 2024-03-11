@@ -5,10 +5,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography,
+  Typography
 } from '@mui/material';
 
-function AlertDialog(props) {
+function AlertDialog (props) {
   const { open, onClose, onDelete, onConfirm, title, message, confirm } = props;
 
   const handleAction = () => {
@@ -31,7 +31,7 @@ function AlertDialog(props) {
           Cancelar
         </Button>
         <Button onClick={handleAction} color="secondary" autoFocus>
-          {confirm ? "Confirmar" : "Eliminar"}
+          {confirm ? 'Confirmar' : 'Eliminar'}
         </Button>
       </DialogActions>
     </Dialog>
