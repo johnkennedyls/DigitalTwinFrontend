@@ -1,4 +1,4 @@
-import { Backdrop } from "@mui/material";
+import { Backdrop, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import './styles/Loading.css';
@@ -17,7 +17,7 @@ const Loading = () => {
         <Backdrop 
             open={open}
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 10000 }}>
-                <span className="loader"></span>
+                <CircularProgress color="inherit" />
         </Backdrop>
     )
 }

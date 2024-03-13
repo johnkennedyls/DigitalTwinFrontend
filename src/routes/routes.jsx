@@ -17,12 +17,10 @@ import ListProcess from '../pages/process-management/ListProcess';
 import AddProcess from '../pages/process-management/AddProcess';
 import ListExecutionsProcess from '../pages/process-management/ListExecutionsProcess';
 import App from '../App';
-import Loading from '../components/utils/Loading';
 
 // eslint-disable-next-line react-refresh/only-export-components
 const MainLayoutRoutes = () => (
   <App>
-    <Loading />
     <Switch>
       <Route path="/add-type-alarm" component={AddTypeAlarm} />
       <Route path="/edit-type-alarm/:id" component={EditTypeAlarm} />

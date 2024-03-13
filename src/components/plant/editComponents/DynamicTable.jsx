@@ -54,11 +54,7 @@ function DynamicTable({ tags, setTags, mapSvgTag, handleRemoveTag, handleChangeS
             };
         } else {
             newTags[rowIndex].metadata = newTags[rowIndex].metadata || {};
-            if (newTags[rowIndex].metadata.hasOwnProperty(columnName)) {
-                newTags[rowIndex].metadata[columnName] = newValue;
-            } else {
-                newTags[rowIndex].metadata[columnName] = newValue;
-            }
+            newTags[rowIndex].metadata[columnName] = newValue;
         }
         setTags(newTags);
         if (columnName === 'svgId') {
@@ -116,11 +112,10 @@ function DynamicTable({ tags, setTags, mapSvgTag, handleRemoveTag, handleChangeS
                     editingCell?.rowIndex === rowIndex && editingCell?.columnIndex === columnIndex ? (
                         column === 'svgId' ? (
                             <Autocomplete
-                                key={`${rowIndex}-${columnIndex}`}
                                 options={mapSvgTag} 
                                 getOptionLabel={(option) => option.svgId}
                                 value={mapSvgTag.find((option) => option.tagName === tags[rowIndex].name) || null}
-                                onChange={(event, newValue) => handleCellChange(rowIndex, columnIndex, newValue.svgId)}
+                                onChange={(event, newValue) => handleCellChange(rowIndex, columnIndex, (newValue?.svgId?? ''))}
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
