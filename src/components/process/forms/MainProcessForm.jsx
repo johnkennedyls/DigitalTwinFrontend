@@ -43,74 +43,74 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
   };
 
   return (
-        <Grid container justifyContent="center">
-            <Grid item xs={12} sm={6} md={6}>
-                <Paper elevation={3} sx={{ p: 4, my: 4 }}>
-                    <Typography variant="h6" gutterBottom>
+    <Grid container justifyContent="center">
+      <Grid item xs={12} sm={6} md={6}>
+        <Paper elevation={3} sx={{ p: 4, my: 4 }}>
+          <Typography variant="h6" gutterBottom>
                         Agregar proceso
-                    </Typography>
-                    <form onSubmit={handleSubmit}>
-                        <TextField
-                            label="Nombre del proceso"
-                            name="name"
-                            value={name}
-                            onChange={e => setName(e.target.value)}
-                            fullWidth
-                            required
-                            sx={{ mb: 2 }}
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Nombre del proceso"
+              name="name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              fullWidth
+              required
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Descripción del proceso"
+              name="description"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              fullWidth
+              multiline
+              rows={4}
+              sx={{ mb: 2 }}
+            />
+            {Object.keys(plantState).map((plantKey) => (
+              <Accordion key={plantState[plantKey].assetId}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={selectedAssets.includes(plantState[plantKey].assetId)}
+                        onChange={() => handleCheck(plantState[plantKey].assetId)}
+                      />
+                    }
+                    label={plantState[plantKey].plantName}
+                  />
+                </AccordionSummary>
+                <AccordionDetails>
+                  {Object.keys(plantState[plantKey].tags).map((assetId) => (
+                    <FormControlLabel
+                      key={assetId}
+                      control={
+                        <Checkbox
+                          disabled={selectedAssets.includes(plantState[plantKey].assetId)}
+                          checked={selectedAssets.includes(Number(assetId))}
+                          onChange={() => handleCheck(Number(assetId))}
                         />
-                        <TextField
-                            label="Descripción del proceso"
-                            name="description"
-                            value={description}
-                            onChange={e => setDescription(e.target.value)}
-                            fullWidth
-                            multiline
-                            rows={4}
-                            sx={{ mb: 2 }}
-                        />
-                        {Object.keys(plantState).map((plantKey) => (
-                            <Accordion key={plantState[plantKey].assetId}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                    onClick={(event) => event.stopPropagation()}
-                                >
-                                    <FormControlLabel
-                                        control={
-                                          <Checkbox
-                                          checked={selectedAssets.includes(plantState[plantKey].assetId)}
-                                          onChange={() => handleCheck(plantState[plantKey].assetId)}
-                                          />
-                                        }
-                                        label={plantState[plantKey].plantName}
-                                    />
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    {Object.keys(plantState[plantKey].tags).map((assetId) => (
-                                        <FormControlLabel
-                                            key={assetId}
-                                            control={
-                                              <Checkbox
-                                              disabled={selectedAssets.includes(plantState[plantKey].assetId)}
-                                              checked={selectedAssets.includes(Number(assetId))}
-                                              onChange={() => handleCheck(Number(assetId))}
-                                              />
-                                            }
-                                            label={plantState[plantKey].tags[assetId]}
-                                        />
-                                    ))}
-                                </AccordionDetails>
-                            </Accordion>
-                        ))}
-                        <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
+                      }
+                      label={plantState[plantKey].tags[assetId]}
+                    />
+                  ))}
+                </AccordionDetails>
+              </Accordion>
+            ))}
+            <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
                             Agregar proceso
-                        </Button>
-                    </form>
-                </Paper>
-            </Grid>
-        </Grid>
+            </Button>
+          </form>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -66,29 +66,29 @@ const EditPlant = () => {
 
   const renderStepContent = (step) => {
     switch (step) {
-      case 0:
-        return <MainPlantForm
-          processLabel='edit'
-          onNext={handleNext}
-          plantName={plant.plantName}
-          plantDescription={plant.plantDescription}
-          plantPhoto={plant.plantPhoto}
-          plantIp={plant.plantIp}
-          plantSlot={plant.plantSlot}
-        />;
-      case 1:
-        return <LoadPlantSvgForm
-          processLabel='edit'
-          onNext={handleNext}
-          onBack={handleBack}
-          svgImageUrl={plant.svgImage}
-          conventions={plant.conventions}
-          prevMapSvgTag={plant.mapSvgTag}
-        />;
-      case 2:
-        return <TagsPlantForm processLabel='edit' onNext={handleNext} onBack={handleBack} currentTags={plant.tags} svgIds={plant.mapSvgTag} />;
-      default:
-        throw new Error('Unknown step');
+    case 0:
+      return <MainPlantForm
+        processLabel='edit'
+        onNext={handleNext}
+        plantName={plant.plantName}
+        plantDescription={plant.plantDescription}
+        plantPhoto={plant.plantPhoto}
+        plantIp={plant.plantIp}
+        plantSlot={plant.plantSlot}
+      />;
+    case 1:
+      return <LoadPlantSvgForm
+        processLabel='edit'
+        onNext={handleNext}
+        onBack={handleBack}
+        svgImageUrl={plant.svgImage}
+        conventions={plant.conventions}
+        prevMapSvgTag={plant.mapSvgTag}
+      />;
+    case 2:
+      return <TagsPlantForm processLabel='edit' onNext={handleNext} onBack={handleBack} currentTags={plant.tags} svgIds={plant.mapSvgTag} />;
+    default:
+      throw new Error('Unknown step');
     }
   };
 

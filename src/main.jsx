@@ -48,13 +48,13 @@ export const persistor = persistStore(store);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <BrowserRouter basename="/dashboard">
-            <Switch>
-              {routes()}
-            </Switch>
-          </BrowserRouter>
-        </PersistGate>
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter basename="/dashboard">
+          <Switch>
+            {routes()}
+          </Switch>
+        </BrowserRouter>
+      </PersistGate>
     </Provider>
   </React.StrictMode>
 );

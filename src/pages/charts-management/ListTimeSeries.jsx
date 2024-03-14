@@ -20,57 +20,57 @@ export default function ListTimeSeries () {
   };
 
   return (
-        <Box>
-            {charts.map((chart, index) => (
-                <Box
-                    key={chart.key}
-                    sx={{
-                      position: 'relative',
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      borderRadius: 1,
-                      padding: 2,
-                      marginTop: 2
-                    }}
-                >
-                    <Box
-                        sx={{
-                          position: 'absolute',
-                          top: 5,
-                          right: 10
-                        }}
-                    >
-                        <IconButton
-                            edge="end"
-                            color="gray"
-                            onClick={() => handleDeleteChart(index)}
-                        >
-                            <DeleteIcon />
-                        </IconButton>
-                    </Box>
-                    {chart}
-                </Box>
-            ))}
-            <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  minHeight: '100%',
-                  minWidth: '100%',
-                  marginTop: 2,
-                  maginBottom: 5
-                }}
+    <Box>
+      {charts.map((chart, index) => (
+        <Box
+          key={chart.key}
+          sx={{
+            position: 'relative',
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 1,
+            padding: 2,
+            marginTop: 2
+          }}
+        >
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 5,
+              right: 10
+            }}
+          >
+            <IconButton
+              edge="end"
+              color="gray"
+              onClick={() => handleDeleteChart(index)}
             >
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<AddIcon />}
-                    onClick={handleAddChart}
-                >
-                    Agregar nuevo Lienzo
-                </Button>
-            </Box>
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+          {chart}
         </Box>
+      ))}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100%',
+          minWidth: '100%',
+          marginTop: 2,
+          maginBottom: 5
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleAddChart}
+        >
+                    Agregar nuevo Lienzo
+        </Button>
+      </Box>
+    </Box>
   );
 }

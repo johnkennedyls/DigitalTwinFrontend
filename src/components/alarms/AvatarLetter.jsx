@@ -27,7 +27,7 @@ function AvatarLetter ({ names }) {
       })}
       {remainingNames.length > 0 && (
         <Avatar
-        sx={{ bgcolor: blue }}
+          sx={{ bgcolor: blue }}
           title={remainingNames.map(name => name).join(', ')}
         >
           +{remainingNames.length}

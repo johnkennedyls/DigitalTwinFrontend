@@ -156,12 +156,12 @@ export default function TimeSeries () {
       currentYaxis.axisLine.lineStyle.color = option.color[i];
       option.yAxis.push(currentYaxis);
 
-      const currentSeries = deepCopy(DEFAULT_SERIES_FORMAT)
-      currentSeries.name = tagName
-      currentSeries.data = mode === 'realtime' ? tagsState[tag] : delimitedData[tag]
-      currentSeries.symbol = SYMBOLS[i % SYMBOLS.length]
+      const currentSeries = deepCopy(DEFAULT_SERIES_FORMAT);
+      currentSeries.name = tagName;
+      currentSeries.data = mode === 'realtime' ? tagsState[tag] : delimitedData[tag];
+      currentSeries.symbol = SYMBOLS[i % SYMBOLS.length];
       if (i != 0) {
-        currentSeries['yAxisIndex'] = i
+        currentSeries.yAxisIndex = i;
       }
       option.series.push(currentSeries);
     }
@@ -248,48 +248,48 @@ export default function TimeSeries () {
           </Select>
         </FormControl>
 
-{
-  plant && (
-    <ProcessSelectionForm
-      processes={processes}
-      onChange={handleProcessChange}
-    />
+        {
+          plant && (
+            <ProcessSelectionForm
+              processes={processes}
+              onChange={handleProcessChange}
+            />
 
-  )
-}
-
-<Box mt={2} />
-
-{isProcessSelected && (
-  <FormControl fullWidth>
-    <InputLabel id="execution-select-label">Ejecución</InputLabel>
-    <Select
-      labelId="execution-select-label"
-      id="execution-select"
-      value={selectedExecution.id}
-  onChange={handleExecutionChange}
-    >
-      {executions.map((execution) => {
-        const startDateL = moment(execution.startDate).format('DD/MM/YYYY HH:mm');
-        const endDateL = moment(execution.endDate).format('DD/MM/YYYY HH:mm');
-        if (execution.state === 'running') {
-          return (
-              <MenuItem key={execution.id} value={execution.id}>
-                {startDateL} - En curso
-              </MenuItem>
-          );
+          )
         }
-        return (
-          <MenuItem key={execution.id} value={execution.id}>
-            {startDateL} - {endDateL}
-          </MenuItem>
-        );
-      })}
-    </Select>
-  </FormControl>
-)}
 
-<Box mt={2} />
+        <Box mt={2} />
+
+        {isProcessSelected && (
+          <FormControl fullWidth>
+            <InputLabel id="execution-select-label">Ejecución</InputLabel>
+            <Select
+              labelId="execution-select-label"
+              id="execution-select"
+              value={selectedExecution.id}
+              onChange={handleExecutionChange}
+            >
+              {executions.map((execution) => {
+                const startDateL = moment(execution.startDate).format('DD/MM/YYYY HH:mm');
+                const endDateL = moment(execution.endDate).format('DD/MM/YYYY HH:mm');
+                if (execution.state === 'running') {
+                  return (
+                    <MenuItem key={execution.id} value={execution.id}>
+                      {startDateL} - En curso
+                    </MenuItem>
+                  );
+                }
+                return (
+                  <MenuItem key={execution.id} value={execution.id}>
+                    {startDateL} - {endDateL}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        )}
+
+        <Box mt={2} />
         <Box
           display="flex"
           flexDirection="row"

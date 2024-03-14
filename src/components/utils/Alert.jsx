@@ -22,10 +22,10 @@ export function ErrorAlert (title) {
   ToastAlert(title, 'error');
 }
 
-export function SuccessAlert(title) {
-    ToastAlert(title, 'success');
+export function SuccessAlert (title) {
+  ToastAlert(title, 'success');
 }
 
-export function InfoAlert(title) {
-    ToastAlert(title, 'info');
+export function InfoAlert (title) {
+  ToastAlert(title, 'info');
 }

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import moment from 'moment';
 
-import { LIMIT_STORED_DATA } from '../../config/config';
+import { LIMIT_STORED_DATA } from './config';
 
 export const tagSlice = createSlice({
   name: 'tags',

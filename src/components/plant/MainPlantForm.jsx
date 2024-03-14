@@ -50,13 +50,13 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
           <Avatar src={plant.plantPhoto} variant="rounded" style={{ width: '7vw', height: '7vw', margin: '15px auto' }} />
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <label htmlFor="image-upload">
+            <label htmlFor="image-upload">
               <Button variant="outlined" component="span" startIcon={<ImageIcon />}>
-              {processLabel === 'add' ? 'Cargar imagen' : 'Editar imagen'}
+                {processLabel === 'add' ? 'Cargar imagen' : 'Editar imagen'}
 
               </Button>
             </label>
-            </div>
+          </div>
 
           <form onSubmit={handleSubmit}>
             <TextField

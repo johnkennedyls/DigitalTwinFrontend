@@ -44,10 +44,10 @@ const PlantSVG = ({ mapSvgTag, svgImage }) => {
   }, [svgContent]);
 
   return (
-        <Box
-            className="svg-container"
-            dangerouslySetInnerHTML={{ __html: svgContent }}
-        />
+    <Box
+      className="svg-container"
+      dangerouslySetInnerHTML={{ __html: svgContent }}
+    />
   );
 };
 

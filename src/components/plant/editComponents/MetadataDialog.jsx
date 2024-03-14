@@ -38,36 +38,36 @@ function MetadataDialog ({ tagProperties, setTagProperties }) {
   };
 
   return (
-        <>
-            <Button variant="outlined" color="primary" onClick={handleOpen} sx={{ margin: 1 }}>
+    <>
+      <Button variant="outlined" color="primary" onClick={handleOpen} sx={{ margin: 1 }}>
                 Agregar Metadata
-            </Button>
-            <Dialog open={open} onClose={handleClose} style={{ minWidth: '80vw' }}>
-                <DialogTitle>Agregar Nueva Metadata</DialogTitle>
-                <DialogContent>
-                    <Typography>Ingrese el nombre de la nueva metadata</Typography>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Nombre de la metadata"
-                        type="text"
-                        value={metadata}
-                        error={error}
-                        onChange={handleChangeMetadata}
-                        fullWidth
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="error">
+      </Button>
+      <Dialog open={open} onClose={handleClose} style={{ minWidth: '80vw' }}>
+        <DialogTitle>Agregar Nueva Metadata</DialogTitle>
+        <DialogContent>
+          <Typography>Ingrese el nombre de la nueva metadata</Typography>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Nombre de la metadata"
+            type="text"
+            value={metadata}
+            error={error}
+            onChange={handleChangeMetadata}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="error">
                         Cerrar
-                    </Button>
-                    <Button onClick={handleAddMetadata} color="primary">
+          </Button>
+          <Button onClick={handleAddMetadata} color="primary">
                         Agregar
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </>
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 

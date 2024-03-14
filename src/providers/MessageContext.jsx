@@ -28,15 +28,15 @@ export const MessageProvider = ({ children }) => {
   };
 
   return (
-        <MessageContext.Provider value={contextValue}>
-            {open &&
+    <MessageContext.Provider value={contextValue}>
+      {open &&
                 <Alert severity={type} style={{ width: '20%', margin: '1em auto' }}>
-                    <AlertTitle>{type.charAt(0).toUpperCase() + type.slice(1)}</AlertTitle>
-                    {message}
+                  <AlertTitle>{type.charAt(0).toUpperCase() + type.slice(1)}</AlertTitle>
+                  {message}
                 </Alert>
-            }
-            {children}
-        </MessageContext.Provider>
+      }
+      {children}
+    </MessageContext.Provider>
   );
 };
 

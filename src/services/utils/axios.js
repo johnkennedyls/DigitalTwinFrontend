@@ -1,5 +1,6 @@
 import axios from 'axios';
-import {store} from '../../main.jsx';
+
+import { store } from '../../main.jsx';
 import { isLoading } from '../../reducers/loading/loadingSlice';
 
 const instance = axios.create({

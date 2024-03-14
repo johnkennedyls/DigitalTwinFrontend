@@ -50,7 +50,7 @@
       }
     ],
     "no-unused-vars": "warn",
-    // "ident": [ "error", 2],
+    "indent": [ "error", 2],
     "no-multiple-empty-lines": [
       "error",
       {

@@ -10,13 +10,12 @@ import { esES } from '@mui/x-date-pickers/locales';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 
-import { updateTagData } from './reducers/plant/tagSlice';
+import { updateTagData } from './reducers/plant/tag/tagSlice';
 import { StompClient } from './services/utils/stompClient';
 import MainLayout from './layouts/main/MainLayout';
 import { MessageProvider } from './providers/MessageContext';
-
-import './assets/styles/global.css';
 import Loading from './components/utils/Loading';
+import './app.css';
 
 const theme = createTheme({}, esES);
 
@@ -65,7 +64,7 @@ const App = ({ children }) => {
 
   return (
     <MainLayout>
-    <Loading />
+      <Loading />
       <MessageProvider>
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={es}>
           <ThemeProvider theme={theme}>

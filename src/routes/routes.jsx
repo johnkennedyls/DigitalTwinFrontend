@@ -1,6 +1,6 @@
 import { Route, Switch } from 'react-router';
 
-import WelcomeLayout from '../layouts/welcome/WelcomeLayout';
+import Landing from '../pages/landing/Landing';
 import AddPlant from '../pages/plant-management/AddPlant';
 import EditPlant from '../pages/plant-management/EditPlant';
 import ListPlant from '../pages/plant-management/ListPlant';
@@ -43,9 +43,9 @@ const MainLayoutRoutes = () => (
 
 const routes = () => (
   <Switch>
-    <Route exact path="/" component={WelcomeLayout} />
+    <Route exact path="/" component={Landing} />
     <Route component={(MainLayoutRoutes)} />
-    <Route path="*" component={WelcomeLayout} />
+    <Route path="*" component={Landing} />
   </Switch>
 );
 

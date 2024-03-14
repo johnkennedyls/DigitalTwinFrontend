@@ -7,9 +7,9 @@ import { useHistory } from 'react-router-dom';
 
 import icesiLogoBlack from '../../assets/images/ICESI_logo_black.png';
 
-import './WelcomeLayout.css';
+import './Landing.css';
 
-const WelcomeLayout = () => {
+const Landing = () => {
   const saamfiUrl = import.meta.env.VITE_SAAMFI_FRONTEND_URL;
 
   const [logoWidth, setLogoWidth] = useState(null);
@@ -35,42 +35,41 @@ const WelcomeLayout = () => {
 
   return (
     <Box className={'container'}>
-    {logoWidth && (
-      <div className="fade-in" style={{ width: logoWidth }}>
-        <img
-          src={icesiLogoBlack}
-          alt="Logo de la Universidad"
-          style={{ width: '100%', height: 'auto', marginBottom: '2.5rem', marginTop: '10rem' }}
-        />
-      </div>
-    )}
-    <div className="fade-in">
-      <Typography
-        variant="h4"
-        component="h1"
-        gutterBottom
-        className={'title'}
-        ref={titleRef}
-      >
+      {logoWidth && (
+        <div className="fade-in" style={{ width: logoWidth }}>
+          <img
+            src={icesiLogoBlack}
+            alt="Logo de la Universidad"
+            style={{ width: '100%', height: 'auto', marginBottom: '2.5rem', marginTop: '10rem' }}
+          />
+        </div>
+      )}
+      <div className="fade-in">
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          className={'title'}
+          ref={titleRef}
+        >
         Bienvenido a la Planta Piloto<br/>Ingeniería Bioquímica
-      </Typography>
-    </div>
-    <div className="scale-in">
-      <Button
-        variant="contained"
-        className={'button'}
-        onClick={handleLogin}
-        startIcon={<LoginIcon className={'icon'}/>}
-        sx={{
-          marginTop: '1rem'
-        }}
-      >
+        </Typography>
+      </div>
+      <div className="scale-in">
+        <Button
+          variant="contained"
+          className={'button'}
+          onClick={handleLogin}
+          startIcon={<LoginIcon className={'icon'}/>}
+          sx={{
+            marginTop: '1rem'
+          }}
+        >
         Iniciar sesión
-      </Button>
-    </div>
-
+        </Button>
+      </div>
     </Box>
   );
 };
 
-export default WelcomeLayout;
+export default Landing;

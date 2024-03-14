@@ -267,42 +267,42 @@ const ListTypeAlarm = () => {
             <TableBody>
               {alarms.length === 0
                 ? (
-                <TableRow>
-                  <TableCell colSpan={12} align="center" style={{ height: '198px' }}>
+                  <TableRow>
+                    <TableCell colSpan={12} align="center" style={{ height: '198px' }}>
                     No hay elementos disponibles.
-                  </TableCell>
-                </TableRow>
-                  )
+                    </TableCell>
+                  </TableRow>
+                )
                 : (
-                <>
-                  {(rowsPerPage > 0
-                    ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    : alarms
-                  ).map((row) => (
-                    <TableRow key={row.typeAlarmId}>
-                      {columns.map((column) => (
-                        <TableCell className={classes.centeredCell} key={`${row.typeAlarmId}-${column.field}`} width={column.width}>
-                          {row[column.field]}
+                  <>
+                    {(rowsPerPage > 0
+                      ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      : alarms
+                    ).map((row) => (
+                      <TableRow key={row.typeAlarmId}>
+                        {columns.map((column) => (
+                          <TableCell className={classes.centeredCell} key={`${row.typeAlarmId}-${column.field}`} width={column.width}>
+                            {row[column.field]}
+                          </TableCell>
+                        ))}
+                        <TableCell className={classes.usersCell}>
+                          <AvatarLetter names={row.usersAssigned} />
                         </TableCell>
-                      ))}
-                      <TableCell className={classes.usersCell}>
-                        <AvatarLetter names={row.usersAssigned} />
-                      </TableCell>
-                      <TableCell className={classes.actionColumn}>
-                        <IconButton aria-label="show" onClick={() => handleShow(row)}>
-                          <Visibility />
-                        </IconButton>
-                        <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
-                          <Edit />
-                        </IconButton>
-                        <IconButton aria-label="delete" onClick={() => handleOpenDialog(row)}>
-                          <Delete />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </>
-                  )}
+                        <TableCell className={classes.actionColumn}>
+                          <IconButton aria-label="show" onClick={() => handleShow(row)}>
+                            <Visibility />
+                          </IconButton>
+                          <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
+                            <Edit />
+                          </IconButton>
+                          <IconButton aria-label="delete" onClick={() => handleOpenDialog(row)}>
+                            <Delete />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
+                )}
             </TableBody>
             <TableFooter className={classes.stickyFooter}>
               <TableRow style={{ textAlign: 'center' }}>
