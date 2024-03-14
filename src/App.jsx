@@ -16,6 +16,7 @@ import MainLayout from './layouts/main/MainLayout';
 import { MessageProvider } from './providers/MessageContext';
 
 import './assets/styles/global.css';
+import Loading from './components/utils/Loading';
 
 const theme = createTheme({}, esES);
 
@@ -64,6 +65,7 @@ const App = ({ children }) => {
 
   return (
     <MainLayout>
+    <Loading />
       <MessageProvider>
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={es}>
           <ThemeProvider theme={theme}>
