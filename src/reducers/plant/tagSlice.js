@@ -17,9 +17,10 @@ export const tagSlice = createSlice({
           }
 
           const currentDate = moment(new Date(tag.timeStamp)).format('YYYY-MM-DD HH:mm:ss');
+          const executionId = tag.execId;
 
           if (Number.isFinite(tag.value)) { // Verifica si tag.value es un número
-            state[tag.assetId].push([currentDate, tag.value]);
+            state[tag.assetId].push([currentDate, tag.value,executionId]);
             state.date.push(currentDate);
             if (state[tag.assetId].length > LIMIT_STORED_DATA) {
               state[tag.assetId].shift();

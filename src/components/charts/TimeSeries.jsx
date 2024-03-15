@@ -62,11 +62,14 @@ export default function TimeSeries () {
     const currentTags = Object.keys(data);
     setSelectedTags([]);
     setTags(currentTags);
+    console.log("Disparo para plantas");
+    setIsProcessSelected(false);
   }, [plant, plantState]);
 
   // TAGS
   const [selectedTags, setSelectedTags] = useState([]);
   const [tags, setTags] = useState([]);
+  
 
   // PROCESSES
   const [processes, setProcesses] = useState([]);
@@ -77,7 +80,6 @@ export default function TimeSeries () {
     setSelectedProcess(newProcess);
     getExecutionsOfProcess(newProcess.id);
     setIsProcessSelected(true);
-    setTags([]); // Reset tags when a new process is selected
   };
 
   useEffect(() => {
@@ -87,8 +89,9 @@ export default function TimeSeries () {
       const currentTags = Object.keys(data);
       setSelectedTags([]);
       setTags(currentTags);
+      console.log("Disparo para procesos");
     }
-  }, [isProcessSelected, plant, plantState]);
+  }, [isProcessSelected]);
 
   const getProcessesOfPlant = (plantId) => {
     getProcessByPlant(plantId).then(setProcesses);
@@ -147,7 +150,6 @@ export default function TimeSeries () {
     option.grid.left = `${OFFSET * selectedTags.length}px`;
 
     option.xAxis[0].data = mode === 'realtime' ? tagsState.date : delimitedData.date;
-
     for (let i = 0; i < selectedTags.length; i++) {
       const tag = selectedTags[i];
       const tagName = plantState[plant].tags[tag];
@@ -158,7 +160,12 @@ export default function TimeSeries () {
 
       const currentSeries = deepCopy(DEFAULT_SERIES_FORMAT)
       currentSeries.name = tagName
-      currentSeries.data = mode === 'realtime' ? tagsState[tag] : delimitedData[tag]
+      if(mode === 'realtime'){
+        const realtimeData = tagsState[tag].filter(element => element[2] === selectedExecution.id);
+        currentSeries.data = realtimeData
+      }else{
+        currentSeries.data = delimitedData[tag]
+      }
       currentSeries.symbol = SYMBOLS[i % SYMBOLS.length]
       if (i != 0) {
         currentSeries['yAxisIndex'] = i
