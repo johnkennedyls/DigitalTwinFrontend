@@ -17,16 +17,10 @@ export default function TagsPlantForm ({
   const [mapSvgTag, setMapSvgTag] = useState(mapSvgTagPrev == null ? svgIds : mapSvgTagPrev);
   const [isValid, setIsValid] = useState(false);
 
-  useEffect(() => {
-    console.log(mapSvgTag);
-    console.log(tags);
-  }, [mapSvgTag]);
-
   const handleChangeSvgId = (value) => {
     const svgIdExists = mapSvgTag.some((tag) => tag.svgId === value);
     if (svgIdExists) {
       const tagNameBeingEdited = tags.find((tag) => tag.metadata.svgId === value)?.name;
-      console.log(tagNameBeingEdited);
       const newTags = mapSvgTag.map((tag) =>
         tag.svgId === value
           ? {
@@ -42,8 +36,6 @@ export default function TagsPlantForm ({
             : tag
       );
       setMapSvgTag(newTags);
-    } else {
-      console.log(`SvgId ${value} no existe en la lista.`);
     }
   };
 

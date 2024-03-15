@@ -3,7 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import { blue } from '@mui/material/colors';
 
-import getAvatarColor from '../../services/utils/ColorsAvatar';
+import getAvatarColor from '../../utils/ColorsAvatar';
 
 function AvatarLetter ({ names }) {
   const displayedNames = names.slice(0, 2);
@@ -11,7 +11,6 @@ function AvatarLetter ({ names }) {
   return (
     <AvatarGroup max={3}>
       {displayedNames.map((avatar, index) => {
-        console.log('OLAA', avatar);
         const letter = avatar[0];
         const color = getAvatarColor(avatar[0]);
 

@@ -10,7 +10,7 @@ import { Box } from '@mui/system';
 import * as XLSX from 'xlsx';
 
 import { ErrorAlert } from '../../utils/Alert';
-import { toCamelCase, toTitleCase } from '../../utils/TextConverter';
+import { toCamelCase, toTitleCase } from '../../../utils/TextConverter';
 
 function ImportDialog ({ tags, setTags }) {
   const [filteredPrevTags, setFilteredPrevTags] = useState();

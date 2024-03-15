@@ -1,5 +1,4 @@
-import axios from './utils/axios';
-// const API_URL = import.meta.env.VITE_API_URL;
+import axios from '../axios';
 
 export const getPlantsData = () => {
   return new Promise((resolve, reject) => {
@@ -41,7 +40,6 @@ export const addPlant = (plant) => {
 };
 
 export const editPlant = (plant, plantId) => {
-  console.log(plant);
   return new Promise((resolve, reject) => {
     axios.put(`plants/edit/${plantId}`, plant)
       .then(response => {

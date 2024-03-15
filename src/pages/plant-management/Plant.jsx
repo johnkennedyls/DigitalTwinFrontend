@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import PlantSVG from '../../components/utils/SVGRender';
-import { getPlantData } from '../../services/PlantService';
+import { getPlantData } from '../../services/Api/PlantService';
 
 export default function Plant () {
   const { plantId } = useParams();
@@ -22,10 +22,6 @@ export default function Plant () {
         history.push('/manage-plant');
       });
   }, [plantId, history]);
-
-  useEffect(() => {
-    console.log(plant);
-  }, [plant]);
 
   return (
     <>

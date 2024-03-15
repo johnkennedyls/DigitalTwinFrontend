@@ -11,9 +11,9 @@ import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Add } from '@mui/icons-material';
 
-import getAvatarColor from '../../services/utils/ColorsAvatar';
-import { formatDate } from '../../services/utils/FormatterDate';
-import { addHistoryAction, getAllActionsHistoryByAlarm } from '../../services/AlarmService';
+import getAvatarColor from '../../utils/ColorsAvatar';
+import { formatDate } from '../../utils/FormatterDate';
+import { addHistoryAction, getAllActionsHistoryByAlarm } from '../../services/Api/AlarmService';
 
 const useStyles = makeStyles({
   commentContainer: {
@@ -96,7 +96,7 @@ function CommentBox ({ alarmId, handleShowAlert }) {
         setCommentList(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -113,6 +113,7 @@ function CommentBox ({ alarmId, handleShowAlert }) {
           getHistoryActions();
         })
         .catch(error => {
+          console.error(error);
           handleShowAlert('Error al agregar el comentario', 'error');
         });
     }

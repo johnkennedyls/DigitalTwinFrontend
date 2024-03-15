@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 
-import { isValidSVG } from '../../services/utils/funtions';
+import { isValidSVG } from '../../utils/Funtions';
 
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
@@ -34,7 +34,6 @@ export default function LoadPlantSvgForm ({ onNext, onBack, svgImageUrl = null, 
   };
 
   const handleSubmit = (e) => {
-    console.log('SDAD');
     onNext({ svgImage: previewUrl, mapSvgTag: parseTextIds(), conventions: value });
     e.preventDefault();
   };

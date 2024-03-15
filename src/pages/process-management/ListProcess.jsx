@@ -19,7 +19,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import {
   getProcessesData, deleteProcess, startProcess,
   pauseProcess, stopProcess
-} from '../../services/ProcessService';
+} from '../../services/Api/ProcessService';
 
 const PROCESS_STATE = {
   STOPPED: 0,

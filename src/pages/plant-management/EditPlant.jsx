@@ -5,7 +5,7 @@ import { Container, Stepper, Step, StepLabel } from '@mui/material';
 import MainPlantForm from '../../components/plant/MainPlantForm';
 import TagsPlantForm from '../../components/plant/TagsPlantForm';
 import LoadPlantSvgForm from '../../components/plant/LoadPlantSvgForm';
-import { editPlant, getPlantData } from '../../services/PlantService';
+import { editPlant, getPlantData } from '../../services/Api/PlantService';
 import { ErrorAlert, SuccessAlert } from '../../components/utils/Alert';
 
 const steps = ['INFORMACIÓN GENERAL', 'REPRESENTACIÓN GRAFICA', 'TAGS'];
@@ -19,7 +19,6 @@ const EditPlant = () => {
 
   useEffect(() => {
     getPlantData(plantId).then((data) => {
-      console.log('DATA', data);
       setPlant(data);
     }).catch((error) => {
       console.error(error);
@@ -39,11 +38,9 @@ const EditPlant = () => {
 
   const handleNext = (currentForm, submit = false) => {
     const currentPlant = { ...plant };
-    console.log('RECEIVED ', currentForm);
     Object.keys(currentForm).forEach((key) => {
       currentPlant[key] = currentForm[key];
     });
-    console.log('CURRENT PLANT', currentPlant);
     setPlant(currentPlant);
     if (!submit) {
       setActiveStep((prevStep) => prevStep + 1);
@@ -54,7 +51,6 @@ const EditPlant = () => {
 
   const handleSubmit = (currentPlant) => {
     currentPlant.tags = [...currentPlant.tags, ...currentPlant.removedTags];
-    console.log('SUBMIT', currentPlant);
     editPlant(currentPlant, plantId).then(() => {
       SuccessAlert('Planta editada correctamente');
       history.push('/manage-plant');

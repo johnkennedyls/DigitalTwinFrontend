@@ -13,9 +13,9 @@ import { makeStyles } from '@mui/styles';
 import { useSelector } from 'react-redux';
 
 import ChipState from '../../components/alarms/ChipState.jsx';
-import { formatDate } from '../../services/utils/FormatterDate';
+import { formatDate } from '../../utils/FormatterDate.js';
 import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
-import { getAlarmsHistory, getAllAlarmsClosedByPlantId } from '../../services/AlarmService';
+import { getAlarmsHistory, getAllAlarmsClosedByPlantId } from '../../services/Api/AlarmService.js';
 
 const useStyles = makeStyles({
   tableContainer: {
@@ -177,7 +177,7 @@ const ListAlarmHistory = () => {
         setAlarms(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 

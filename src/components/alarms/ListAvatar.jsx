@@ -6,7 +6,7 @@ import Avatar from '@mui/material/Avatar';
 import ListItemText from '@mui/material/ListItemText';
 import { makeStyles } from '@mui/styles';
 
-import getAvatarColor from '../../services/utils/ColorsAvatar';
+import getAvatarColor from '../../utils/ColorsAvatar';
 
 const useStyles = makeStyles({
   root: {

@@ -17,8 +17,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { hasAnyRole } from '../../services/utils/funtions';
-import { getPlantsData, deletePlant } from '../../services/PlantService';
+import { hasAnyRole } from '../../utils/Funtions';
+import { getPlantsData, deletePlant } from '../../services/Api/PlantService';
 import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '../../reducers/plant/plantSlice';
 import { useMessage } from '../../providers/MessageContext';
 
@@ -47,7 +47,6 @@ export default function ListPlant () {
 
   useEffect(() => {
     const currentPlants = [];
-    console.log(plantState);
     Object.keys(plantState).forEach((plant) => {
       currentPlants.push({
         plantId: plantState[plant].assetId,

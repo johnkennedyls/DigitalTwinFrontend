@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { Button, TextField, Grid, Paper, Typography, Accordion, AccordionSummary, AccordionDetails, FormControlLabel, Checkbox } from '@mui/material';
+import {
+  Button, TextField, Grid, Paper, Typography, Accordion,
+  AccordionSummary, AccordionDetails, FormControlLabel, Checkbox
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
@@ -105,7 +108,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
               </Accordion>
             ))}
             <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
-                            Agregar proceso
+              Agregar proceso
             </Button>
           </form>
         </Paper>

@@ -19,6 +19,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import rootReducer from './reducers'; // the value from combineReducers
 import routes from './routes/routes.jsx';
+
 if (typeof window !== 'undefined') {
   window.global = window;
 } else {

@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 
-import MainToolbar from '../header/MainToolbar';
+import Header from '../header/Header';
 
 const MainLayout = ({ children }) => {
   return (
     <main>
-      <MainToolbar />
+      <Header />
       {children}
     </main>
   );

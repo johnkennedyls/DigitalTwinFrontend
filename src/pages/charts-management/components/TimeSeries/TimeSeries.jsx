@@ -19,11 +19,12 @@ import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { useSelector } from 'react-redux';
 
-import { deepCopy } from '../../services/utils/funtions';
-import { getDelimitedData } from '../../services/PlantService';
-import { getExutionsByProcess, getProcessByPlant } from '../../services/ProcessService';
-import ProcessSelectionForm from '../filters/ProcessSelectionForm';
-import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, SYMBOLS } from '../../services/utils/constants';
+import { deepCopy } from '../../../../utils/Funtions';
+import { getDelimitedData } from '../../../../services/Api/PlantService';
+import { getExutionsByProcess, getProcessByPlant } from '../../../../services/Api/ProcessService';
+import { DEFAULT_TIME_SERIES_OPTION, DEFAULT_Y_AXIS_FORMAT, DEFAULT_SERIES_FORMAT, SYMBOLS } from '../../../../utils/Constants';
+
+import ProcessSelectionForm from './SelectionForms/ProcessSelectionForm';
 
 ECharts.use([
   ToolboxComponent,
@@ -160,7 +161,7 @@ export default function TimeSeries () {
       currentSeries.name = tagName;
       currentSeries.data = mode === 'realtime' ? tagsState[tag] : delimitedData[tag];
       currentSeries.symbol = SYMBOLS[i % SYMBOLS.length];
-      if (i != 0) {
+      if (i !== 0) {
         currentSeries.yAxisIndex = i;
       }
       option.series.push(currentSeries);
@@ -203,7 +204,6 @@ export default function TimeSeries () {
         .then((data) => {
           const currentData = { date: [] };
           data.forEach((currentMeasures) => {
-            console.log(currentMeasures.measures);
             const tag = currentMeasures.assetId;
             if (currentData[tag] === undefined) {
               currentData[tag] = [];
@@ -226,10 +226,9 @@ export default function TimeSeries () {
   };
 
   const showTags = () => {
-    return plant &&
-      (mode === 'realtime' ||
-         mode === 'range');
+    return plant && (mode === 'realtime' || mode === 'range');
   };
+
   const showGraphic = () => {
     return selectedTags.length > 0;
   };
@@ -239,7 +238,7 @@ export default function TimeSeries () {
       <Box>
         <FormControl fullWidth variant="outlined" margin="normal">
           <InputLabel>Seleccione Planta</InputLabel>
-          <Select value={plant} onChange={handlePlantChange} label="Planta">
+          <Select value={plant} onChange={handlePlantChange} label="Seleccione Planta<">
             {plants.map((currentPlant) => (
               <MenuItem key={currentPlant} value={currentPlant}>
                 {plantState[currentPlant].plantName}
@@ -249,17 +248,10 @@ export default function TimeSeries () {
         </FormControl>
 
         {
-          plant && (
-            <ProcessSelectionForm
-              processes={processes}
-              onChange={handleProcessChange}
-            />
-
-          )
+          plant && <ProcessSelectionForm processes={processes} onChange={handleProcessChange} />
         }
 
         <Box mt={2} />
-
         {isProcessSelected && (
           <FormControl fullWidth>
             <InputLabel id="execution-select-label">Ejecución</InputLabel>
@@ -268,6 +260,7 @@ export default function TimeSeries () {
               id="execution-select"
               value={selectedExecution.id}
               onChange={handleExecutionChange}
+              label="Ejecución"
             >
               {executions.map((execution) => {
                 const startDateL = moment(execution.startDate).format('DD/MM/YYYY HH:mm');

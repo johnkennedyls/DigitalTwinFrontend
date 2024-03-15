@@ -6,9 +6,9 @@ import { useParams } from 'react-router-dom';
 
 import CommentBox from '../../components/alarms/CommentBox';
 import ListAvatar from '../../components/alarms/ListAvatar';
-import { getAlarmById } from '../../services/AlarmService';
-import { changeStateAlarm } from '../../services/StateAlarm';
-import { formatDate } from '../../services/utils/FormatterDate';
+import { getAlarmById } from '../../services/Api/AlarmService';
+import { changeStateAlarm } from '../../services/Api/StateAlarmService';
+import { formatDate } from '../../utils/FormatterDate';
 import AlertMessage from '../../components/messages/AlertMessage';
 import AlertDialog from '../../components/alarms/AlertDialog';
 
@@ -91,10 +91,9 @@ const DetailAlarm = () => {
       .then((data) => {
         setAlarm(data);
         setSelectedState(data.stateAlarmName);
-        console.log(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -122,7 +121,7 @@ const DetailAlarm = () => {
         handleShowAlert('El estado fue cambiado exitosamente', 'success');
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         handleShowAlert('El estado no pudo ser cambiado', 'error');
       });
     setIsSelectDisabled(true);

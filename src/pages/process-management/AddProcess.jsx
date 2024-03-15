@@ -1,7 +1,8 @@
 import { useHistory } from 'react-router-dom';
 
-import { addProcess } from '../../services/ProcessService';
-import MainProcessForm from '../../components/process/forms/MainProcessForm';
+import { addProcess } from '../../services/Api/ProcessService';
+
+import MainProcessForm from './components/forms/MainProcessForm';
 
 export default function AddProcess () {
   const history = useHistory();

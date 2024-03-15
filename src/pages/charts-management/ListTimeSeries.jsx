@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 
-import TimeSeries from '../../components/charts/TimeSeries';
+import TimeSeries from './components/TimeSeries/TimeSeries';
 
 export default function ListTimeSeries () {
   const [charts, setCharts] = useState([]);
@@ -16,7 +16,6 @@ export default function ListTimeSeries () {
 
   const handleDeleteChart = (index) => {
     setCharts(charts.filter((_, i) => i !== index));
-    console.log('Eliminar gráfica:', index);
   };
 
   return (
@@ -68,7 +67,7 @@ export default function ListTimeSeries () {
           startIcon={<AddIcon />}
           onClick={handleAddChart}
         >
-                    Agregar nuevo Lienzo
+          Agregar nuevo Lienzo
         </Button>
       </Box>
     </Box>

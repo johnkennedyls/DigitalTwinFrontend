@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { store } from '../../main.jsx';
-import { isLoading } from '../../reducers/loading/loadingSlice';
+import { store } from '../main.jsx';
+import { isLoading } from '../reducers/loading/loadingSlice.js';
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -26,7 +26,6 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   request => {
-    console.log('request');
     store.dispatch(isLoading(true));
     return request;
   }
@@ -34,7 +33,6 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   response => {
-    console.log('response');
     store.dispatch(isLoading(false));
     return response;
   },

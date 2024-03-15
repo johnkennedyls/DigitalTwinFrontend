@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import { useParams } from 'react-router-dom';
 
 import ListAvatar from '../../components/alarms/ListAvatar';
-import { getTypeAlarmById } from '../../services/TypeAlarmService';
+import { getTypeAlarmById } from '../../services/Api/TypeAlarmService';
 
 const useStyles = makeStyles({
   root: {
@@ -75,10 +75,9 @@ const DetaiTypelAlarm = () => {
     getTypeAlarmById(id)
       .then((data) => {
         setTypeAlarm(data);
-        console.log(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 

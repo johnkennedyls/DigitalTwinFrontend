@@ -10,9 +10,8 @@ import { Menu, MenuItem } from '@mui/material';
 
 import icesiLogo from '../../assets/images/ICESI_logo.png';
 import logobioinc from '../../assets/images/logo_bioinc.png';
-import './MainToolbar.css';
 
-export default function MainToolbar () {
+export default function Header () {
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
 
@@ -57,26 +56,26 @@ export default function MainToolbar () {
 
   return (
     <>
-      <AppBar position="static" className="appBar">
+      <AppBar position="static" sx={{ bgColor: '#64b5f6', borderRadius: '3px' }}>
         <Toolbar>
-          <Box className="logoBox">
-            <img src={icesiLogo} alt="Icesi Logo" className="logo" />
-            <Box className="separatorBox">
-              <div className="separator" />
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <img src={icesiLogo} alt="Icesi Logo" style={{ height: '40px' }}/>
+            <Box sx={{ marginX: '1rem' }}>
+              <div style={{ marginX: '5px', height: '30px', borderLeft: '1px solid #fff' }}/>
             </Box>
-            <img src={logobioinc} alt="Otro Logo" className="logo enlarged" />
+            <img src={logobioinc} alt="Otro Logo" style={{ height: '90px' }}/>
           </Box>
-          <Box className="buttonBox">
-            <Button color="inherit" className="button" onClick={plantNavigate}>
+          <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Button color="inherit" sx={{ marginRight: '0.5rem' }} onClick={plantNavigate}>
             Plantas
             </Button>
-            <Button color="inherit" className="button" onClick={processNavigate}>
+            <Button color="inherit" sx={{ marginRight: '0.5rem' }} onClick={processNavigate}>
             Procesos
             </Button>
-            <Button color="inherit" className="button" onClick={typeAlarmNavigate}>
+            <Button color="inherit" sx={{ marginRight: '0.5rem' }} onClick={typeAlarmNavigate}>
             Tipos de Alarmas
             </Button>
-            <Button color="inherit" className="button" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+            <Button color="inherit" sx={{ marginRight: '0.5rem' }} aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
             Alarmas
             </Button>
             <Menu
@@ -87,21 +86,21 @@ export default function MainToolbar () {
               onClose={handleClose}
             >
               <MenuItem onClick={handleClose}>
-                <Button color="inherit" className="button" onClick={alarmNavigate}>
+                <Button color="inherit" sx={{ marginRight: '0.5rem' }} onClick={alarmNavigate}>
                 Alarmas Activas
                 </Button>
               </MenuItem>
               <MenuItem onClick={handleClose}>
-                <Button color="inherit" className="button" onClick={plantNavigate}>
+                <Button color="inherit" sx={{ marginRight: '0.5rem' }} onClick={plantNavigate}>
                 Historial de Alarmas
                 </Button>
               </MenuItem>
             </Menu>
-            <Button color="inherit" className="button" onClick={chartNavigate}>
+            <Button color="inherit" sx={{ marginRight: '0.5rem' }} onClick={chartNavigate}>
             Lienzos
             </Button>
           </Box>
-          <Box className="iconBox">
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton edge="end" color="inherit" aria-label="logout" onClick={logout}>
               <Logout />
             </IconButton>

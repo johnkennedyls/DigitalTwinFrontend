@@ -17,11 +17,11 @@ function ProcessSelectionForm ({ processes, onChange }) {
         id="process-select"
         value={selectedProcess}
         onChange={handleChange}
+        label="Proceso"
       >
         {processes.map((process) => (
           <MenuItem key={process.id} value={process.id}>
             {process.name}
-
           </MenuItem>
         ))}
       </Select>

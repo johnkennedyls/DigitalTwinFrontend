@@ -13,9 +13,9 @@ import { makeStyles } from '@mui/styles';
 import { useSelector } from 'react-redux';
 
 import ChipState from '../../components/alarms/ChipState.jsx';
-import { formatDate } from '../../services/utils/FormatterDate';
+import { formatDate } from '../../utils/FormatterDate.js';
 import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
-import { getAlarmsGenerate, getAllAlarmsActiveByPlantId } from '../../services/AlarmService';
+import { getAlarmsGenerate, getAllAlarmsActiveByPlantId } from '../../services/Api/AlarmService.js';
 
 const useStyles = makeStyles({
   tableContainer: {
@@ -177,10 +177,9 @@ const ListAlarmGenerate = () => {
     getAlarmsGenerate()
       .then((data) => {
         setAlarms(data);
-        console.log('PREUBAxd', data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 

@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 import AlertDialog from '../../components/alarms/AlertDialog.jsx';
 import AlertMessage from '../../components/messages/AlertMessage';
 import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
-import { getTypeAlarms, deleteTypeAlarm, getTypeAlarmsByPlant } from '../../services/TypeAlarmService';
+import { getTypeAlarms, deleteTypeAlarm, getTypeAlarmsByPlant } from '../../services/Api/TypeAlarmService.js';
 
 const useStyles = makeStyles({
   tableContainer: {
@@ -175,7 +175,7 @@ const ListTypeAlarm = () => {
           setAlarms(newAlarms);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
           const message = 'No se ha podido eliminar la alarma';
           const severity = 'error';
           setAlert({ show: true, message, severity });
@@ -192,13 +192,12 @@ const ListTypeAlarm = () => {
   }, []);
 
   const getAlarms = () => {
-    console.log('OLAAAAAAAAAAAAA');
     getTypeAlarms()
       .then((data) => {
         setAlarms(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -216,7 +215,7 @@ const ListTypeAlarm = () => {
           setAlarms(data);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     } else {
       getTypeAlarmsByPlant(plantId)

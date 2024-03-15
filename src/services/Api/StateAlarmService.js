@@ -1,4 +1,4 @@
-import axios from './utils/axios';
+import axios from '../axios';
 
 export function changeStateAlarm (stateAlarm, alarmid) {
   return axios.post(`statesAlarm/change/${alarmid}`, stateAlarm)
