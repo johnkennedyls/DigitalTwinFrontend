@@ -37,6 +37,7 @@ const App = ({ children }) => {
 
   const onMessageReceived = (message) => {
     const parsedMessage = JSON.parse(message.body);
+    console.log('Message received:', parsedMessage);
     dispatch(updateTagData(parsedMessage));
   };
 
