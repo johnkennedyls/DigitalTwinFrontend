@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 
-import TimeSeries from './components/TimeSeries/TimeSeries';
+import TimeSeries from './components/TimeSeries';
 
 export default function ListTimeSeries () {
   const [charts, setCharts] = useState([]);

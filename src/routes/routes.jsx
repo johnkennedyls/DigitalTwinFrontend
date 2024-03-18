@@ -1,11 +1,11 @@
 import { Route, Switch } from 'react-router';
 
-import Landing from '../pages/landing/Landing';
+import Landing from '../pages/landing-page/Landing';
 import AddPlant from '../pages/plant-management/AddPlant';
 import EditPlant from '../pages/plant-management/EditPlant';
 import ListPlant from '../pages/plant-management/ListPlant';
 import DetailTypeAlarm from '../pages/type-alarm-management/DetailTypeAlarm';
-import ListTimeSeries from '../pages/charts-management/ListTimeSeries';
+import ListTimeSeries from '../pages/charts-management/TimeSeries/ListTimeSeries';
 import Plant from '../pages/plant-management/Plant';
 import AddTypeAlarm from '../pages/type-alarm-management/AddTypeAlarm';
 import EditTypeAlarm from '../pages/type-alarm-management/EditTypeAlarm';

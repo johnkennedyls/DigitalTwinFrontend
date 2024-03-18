@@ -1,16 +1,13 @@
-import { useState } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-function ProcessSelectionForm ({ processes, onChange }) {
-  const [selectedProcess, setSelectedProcess] = useState('');
-
+function ProcessSelectionForm ({ processes, onChange, selectedProcess, setSelectedProcess }) {
   const handleChange = (event) => {
     setSelectedProcess(event.target.value);
     onChange(processes.find(process => process.id === event.target.value));
   };
 
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth variant="outlined" margin="normal">
       <InputLabel id="process-select-label">Proceso</InputLabel>
       <Select
         labelId="process-select-label"

@@ -62,9 +62,8 @@ export const DEFAULT_TIME_SERIES_OPTION = {
     {
       type: 'time',
       axisLabel: {
-        rotate: 45,
         align: 'right',
-        formatter: '{yyyy}-{MM}-{dd}  \n{hh}:{mm}:{ss}  '
+        formatter: '{yyyy}-{MM}-{dd}\n{hh}:{mm}:{ss}  '
       },
       axisTick: {
         alignWithLabel: true
