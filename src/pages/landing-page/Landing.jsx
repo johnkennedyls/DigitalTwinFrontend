@@ -40,7 +40,7 @@ const Landing = () => {
           <img
             src={icesiLogoBlack}
             alt="Logo de la Universidad"
-            style={{ width: '100%', height: 'auto', marginBottom: '2.5rem', marginTop: '10rem' }}
+            style={{ width: '100%', height: 'auto' }}
           />
         </div>
       )}

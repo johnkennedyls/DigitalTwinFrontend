@@ -8,7 +8,7 @@ import { esES } from '@mui/x-date-pickers/locales';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 
-import { updateTagData } from './reducers/plant/tag/tagSlice';
+import { updateTagData } from './reducers/plant/tagSlice';
 import { StompClient } from './utils/stompClient';
 import MainLayout from './layouts/main/MainLayout';
 import { MessageProvider } from './providers/MessageContext';
@@ -29,6 +29,7 @@ const App = ({ children }) => {
     if (!token) {
       history.push('');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onDisconnect = () => {
@@ -37,7 +38,6 @@ const App = ({ children }) => {
 
   const onMessageReceived = (message) => {
     const parsedMessage = JSON.parse(message.body);
-    console.log('Message received:', parsedMessage);
     dispatch(updateTagData(parsedMessage));
   };
 

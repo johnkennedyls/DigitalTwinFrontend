@@ -4,7 +4,7 @@ import Header from '../header/Header';
 
 const MainLayout = ({ children }) => {
   return (
-    <main>
+    <main style={{ padding: '0.5rem' }}>
       <Header />
       {children}
     </main>

@@ -17,7 +17,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useSelector } from 'react-redux';
 
 import { deepCopy } from '../../../../utils/Funtions';
-import { getDelimitedData } from '../../../../services/Api/PlantService';
+import { getDelimitedDataV2 } from '../../../../services/Api/PlantService';
 import {
   getExutionsByProcess,
   getProcessByPlant
@@ -72,16 +72,26 @@ export default function TimeSeries () {
 
   const [isPlaying, setIsPlaying] = useState(true);
 
+  let currentOption = {};
+
   const showTags = () => {
     return selectedPlant && (mode === 'realtime' || mode === 'range');
   };
 
   const showGraphic = () => {
-    return selectedTags.length > 0;
+    return delimitedData.date.length > 0;
   };
 
   const formatDate = (date) => {
     return moment(date).format('YYYY-MM-DDTHH:mm');
+  };
+
+  const resetFlow = () => {
+    setSelectedTags([]);
+    setSelectedProcess('');
+    setSelectedExecution('');
+    setTags([]);
+    setMode('');
   };
 
   const getProcessesOfPlant = (plantId) => {
@@ -93,13 +103,15 @@ export default function TimeSeries () {
   };
 
   const handlePlantChange = (newPlant) => {
-    setSelectedTags([]);
+    resetFlow();
     getProcessesOfPlant(newPlant);
   };
 
   const handleProcessChange = (newProcess) => {
     getExecutionsOfProcess(newProcess.id);
-    setTags([]); // Reset tags when a new process is selected
+    setSelectedExecution('');
+    setSelectedTags([]);
+    setMode('');
   };
 
   const handleExecutionChange = (selectedExec) => {
@@ -143,7 +155,7 @@ export default function TimeSeries () {
       if (startDateLong > endDateLong) {
         return;
       }
-      getDelimitedData(selectedPlant, startDateLong, endDateLong)
+      getDelimitedDataV2(selectedPlant, startDateLong, endDateLong)
         .then((data) => {
           const currentData = { date: [] };
           data.forEach((currentMeasures) => {
@@ -192,7 +204,9 @@ export default function TimeSeries () {
     const data = plantState[selectedPlant].tags;
     const currentTags = Object.keys(data);
     setSelectedTags([]);
+    setDateRange({ start: '', end: '' });
     setTags(currentTags);
+    setSelectedProcess('');
   }, [selectedPlant, plantState]);
 
   useEffect(() => {
@@ -200,19 +214,20 @@ export default function TimeSeries () {
       // Update the tags array when a process is selected
       const data = plantState[selectedPlant].tags;
       const currentTags = Object.keys(data);
-      setSelectedTags([]);
+      setDateRange({ start: '', end: '' });
       setTags(currentTags);
     }
-  }, [selectedProcess, selectedPlant, plantState]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProcess]);
 
   useEffect(() => {
-    if (dateRange.start !== '' && dateRange.end !== '') {
-      handleDateChange();
+    if (selectedTags.length > 0) {
+      if (dateRange.start !== '' && dateRange.end !== '') {
+        handleDateChange();
+      }
     }
-  }, [dateRange]);
-
-  useEffect(() => {}, [processes]);
-  let currentOption = {};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTags, selectedExecution, dateRange]);
 
   // Executions for graphics
   const getOption = () => {
@@ -240,7 +255,12 @@ export default function TimeSeries () {
 
       const currentSeries = deepCopy(DEFAULT_SERIES_FORMAT);
       currentSeries.name = tagName;
-      currentSeries.data = mode === 'realtime' ? tagsState[tag] : delimitedData[tag];
+      if (mode === 'realtime') {
+        const realtimeData = tagsState[tag].filter(element => element[2] === selectedExecution.id);
+        currentSeries.data = realtimeData;
+      } else {
+        currentSeries.data = delimitedData[tag];
+      }
       currentSeries.symbol = SYMBOLS[i % SYMBOLS.length];
       if (i !== 0) {
         currentSeries.yAxisIndex = i;
@@ -287,16 +307,14 @@ export default function TimeSeries () {
               label="Fecha de inicio"
               ampm={false}
               value={new Date(dateRange.start)}
-              maxTime={new Date(dateRange.end)}
-              maxDate={new Date(dateRange.end)}
+              maxDateTime={new Date(dateRange.end)}
               onChange={(newDate) => handleDateChangeFromPicker(newDate, 'start')}
             />
             <DateTimePicker
               label="Fecha de fin"
               ampm={false}
               value={new Date(dateRange.end)}
-              minTime={new Date(dateRange.start)}
-              minDate={new Date(dateRange.start)}
+              minDateTime={new Date(dateRange.start)}
               onChange={(newDate) => handleDateChangeFromPicker(newDate, 'end')}
             />
           </Box>
