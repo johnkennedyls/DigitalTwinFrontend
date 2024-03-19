@@ -79,11 +79,15 @@ export default function TimeSeries () {
   };
 
   const showGraphic = () => {
-    return delimitedData.date.length > 0;
+    return delimitedData.date.length > 0 && selectedTags.length > 0;
   };
 
   const formatDate = (date) => {
     return moment(date).format('YYYY-MM-DDTHH:mm');
+  };
+
+  const isManual = () => {
+    return selectedExecution.id === -1;
   };
 
   const resetFlow = () => {
@@ -92,6 +96,7 @@ export default function TimeSeries () {
     setSelectedExecution('');
     setTags([]);
     setMode('');
+    setDelimitedData({ date: [] });
   };
 
   const getProcessesOfPlant = (plantId) => {
@@ -112,6 +117,7 @@ export default function TimeSeries () {
     setSelectedExecution('');
     setSelectedTags([]);
     setMode('');
+    setDelimitedData({ date: [] });
   };
 
   const handleExecutionChange = (selectedExec) => {
@@ -123,6 +129,8 @@ export default function TimeSeries () {
       } else if (selectedExec === 'Manual') {
         setMode('range');
       }
+      setDelimitedData({ date: [] });
+      setSelectedTags([]);
       setDateRange({
         start: formatDate(selectedExec.startDate),
         end: formatDate(selectedExec.endDate)
@@ -155,7 +163,8 @@ export default function TimeSeries () {
       if (startDateLong > endDateLong) {
         return;
       }
-      getDelimitedDataV2(selectedPlant, startDateLong, endDateLong)
+      const lastTag = selectedTags[selectedTags.length - 1];
+      getDelimitedDataV2(lastTag, startDateLong, endDateLong)
         .then((data) => {
           const currentData = { date: [] };
           data.forEach((currentMeasures) => {
@@ -176,7 +185,7 @@ export default function TimeSeries () {
               currentData[tag].push([currentDate, current.value]);
             });
           });
-          setDelimitedData(currentData);
+          setDelimitedData(prevData => ({ ...prevData, ...currentData }));
         })
         .catch((error) => {
           console.error(error);
@@ -307,6 +316,7 @@ export default function TimeSeries () {
               label="Fecha de inicio"
               ampm={false}
               value={new Date(dateRange.start)}
+              minDateTime={!isManual() && new Date(dateRange.start)}
               maxDateTime={new Date(dateRange.end)}
               onChange={(newDate) => handleDateChangeFromPicker(newDate, 'start')}
             />
@@ -315,6 +325,7 @@ export default function TimeSeries () {
               ampm={false}
               value={new Date(dateRange.end)}
               minDateTime={new Date(dateRange.start)}
+              maxDateTime={!isManual() && new Date(dateRange.start)}
               onChange={(newDate) => handleDateChangeFromPicker(newDate, 'end')}
             />
           </Box>
