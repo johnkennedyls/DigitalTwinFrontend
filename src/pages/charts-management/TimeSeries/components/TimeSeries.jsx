@@ -325,7 +325,7 @@ export default function TimeSeries () {
               ampm={false}
               value={new Date(dateRange.end)}
               minDateTime={new Date(dateRange.start)}
-              maxDateTime={!isManual() && new Date(dateRange.start)}
+              maxDateTime={!isManual() && new Date(dateRange.end)}
               onChange={(newDate) => handleDateChangeFromPicker(newDate, 'end')}
             />
           </Box>

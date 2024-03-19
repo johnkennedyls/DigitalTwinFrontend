@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import routes from './routes/routes';
-import { store, persistor } from './reducers/store.js';
+import { store, persistor } from './reducers/Store.js';
 
 if (typeof window !== 'undefined') {
   window.global = window;
