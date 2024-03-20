@@ -120,7 +120,15 @@ export default function Header () {
               </MenuItem>
             </Menu>
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' },
+              position: 'absolute',
+              left: { md: '60%', lg: '50%' },
+              transform: 'translateX(-50%)'
+            }}
+          >
             <Button color="inherit" sx={{ marginRight: '0.5rem' }} onClick={(e) => navigate(e, '/manage-plant')}>
               Plants
             </Button>
