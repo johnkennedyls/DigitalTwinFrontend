@@ -50,7 +50,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
       <Grid item xs={12} sm={6} md={6}>
         <Paper elevation={3} sx={{ p: 4, my: 4 }}>
           <Typography variant="h6" gutterBottom>
-                        Agregar proceso
+            Add process
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -108,7 +108,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
               </Accordion>
             ))}
             <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
-              Agregar proceso
+              Add process
             </Button>
           </form>
         </Paper>

@@ -45,14 +45,14 @@ const MainPlantForm = ({ onNext, plantName = '', plantDescription = '', plantPho
       <Grid item xs={12} sm={6} md={6}>
         <Paper elevation={3} sx={{ p: 4, my: 4 }}>
           <Typography variant="h6" gutterBottom>
-            {processLabel === 'add' ? 'Agregar planta' : 'Editar planta'}
+            {processLabel === 'add' ? 'Add plant' : 'Edit plant'}
           </Typography>
           <Avatar src={plant.plantPhoto} variant="rounded" style={{ width: '7vw', height: '7vw', margin: '15px auto' }} />
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <label htmlFor="image-upload">
               <Button variant="outlined" component="span" startIcon={<ImageIcon />}>
-                {processLabel === 'add' ? 'Cargar imagen' : 'Editar imagen'}
+                {processLabel === 'add' ? 'Load image' : 'Edit image'}
 
               </Button>
             </label>

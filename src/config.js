@@ -1,1 +1,1 @@
-export const LIMIT_STORED_DATA = 20;
+export const LIMIT_STORED_DATA = 1000;

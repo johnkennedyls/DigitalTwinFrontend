@@ -31,7 +31,7 @@ function TagSelectionForm ({ tags, selectedTags, handleTagChange, plantState, se
           <TextField
             {...params}
             variant="outlined"
-            label="Selecciona los tags"
+            label="Select Tags"
             placeholder="Tags"
           />
         )}

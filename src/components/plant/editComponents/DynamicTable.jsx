@@ -70,7 +70,7 @@ function DynamicTable ({ tags, setTags, mapSvgTag, handleRemoveTag, handleChange
             borderRight: '1px solid #e0e0e0'
           }}
         >
-                    Acciones
+          Acciones
         </TableCell>
         {tagProperties.map((column, columnIndex) => (
           <TableCell

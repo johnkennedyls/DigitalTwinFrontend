@@ -17,7 +17,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useSelector } from 'react-redux';
 
 import { deepCopy } from '../../../../utils/Funtions';
-import { getDelimitedDataV2 } from '../../../../services/Api/PlantService';
+import { getDelimitedData } from '../../../../services/Api/PlantService';
 import {
   getExutionsByProcess,
   getProcessByPlant
@@ -79,7 +79,11 @@ export default function TimeSeries () {
   };
 
   const showGraphic = () => {
-    return delimitedData.date.length > 0 && selectedTags.length > 0;
+    if (mode === 'realtime') {
+      return tagsState.date.length > 0 && selectedTags.length > 0;
+    } else {
+      return delimitedData.date.length > 0 && selectedTags.length > 0;
+    }
   };
 
   const formatDate = (date) => {
@@ -164,7 +168,7 @@ export default function TimeSeries () {
         return;
       }
       const lastTag = selectedTags[selectedTags.length - 1];
-      getDelimitedDataV2(lastTag, startDateLong, endDateLong)
+      getDelimitedData(lastTag, startDateLong, endDateLong)
         .then((data) => {
           const currentData = { date: [] };
           data.forEach((currentMeasures) => {
@@ -310,10 +314,10 @@ export default function TimeSeries () {
           />
         }
 
-        {selectedExecution &&
+        {selectedExecution && mode === 'range' &&
           <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'space-evenly' }}>
             <DateTimePicker
-              label="Fecha de inicio"
+              label="Start Date"
               ampm={false}
               value={new Date(dateRange.start)}
               minDateTime={!isManual() && new Date(dateRange.start)}
@@ -321,7 +325,7 @@ export default function TimeSeries () {
               onChange={(newDate) => handleDateChangeFromPicker(newDate, 'start')}
             />
             <DateTimePicker
-              label="Fecha de fin"
+              label="End Date"
               ampm={false}
               value={new Date(dateRange.end)}
               minDateTime={new Date(dateRange.start)}

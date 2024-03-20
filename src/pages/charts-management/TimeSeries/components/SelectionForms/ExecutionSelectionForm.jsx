@@ -15,13 +15,13 @@ function ExecutionSelectionForm ({ executions, onChange, selectedExecution, setS
 
   return (
     <FormControl fullWidth variant="outlined" margin="normal">
-      <InputLabel id="execution-select-label">Ejecución</InputLabel>
+      <InputLabel id="execution-select-label">Select Execution</InputLabel>
       <Select
         labelId="execution-select-label"
         id="execution-select"
         value={selectedExecution.id}
         onChange={handleChange}
-        label="Ejecución"
+        label="Select Execution"
       >
         <MenuItem key={-1} value={-1}>
           Manual

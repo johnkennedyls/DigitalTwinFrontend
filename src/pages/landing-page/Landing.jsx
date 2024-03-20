@@ -1,19 +1,18 @@
 import { useRef, useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import { Box, Typography, Button, Fade } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import { useHistory } from 'react-router-dom';
 
 import icesiLogoBlack from '../../assets/images/ICESI_logo_black.png';
-
-import './Landing.css';
+import { useIncrementalIndexEffect } from '../../utils/UseIncrementalIndexEffect';
 
 const Landing = () => {
   const saamfiUrl = import.meta.env.VITE_SAAMFI_FRONTEND_URL;
 
   const [logoWidth, setLogoWidth] = useState(null);
   const titleRef = useRef();
+
+  const currentIndex = useIncrementalIndexEffect(3, 150);
 
   const history = useHistory();
 
@@ -34,40 +33,48 @@ const Landing = () => {
   };
 
   return (
-    <Box className={'container'}>
-      {logoWidth && (
-        <div className="fade-in" style={{ width: logoWidth }}>
-          <img
-            src={icesiLogoBlack}
-            alt="Logo de la Universidad"
-            style={{ width: '100%', height: 'auto' }}
-          />
-        </div>
-      )}
-      <div className="fade-in">
-        <Typography
-          variant="h4"
-          component="h1"
-          gutterBottom
-          className={'title'}
-          ref={titleRef}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
+      }}
+    >
+      {logoWidth &&
+        <Fade in={currentIndex >= 1} timeout={1000}>
+          <div className="fade-in" style={{ width: logoWidth }}>
+            <img
+              src={icesiLogoBlack}
+              alt="Logo de la Universidad"
+              style={{ width: '100%', height: 'auto' }}
+            />
+          </div>
+        </Fade>
+      }
+      <Fade in={currentIndex >= 2} timeout={1000}>
+        <Typography ref={titleRef}variant="h4" component="h1" gutterBottom
+          sx={{
+            textAlign: 'center',
+            marginBottom: '1rem'
+          }}
         >
-        Bienvenido a la Planta Piloto<br/>Ingeniería Bioquímica
+          Bienvenido a la Planta Piloto<br/>Ingeniería Bioquímica
         </Typography>
-      </div>
-      <div className="scale-in">
+      </Fade>
+      <Fade in={currentIndex >= 3} timeout={1000}>
         <Button
           variant="contained"
-          className={'button'}
           onClick={handleLogin}
-          startIcon={<LoginIcon className={'icon'}/>}
+          startIcon={<LoginIcon sx={{ marginRight: '0.5rem' }}/>}
           sx={{
             marginTop: '1rem'
           }}
         >
         Iniciar sesión
         </Button>
-      </div>
+      </Fade>
     </Box>
   );
 };

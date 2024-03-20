@@ -8,13 +8,13 @@ function ProcessSelectionForm ({ processes, onChange, selectedProcess, setSelect
 
   return (
     <FormControl fullWidth variant="outlined" margin="normal">
-      <InputLabel id="process-select-label">Proceso</InputLabel>
+      <InputLabel id="process-select-label">Select Process</InputLabel>
       <Select
         labelId="process-select-label"
         id="process-select"
         value={selectedProcess}
         onChange={handleChange}
-        label="Proceso"
+        label="Select Process"
       >
         {processes.map((process) => (
           <MenuItem key={process.id} value={process.id}>

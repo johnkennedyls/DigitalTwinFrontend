@@ -66,20 +66,7 @@ export const deletePlant = (plantId) => {
   });
 };
 
-export const getDelimitedData = (plantId, startDate, endDate) => {
-  return new Promise((resolve, reject) => {
-    axios.get(`plants/delimited/${plantId}/${startDate}/${endDate}`)
-      .then(response => {
-        resolve(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-        reject(error);
-      });
-  });
-};
-
-export const getDelimitedDataV2 = (assetId, startDate, endDate) => {
+export const getDelimitedData = (assetId, startDate, endDate) => {
   return new Promise((resolve, reject) => {
     axios.get(`measures?assetId=${assetId}&startDate=${startDate}&endDate=${endDate}&maxLimit=${LIMIT_STORED_DATA}`)
       .then(response => {

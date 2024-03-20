@@ -20,6 +20,7 @@ export default function TagsPlantForm ({
   const handleChangeSvgId = (value) => {
     const svgIdExists = mapSvgTag.some((tag) => tag.svgId === value);
     if (svgIdExists) {
+      console.log('K', value);
       const tagNameBeingEdited = tags.find((tag) => tag.metadata.svgId === value)?.name;
       const newTags = mapSvgTag.map((tag) =>
         tag.svgId === value
@@ -77,6 +78,7 @@ export default function TagsPlantForm ({
   }, [tags]);
 
   useEffect(() => {
+    console.log(mapSvgTag);
     validateForm();
   }, [tags, validateForm]);
 

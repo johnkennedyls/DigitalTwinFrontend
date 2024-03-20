@@ -8,13 +8,13 @@ function PlantSelectionForm ({ plantState, plants, onChange, selectedPlant, setS
 
   return (
     <FormControl fullWidth variant="outlined" margin="normal">
-      <InputLabel>Seleccione Planta</InputLabel>
+      <InputLabel>Select Plant</InputLabel>
       <Select
         labelId="plant-select-label"
         id="plant-select"
         value={selectedPlant}
         onChange={handleChange}
-        label="Seleccione Planta"
+        label="Select Plant"
       >
         {plants.map((plant) => (
           <MenuItem key={plant} value={plant}>

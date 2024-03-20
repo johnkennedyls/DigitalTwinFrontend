@@ -8,7 +8,7 @@ const ImageDialog = ({ open, imageSrc, onAccept, onCancel }) => {
   return (
     <Dialog open={open} onClose={onCancel}>
       <DialogContent>
-        <img src={imageSrc} style={{ width: '250px', height: '250px' }} alt="Imagen a recortar" />
+        <img src={imageSrc} style={{ width: '250px', height: '250px' }} alt="Image to crop" />
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel}>Cancelar</Button>
@@ -50,9 +50,9 @@ const ImageUploader = ({ onImageAccepted }) => {
         onChange={handleFileChange}
         style={{ display: 'none' }}
       />
-      <label htmlFor="image-upload"> {/* Añadir etiqueta y vincularla al input */}
+      <label htmlFor="image-upload">
         <Button variant="outlined" component="span" startIcon={<ImageIcon />}>
-                    Cargar imagen
+                    Load image
         </Button>
       </label>
       {imageSrc && (

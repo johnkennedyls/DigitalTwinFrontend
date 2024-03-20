@@ -89,18 +89,18 @@ export default function ListPlant () {
   const columns = [
     {
       field: 'plantPhoto',
-      headerName: 'Imagen',
+      headerName: 'Image',
       sortable: false,
       width: 120,
       renderCell: (params) => (
         <Avatar src={params.value} alt={params.row.name} />
       )
     },
-    { field: 'plantName', headerName: 'Nombre', width: 200 },
-    { field: 'plantDescription', headerName: 'Descripción', flex: 1 },
+    { field: 'plantName', headerName: 'Name', width: 200 },
+    { field: 'plantDescription', headerName: 'Description', flex: 1 },
     {
       field: 'actions',
-      headerName: 'Acciones',
+      headerName: 'Actions',
       sortable: false,
       width: 150,
       disableClickEventBubbling: true,
@@ -178,7 +178,7 @@ export default function ListPlant () {
           startIcon={<AddIcon />}
           onClick={handleAdd}
         >
-          Agregar planta
+          Add plant
         </Button>
       </Box>
     </Box>
