@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-// import * as Stomp from "stompjs"
-// import * as SockJS from "sockjs-client"
 import { useDispatch } from 'react-redux';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { es } from 'date-fns/locale';
@@ -11,12 +9,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 
 import { updateTagData } from './reducers/plant/tagSlice';
-import { StompClient } from './services/utils/stompClient';
+import { StompClient } from './utils/stompClient';
 import MainLayout from './layouts/main/MainLayout';
 import { MessageProvider } from './providers/MessageContext';
-
-import './assets/styles/global.css';
 import Loading from './components/utils/Loading';
+import './app.css';
 
 const theme = createTheme({}, esES);
 
@@ -32,10 +29,11 @@ const App = ({ children }) => {
     if (!token) {
       history.push('');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onDisconnect = () => {
-    console.log('Disconnected from WebSocket server');
+    console.info('Disconnected from WebSocket server');
   };
 
   const onMessageReceived = (message) => {
@@ -44,7 +42,7 @@ const App = ({ children }) => {
   };
 
   const onConnect = () => {
-    console.log('Connected to WebSocket server');
+    console.info('Connected to WebSocket server');
     stompClient.subscribe('/topic/realtime', onMessageReceived);
   };
 
@@ -65,14 +63,16 @@ const App = ({ children }) => {
 
   return (
     <MainLayout>
-    <Loading />
-      <MessageProvider>
-        <LocalizationProvider dateAdapter={AdapterDateFns} locale={es}>
-          <ThemeProvider theme={theme}>
-            {children}
-          </ThemeProvider>
-        </LocalizationProvider>
-      </MessageProvider>
+      <React.Fragment>
+        <Loading />
+        <MessageProvider>
+          <LocalizationProvider dateAdapter={AdapterDateFns} locale={es}>
+            <ThemeProvider theme={theme}>
+              {children}
+            </ThemeProvider>
+          </LocalizationProvider>
+        </MessageProvider>
+      </React.Fragment>
     </MainLayout>
   );
 };

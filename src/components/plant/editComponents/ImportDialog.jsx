@@ -10,7 +10,7 @@ import { Box } from '@mui/system';
 import * as XLSX from 'xlsx';
 
 import { ErrorAlert } from '../../utils/Alert';
-import { toCamelCase, toTitleCase } from '../../utils/TextConverter';
+import { toCamelCase, toTitleCase } from '../../../utils/TextConverter';
 
 function ImportDialog ({ tags, setTags }) {
   const [filteredPrevTags, setFilteredPrevTags] = useState();
@@ -23,7 +23,7 @@ function ImportDialog ({ tags, setTags }) {
 
   useEffect(() => {
     setFilteredPrevTags(tags.filter(tag => tag.name !== ''));
-  }, [tags])
+  }, [tags]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -131,48 +131,48 @@ function ImportDialog ({ tags, setTags }) {
 
   const renderOnFileNotLoaded = () => {
     return (
-            <>
-                <input type="file" accept=".csv, .xlsx" onChange={handleFileUpload} ref={fileInput} style={{ display: 'None' }} />
-                <Button variant="outlined" color="success" onClick={() => fileInput.current.click()}>
+      <>
+        <input type="file" accept=".csv, .xlsx" onChange={handleFileUpload} ref={fileInput} style={{ display: 'None' }} />
+        <Button variant="outlined" color="success" onClick={() => fileInput.current.click()}>
                     Seleccionar Archivo
-                </Button>
-            </>
+        </Button>
+      </>
     );
   };
 
   const renderOnFileLoaded = () => {
     return (
-            <>
-                <Typography>Archivo cargado correctamente, vista previa:</Typography>
-                <TableContainer component={Paper}
-                    sx={{
-                      maxHeight: '60vh',
-                      maxWidth: '90vw',
-                      pr: 1,
-                      overflowY: 'scroll',
-                      overflowX: 'scroll'
-                    }}
-                >
-                    <Table stickyHeader>
-                        <TableHead>
-                            <TableRow>
-                                {headers.map((data, index) => (
-                                    <TableCell align="center" key={index}>
-                                        {toTitleCase(data)}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map((row, rowIndex) => (
-                                <TableRow key={rowIndex}>
-                                    {checkEmptyCells(row)}
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </>
+      <>
+        <Typography>Archivo cargado correctamente, vista previa:</Typography>
+        <TableContainer component={Paper}
+          sx={{
+            maxHeight: '60vh',
+            maxWidth: '90vw',
+            pr: 1,
+            overflowY: 'scroll',
+            overflowX: 'scroll'
+          }}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                {headers.map((data, index) => (
+                  <TableCell align="center" key={index}>
+                    {toTitleCase(data)}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row, rowIndex) => (
+                <TableRow key={rowIndex}>
+                  {checkEmptyCells(row)}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </>
     );
   };
 
@@ -189,32 +189,32 @@ function ImportDialog ({ tags, setTags }) {
   }
 
   return (
-        <>
-            <Button variant="outlined" color="success" onClick={handleOpen}>
+    <>
+      <Button variant="outlined" color="success" onClick={handleOpen}>
                 Importar Datos
-            </Button>
-            <Dialog open={open} onClose={handleClose} fullWidth>
-                <DialogTitle>Importar Tags Por CSV o Excel</DialogTitle>
-                <DialogContent>
-                    {fileLoaded ? renderOnFileLoaded() : renderOnFileNotLoaded()}
-                </DialogContent>
-                <DialogActions>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                        <Button onClick={generateTemplate}>
+      </Button>
+      <Dialog open={open} onClose={handleClose} fullWidth>
+        <DialogTitle>Importar Tags Por CSV o Excel</DialogTitle>
+        <DialogContent>
+          {fileLoaded ? renderOnFileLoaded() : renderOnFileNotLoaded()}
+        </DialogContent>
+        <DialogActions>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+            <Button onClick={generateTemplate}>
                             Descargar Plantilla
-                        </Button>
-                        <Box>
-                            <Button onClick={handleClose} color="error">
+            </Button>
+            <Box>
+              <Button onClick={handleClose} color="error">
                                 Cancelar
-                            </Button>
-                            <Button onClick={handleImport} disabled={disabled} color="success">
+              </Button>
+              <Button onClick={handleImport} disabled={disabled} color="success">
                                 Confirmar
-                            </Button>
-                        </Box>
-                        </Box>
-                </DialogActions>
-            </Dialog>
-        </>
+              </Button>
+            </Box>
+          </Box>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 

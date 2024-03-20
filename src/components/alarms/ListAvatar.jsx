@@ -6,7 +6,7 @@ import Avatar from '@mui/material/Avatar';
 import ListItemText from '@mui/material/ListItemText';
 import { makeStyles } from '@mui/styles';
 
-import getAvatarColor from '../../services/utils/ColorsAvatar';
+import getAvatarColor from '../../utils/ColorsAvatar';
 
 const useStyles = makeStyles({
   root: {
@@ -51,30 +51,30 @@ function ListAvatar ({ items }) {
   const classes = useStyles();
 
   return (
-      <div className={classes.usersContainer}>
-        <List dense className={classes.root}>
-          {items && items.map((item) => (
-            <ListItem
-              key={item}
-              disablePadding
-              className={classes.listItem}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = '#f1f1f1')
-              }
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '')}
-            >
-              <ListItemAvatar className={classes.listItemAvatar}>
-                <Avatar
-                  style={{ backgroundColor: getAvatarColor(item.charAt(0)) }}
-                >
-                  {item.charAt(0)}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={item} />
-            </ListItem>
-          ))}
-        </List>
-      </div>
+    <div className={classes.usersContainer}>
+      <List dense className={classes.root}>
+        {items && items.map((item) => (
+          <ListItem
+            key={item}
+            disablePadding
+            className={classes.listItem}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = '#f1f1f1')
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '')}
+          >
+            <ListItemAvatar className={classes.listItemAvatar}>
+              <Avatar
+                style={{ backgroundColor: getAvatarColor(item.charAt(0)) }}
+              >
+                {item.charAt(0)}
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={item} />
+          </ListItem>
+        ))}
+      </List>
+    </div>
   );
 }
 

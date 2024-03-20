@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
 
-import { createTypeAlarm, getEmails, getEvents } from '../../services/TypeAlarmService';
+import { createTypeAlarm, getEmails, getEvents } from '../../services/Api/TypeAlarmService';
 import AlertMessage from '../../components/messages/AlertMessage';
 
 const useStyles = makeStyles({
@@ -154,7 +154,7 @@ function AddTypeAlarm () {
         setEmails(userEmails);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -168,7 +168,7 @@ function AddTypeAlarm () {
         setEvents(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -284,15 +284,8 @@ function AddTypeAlarm () {
       .catch((error) => {
         let message = '';
         const severity = 'error';
-        if (error.response) {
-          if (error.response.data === 'El nombre ya existe') {
-            message = error.response.data;
-            setAlert({ show: true, message, severity });
-          }
-        } else {
-          message = error.response.data;
-          setAlert({ show: true, message, severity });
-        }
+        message = error.response.data;
+        setAlert({ show: true, message, severity });
       });
   };
 
@@ -472,14 +465,14 @@ function AddTypeAlarm () {
                 renderTags={(selected, getTagProps) =>
                   selected.length > 1
                     ? [
-                    <Chip
-                      key={selected.length}
-                      icon={<CheckBoxIcon fontSize="small" />}
-                      label={selected[0]}
-                      deleteIcon={<Badge badgeContent={selected.length - 1} color="primary">+{selected.length - 1}</Badge>}
-                      {...getTagProps({ index: 0 })}
-                    />
-                      ]
+                      <Chip
+                        key={selected.length}
+                        icon={<CheckBoxIcon fontSize="small" />}
+                        label={selected[0]}
+                        deleteIcon={<Badge badgeContent={selected.length - 1} color="primary">+{selected.length - 1}</Badge>}
+                        {...getTagProps({ index: 0 })}
+                      />
+                    ]
                     : selected.map((option, index) => (
                       <Chip
                         key={index}

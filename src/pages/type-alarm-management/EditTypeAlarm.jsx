@@ -11,7 +11,7 @@ import validate from 'validate.js';
 import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
 
-import { getTypeAlarmById, updateTypeAlarm, getEmails, getEvents } from '../../services/TypeAlarmService';
+import { getTypeAlarmById, updateTypeAlarm, getEmails, getEvents } from '../../services/Api/TypeAlarmService';
 import AlertMessage from '../../components/messages/AlertMessage';
 const useStyles = makeStyles({
 
@@ -255,7 +255,7 @@ function EditTypeAlarm () {
         setEmails(userEmails);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -269,7 +269,7 @@ function EditTypeAlarm () {
         setEvents(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -304,7 +304,9 @@ function EditTypeAlarm () {
           });
         }
       })
-      .catch(error => console.log(error));
+      .catch((error) => {
+        console.error(error);
+      });
   }, [id]);
 
   const handleCloseAlert = () => {
@@ -515,14 +517,14 @@ function EditTypeAlarm () {
                 renderTags={(selected, getTagProps) =>
                   selected.length > 1
                     ? [
-                    <Chip
-                      key={selected.length}
-                      icon={<CheckBoxIcon fontSize="small" />}
-                      label={selected[0]}
-                      deleteIcon={<Badge badgeContent={selected.length - 1} color="primary">+{selected.length - 1}</Badge>}
-                      {...getTagProps({ index: 0 })}
-                    />
-                      ]
+                      <Chip
+                        key={selected.length}
+                        icon={<CheckBoxIcon fontSize="small" />}
+                        label={selected[0]}
+                        deleteIcon={<Badge badgeContent={selected.length - 1} color="primary">+{selected.length - 1}</Badge>}
+                        {...getTagProps({ index: 0 })}
+                      />
+                    ]
                     : selected.map((option, index) => (
                       <Chip
                         key={index}

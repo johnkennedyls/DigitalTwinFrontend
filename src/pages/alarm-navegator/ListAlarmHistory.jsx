@@ -13,9 +13,9 @@ import { makeStyles } from '@mui/styles';
 import { useSelector } from 'react-redux';
 
 import ChipState from '../../components/alarms/ChipState.jsx';
-import { formatDate } from '../../services/utils/FormatterDate';
+import { formatDate } from '../../utils/FormatterDate.js';
 import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
-import { getAlarmsHistory, getAllAlarmsClosedByPlantId } from '../../services/AlarmService';
+import { getAlarmsHistory, getAllAlarmsClosedByPlantId } from '../../services/Api/AlarmService.js';
 
 const useStyles = makeStyles({
   tableContainer: {
@@ -177,7 +177,7 @@ const ListAlarmHistory = () => {
         setAlarms(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -216,48 +216,48 @@ const ListAlarmHistory = () => {
           <TableBody>
             {alarms.length === 0
               ? (
-              <TableRow>
-                <TableCell colSpan={12} align="center" style={{ height: '200px' }}>
+                <TableRow>
+                  <TableCell colSpan={12} align="center" style={{ height: '200px' }}>
                   No hay elementos disponibles.
-                </TableCell>
-              </TableRow>
-                )
+                  </TableCell>
+                </TableRow>
+              )
               : (
-              <>
-                {(rowsPerPage > 0
-                  ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  : alarms
-                ).map((row) => (
-                  <TableRow key={row.alarmid}>
-                    {columns.map((column) => {
-                      if (column.field === 'activationDate') {
+                <>
+                  {(rowsPerPage > 0
+                    ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    : alarms
+                  ).map((row) => (
+                    <TableRow key={row.alarmid}>
+                      {columns.map((column) => {
+                        if (column.field === 'activationDate') {
+                          return (
+                            <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
+                              {formatDate(row[column.field])}
+                            </TableCell>
+                          );
+                        }
                         return (
                           <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
-                            {formatDate(row[column.field])}
+                            {row[column.field]}
                           </TableCell>
                         );
-                      }
-                      return (
-                        <TableCell className={classes.centeredCell} key={`${row.alarmid}-${column.field}`} width={column.width}>
-                          {row[column.field]}
-                        </TableCell>
-                      );
-                    })}
-                    <TableCell className={classes.centeredCell}>
-                      <ChipState state={row.stateAlarmName} />
-                    </TableCell>
-                    <TableCell className={classes.centeredCell}>
-                      <AvatarLetter names={row.usersAssigned} />
-                    </TableCell>
-                    <TableCell className={classes.centeredCell}>
-                      <IconButton aria-label="show" onClick={() => handleShowDetail(row)}>
-                        <Visibility />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </>
-                )}
+                      })}
+                      <TableCell className={classes.centeredCell}>
+                        <ChipState state={row.stateAlarmName} />
+                      </TableCell>
+                      <TableCell className={classes.centeredCell}>
+                        <AvatarLetter names={row.usersAssigned} />
+                      </TableCell>
+                      <TableCell className={classes.centeredCell}>
+                        <IconButton aria-label="show" onClick={() => handleShowDetail(row)}>
+                          <Visibility />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </>
+              )}
           </TableBody>
           <TableFooter className={classes.stickyFooter}>
             <TableRow style={{ textAlign: 'center' }}>

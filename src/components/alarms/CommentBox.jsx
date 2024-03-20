@@ -11,9 +11,9 @@ import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Add } from '@mui/icons-material';
 
-import getAvatarColor from '../../services/utils/ColorsAvatar';
-import { formatDate } from '../../services/utils/FormatterDate';
-import { addHistoryAction, getAllActionsHistoryByAlarm } from '../../services/AlarmService';
+import getAvatarColor from '../../utils/ColorsAvatar';
+import { formatDate } from '../../utils/FormatterDate';
+import { addHistoryAction, getAllActionsHistoryByAlarm } from '../../services/Api/AlarmService';
 
 const useStyles = makeStyles({
   commentContainer: {
@@ -96,7 +96,7 @@ function CommentBox ({ alarmId, handleShowAlert }) {
         setCommentList(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -113,82 +113,83 @@ function CommentBox ({ alarmId, handleShowAlert }) {
           getHistoryActions();
         })
         .catch(error => {
+          console.error(error);
           handleShowAlert('Error al agregar el comentario', 'error');
         });
     }
   };
 
   return (
-        <>
-          <div className={classes.commentContainer}>
-            <List className={classes.commentList}>
-              {commentList.length === 0
-                ? (
-                <Typography variant="body1" className={classes.emptyCommentMessage}><em>Aún no hay acciones</em></Typography>
-                  )
-                : (
-                    commentList.map((comment) => (
-                  <React.Fragment key={comment.actionHistoryId}>
-                    <ListItem alignItems="flex-start" className={classes.comment}>
-                      <ListItemAvatar>
-                        <Avatar
-                          style={{ backgroundColor: getAvatarColor(comment.actionHistoryUsername.charAt(0)) }}
-                        >
-                          {comment.actionHistoryUsername.charAt(0)}
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={comment.actionHistoryUsername}
-                        secondary={
-                          <React.Fragment>
-                            <Typography
-                              sx={{ display: 'inline' }}
-                              component="span"
-                              variant="body2"
-                              color="text.primary"
-                            >
-                              {formatDate(comment.actionHistoryDate)}
-                            </Typography>
-                            <br />
-                            <Typography
-                              sx={{ display: 'inline' }}
-                              component="span"
-                              variant="body2"
-                              color="text.secondary"
-                            >
-                              {comment.actionHistoryDescription}
-                            </Typography>
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <Divider variant="inset" component="li" className={classes.divider} />
-                  </React.Fragment>
-                    ))
-                  )}
-            </List>
-          </div>
-          <TextField
-            value={currentComment}
-            onChange={handleCommentChange}
-            label="Agrega una acción"
-            variant="outlined"
-            margin="dense"
-          />
-          <div className={classes.buttonWrapper}>
-            <Button
-              className={classes.button}
-              startIcon={<Add />}
-              size="large"
-              variant="contained"
-              color="primary"
-              onClick={handleAddComment}
-              disabled={!isButtonEnabled}
-            >
+    <>
+      <div className={classes.commentContainer}>
+        <List className={classes.commentList}>
+          {commentList.length === 0
+            ? (
+              <Typography variant="body1" className={classes.emptyCommentMessage}><em>Aún no hay acciones</em></Typography>
+            )
+            : (
+              commentList.map((comment) => (
+                <React.Fragment key={comment.actionHistoryId}>
+                  <ListItem alignItems="flex-start" className={classes.comment}>
+                    <ListItemAvatar>
+                      <Avatar
+                        style={{ backgroundColor: getAvatarColor(comment.actionHistoryUsername.charAt(0)) }}
+                      >
+                        {comment.actionHistoryUsername.charAt(0)}
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={comment.actionHistoryUsername}
+                      secondary={
+                        <React.Fragment>
+                          <Typography
+                            sx={{ display: 'inline' }}
+                            component="span"
+                            variant="body2"
+                            color="text.primary"
+                          >
+                            {formatDate(comment.actionHistoryDate)}
+                          </Typography>
+                          <br />
+                          <Typography
+                            sx={{ display: 'inline' }}
+                            component="span"
+                            variant="body2"
+                            color="text.secondary"
+                          >
+                            {comment.actionHistoryDescription}
+                          </Typography>
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                  <Divider variant="inset" component="li" className={classes.divider} />
+                </React.Fragment>
+              ))
+            )}
+        </List>
+      </div>
+      <TextField
+        value={currentComment}
+        onChange={handleCommentChange}
+        label="Agrega una acción"
+        variant="outlined"
+        margin="dense"
+      />
+      <div className={classes.buttonWrapper}>
+        <Button
+          className={classes.button}
+          startIcon={<Add />}
+          size="large"
+          variant="contained"
+          color="primary"
+          onClick={handleAddComment}
+          disabled={!isButtonEnabled}
+        >
               Añadir acción
-            </Button>
-          </div>
-        </>
+        </Button>
+      </div>
+    </>
   );
 }
 

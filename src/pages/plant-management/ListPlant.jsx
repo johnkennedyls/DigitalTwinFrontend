@@ -17,8 +17,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { hasAnyRole } from '../../services/utils/funtions';
-import { getPlantsData, deletePlant } from '../../services/PlantService';
+import { hasAnyRole } from '../../utils/Funtions';
+import { getPlantsData, deletePlant } from '../../services/Api/PlantService';
 import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '../../reducers/plant/plantSlice';
 import { useMessage } from '../../providers/MessageContext';
 
@@ -47,7 +47,6 @@ export default function ListPlant () {
 
   useEffect(() => {
     const currentPlants = [];
-    console.log(plantState);
     Object.keys(plantState).forEach((plant) => {
       currentPlants.push({
         plantId: plantState[plant].assetId,
@@ -90,18 +89,18 @@ export default function ListPlant () {
   const columns = [
     {
       field: 'plantPhoto',
-      headerName: 'Imagen',
+      headerName: 'Image',
       sortable: false,
       width: 120,
       renderCell: (params) => (
         <Avatar src={params.value} alt={params.row.name} />
       )
     },
-    { field: 'plantName', headerName: 'Nombre', width: 200 },
-    { field: 'plantDescription', headerName: 'Descripción', flex: 1 },
+    { field: 'plantName', headerName: 'Name', width: 200 },
+    { field: 'plantDescription', headerName: 'Description', flex: 1 },
     {
       field: 'actions',
-      headerName: 'Acciones',
+      headerName: 'Actions',
       sortable: false,
       width: 150,
       disableClickEventBubbling: true,
@@ -179,7 +178,7 @@ export default function ListPlant () {
           startIcon={<AddIcon />}
           onClick={handleAdd}
         >
-          Agregar planta
+          Add plant
         </Button>
       </Box>
     </Box>

@@ -1,0 +1,11 @@
+.clickable-row {
+    cursor: pointer !important;
+}
+
+.swal2-container {
+    z-index: 20000 !important;
+}
+
+body {
+  margin: 0;
+}

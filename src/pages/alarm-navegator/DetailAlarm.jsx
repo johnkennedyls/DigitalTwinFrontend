@@ -6,9 +6,9 @@ import { useParams } from 'react-router-dom';
 
 import CommentBox from '../../components/alarms/CommentBox';
 import ListAvatar from '../../components/alarms/ListAvatar';
-import { getAlarmById } from '../../services/AlarmService';
-import { changeStateAlarm } from '../../services/StateAlarm';
-import { formatDate } from '../../services/utils/FormatterDate';
+import { getAlarmById } from '../../services/Api/AlarmService';
+import { changeStateAlarm } from '../../services/Api/StateAlarmService';
+import { formatDate } from '../../utils/FormatterDate';
 import AlertMessage from '../../components/messages/AlertMessage';
 import AlertDialog from '../../components/alarms/AlertDialog';
 
@@ -91,10 +91,9 @@ const DetailAlarm = () => {
       .then((data) => {
         setAlarm(data);
         setSelectedState(data.stateAlarmName);
-        console.log(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -122,7 +121,7 @@ const DetailAlarm = () => {
         handleShowAlert('El estado fue cambiado exitosamente', 'success');
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         handleShowAlert('El estado no pudo ser cambiado', 'error');
       });
     setIsSelectDisabled(true);
@@ -145,74 +144,74 @@ const DetailAlarm = () => {
   };
 
   return (
-      <>
+    <>
       <div className={classes.paperContainer}>
         <Paper elevation={3} style={{ width: '900px', height: '520px', margin: '10px' }}>
-        <div className={classes.root}>
-          <div className={classes.left}>
-          <Typography variant="body1" gutterBottom>
-          <strong>Planta:</strong> {alarm.plantName}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-            <strong>Tipo de Alarma:</strong> {alarm.typeAlarmName}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-            <strong>Fecha de Activación:</strong>
-            <br />
-            {formatDate(alarm.activationDate)}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-            <strong>Valor del Tag:</strong> {alarm.tagValue}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-            <strong>Estado:</strong>
-            </Typography>
-            <FormControl>
+          <div className={classes.root}>
+            <div className={classes.left}>
+              <Typography variant="body1" gutterBottom>
+                <strong>Planta:</strong> {alarm.plantName}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <strong>Tipo de Alarma:</strong> {alarm.typeAlarmName}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <strong>Fecha de Activación:</strong>
+                <br />
+                {formatDate(alarm.activationDate)}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <strong>Valor del Tag:</strong> {alarm.tagValue}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <strong>Estado:</strong>
+              </Typography>
+              <FormControl>
                 <InputLabel>{alarm.stateAlarmName}</InputLabel>
                 <Select value={selectedState}
-                    onChange={handleStateChange}
-                    disabled={alarm.stateAlarmName === 'Cerrado' || isSelectDisabled}>
-                    {alarm.stateAlarmName === 'Activa' && (
-                        <MenuItem value="En Revision">En Revision</MenuItem>
-                    )}
-                    {alarm.stateAlarmName === 'En Revision' && (
-                        <MenuItem value="Cerrado">Cerrado</MenuItem>
-                    )}
+                  onChange={handleStateChange}
+                  disabled={alarm.stateAlarmName === 'Cerrado' || isSelectDisabled}>
+                  {alarm.stateAlarmName === 'Activa' && (
+                    <MenuItem value="En Revision">En Revision</MenuItem>
+                  )}
+                  {alarm.stateAlarmName === 'En Revision' && (
+                    <MenuItem value="Cerrado">Cerrado</MenuItem>
+                  )}
                 </Select>
-            </FormControl>
-            <AlertDialog
-              open={dialogOpen}
-              onClose={handleDialogClose}
-              onConfirm={handleConfirmChange}
-              title="Confirmación"
-              message={dialogMessage}
-              confirm={true}
-            />
-            <div>
-            <Typography variant="body1" gutterBottom>
-            <strong> Usuarios Asignados </strong>
-            </Typography>
-              <ListAvatar items={alarm.usersAssigned} />
+              </FormControl>
+              <AlertDialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+                onConfirm={handleConfirmChange}
+                title="Confirmación"
+                message={dialogMessage}
+                confirm={true}
+              />
+              <div>
+                <Typography variant="body1" gutterBottom>
+                  <strong> Usuarios Asignados </strong>
+                </Typography>
+                <ListAvatar items={alarm.usersAssigned} />
+              </div>
+            </div>
+            <div className={`${classes.right} ${classes.commentsSection}`}>
+              <Typography variant="body1" gutterBottom>
+                <strong> Historial de Acciones </strong>
+              </Typography>
+              <CommentBox alarmId={id} handleShowAlert={handleShowAlert}/>
             </div>
           </div>
-          <div className={`${classes.right} ${classes.commentsSection}`}>
-          <Typography variant="body1" gutterBottom>
-          <strong> Historial de Acciones </strong>
-            </Typography>
-            <CommentBox alarmId={id} handleShowAlert={handleShowAlert}/>
-          </div>
-        </div>
         </Paper>
       </div>
-        <div>
-          <AlertMessage
-            open={alert.show}
-            message={alert.message}
-            severity={alert.severity}
-            handleClose={handleCloseAlert}
-          />
-        </div>
-      </>
+      <div>
+        <AlertMessage
+          open={alert.show}
+          message={alert.message}
+          severity={alert.severity}
+          handleClose={handleCloseAlert}
+        />
+      </div>
+    </>
   );
 };
 export default DetailAlarm;

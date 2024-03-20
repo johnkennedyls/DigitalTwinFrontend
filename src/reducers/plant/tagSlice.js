@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import moment from 'moment';
 
-import { LIMIT_STORED_DATA } from '../../config/config';
+import { LIMIT_STORED_DATA } from '../../config';
 
 export const tagSlice = createSlice({
   name: 'tags',
@@ -17,10 +17,9 @@ export const tagSlice = createSlice({
           }
 
           const currentDate = moment(new Date(tag.timeStamp)).format('YYYY-MM-DD HH:mm:ss');
-          const executionId = tag.execId;
 
           if (Number.isFinite(tag.value)) { // Verifica si tag.value es un número
-            state[tag.assetId].push([currentDate, tag.value,executionId]);
+            state[tag.assetId].push([currentDate, tag.value, tag.execId]);
             state.date.push(currentDate);
             if (state[tag.assetId].length > LIMIT_STORED_DATA) {
               state[tag.assetId].shift();

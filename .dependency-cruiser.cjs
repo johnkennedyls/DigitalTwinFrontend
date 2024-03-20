@@ -1,4 +1,5 @@
 /** @type {import('dependency-cruiser').IConfiguration} */
+// npx depcruise src --include-only "^src" --output-type dot | dot -T svg > dependency-graph.svg
 module.exports = {
   forbidden: [
     {

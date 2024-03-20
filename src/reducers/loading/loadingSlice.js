@@ -1,17 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    status: false
+  status: false
 };
 export const loadingSlice = createSlice({
-    name:"loading",
-    initialState,
-    reducers:{
-        isLoading : (state, action )=>{
-            state.status = action.payload
-        }
+  name: 'loading',
+  initialState,
+  reducers: {
+    isLoading: (state, action) => {
+      state.status = action.payload;
     }
-})
+  }
+});
 
 export const { isLoading } = loadingSlice.actions;
 

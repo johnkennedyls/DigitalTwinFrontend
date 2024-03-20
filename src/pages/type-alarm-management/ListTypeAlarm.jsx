@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 import AlertDialog from '../../components/alarms/AlertDialog.jsx';
 import AlertMessage from '../../components/messages/AlertMessage';
 import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
-import { getTypeAlarms, deleteTypeAlarm, getTypeAlarmsByPlant } from '../../services/TypeAlarmService';
+import { getTypeAlarms, deleteTypeAlarm, getTypeAlarmsByPlant } from '../../services/Api/TypeAlarmService.js';
 
 const useStyles = makeStyles({
   tableContainer: {
@@ -175,7 +175,7 @@ const ListTypeAlarm = () => {
           setAlarms(newAlarms);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
           const message = 'No se ha podido eliminar la alarma';
           const severity = 'error';
           setAlert({ show: true, message, severity });
@@ -192,13 +192,12 @@ const ListTypeAlarm = () => {
   }, []);
 
   const getAlarms = () => {
-    console.log('OLAAAAAAAAAAAAA');
     getTypeAlarms()
       .then((data) => {
         setAlarms(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -216,7 +215,7 @@ const ListTypeAlarm = () => {
           setAlarms(data);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     } else {
       getTypeAlarmsByPlant(plantId)
@@ -267,42 +266,42 @@ const ListTypeAlarm = () => {
             <TableBody>
               {alarms.length === 0
                 ? (
-                <TableRow>
-                  <TableCell colSpan={12} align="center" style={{ height: '198px' }}>
+                  <TableRow>
+                    <TableCell colSpan={12} align="center" style={{ height: '198px' }}>
                     No hay elementos disponibles.
-                  </TableCell>
-                </TableRow>
-                  )
+                    </TableCell>
+                  </TableRow>
+                )
                 : (
-                <>
-                  {(rowsPerPage > 0
-                    ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    : alarms
-                  ).map((row) => (
-                    <TableRow key={row.typeAlarmId}>
-                      {columns.map((column) => (
-                        <TableCell className={classes.centeredCell} key={`${row.typeAlarmId}-${column.field}`} width={column.width}>
-                          {row[column.field]}
+                  <>
+                    {(rowsPerPage > 0
+                      ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      : alarms
+                    ).map((row) => (
+                      <TableRow key={row.typeAlarmId}>
+                        {columns.map((column) => (
+                          <TableCell className={classes.centeredCell} key={`${row.typeAlarmId}-${column.field}`} width={column.width}>
+                            {row[column.field]}
+                          </TableCell>
+                        ))}
+                        <TableCell className={classes.usersCell}>
+                          <AvatarLetter names={row.usersAssigned} />
                         </TableCell>
-                      ))}
-                      <TableCell className={classes.usersCell}>
-                        <AvatarLetter names={row.usersAssigned} />
-                      </TableCell>
-                      <TableCell className={classes.actionColumn}>
-                        <IconButton aria-label="show" onClick={() => handleShow(row)}>
-                          <Visibility />
-                        </IconButton>
-                        <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
-                          <Edit />
-                        </IconButton>
-                        <IconButton aria-label="delete" onClick={() => handleOpenDialog(row)}>
-                          <Delete />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </>
-                  )}
+                        <TableCell className={classes.actionColumn}>
+                          <IconButton aria-label="show" onClick={() => handleShow(row)}>
+                            <Visibility />
+                          </IconButton>
+                          <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
+                            <Edit />
+                          </IconButton>
+                          <IconButton aria-label="delete" onClick={() => handleOpenDialog(row)}>
+                            <Delete />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
+                )}
             </TableBody>
             <TableFooter className={classes.stickyFooter}>
               <TableRow style={{ textAlign: 'center' }}>

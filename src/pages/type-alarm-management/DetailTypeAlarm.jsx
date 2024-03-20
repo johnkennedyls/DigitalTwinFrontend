@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import { useParams } from 'react-router-dom';
 
 import ListAvatar from '../../components/alarms/ListAvatar';
-import { getTypeAlarmById } from '../../services/TypeAlarmService';
+import { getTypeAlarmById } from '../../services/Api/TypeAlarmService';
 
 const useStyles = makeStyles({
   root: {
@@ -75,46 +75,45 @@ const DetaiTypelAlarm = () => {
     getTypeAlarmById(id)
       .then((data) => {
         setTypeAlarm(data);
-        console.log(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
   return (
-        <div className={classes.paperContainer}>
-        <Paper elevation={3} style={{ width: '700px', height: '320px', margin: '30px' }}>
+    <div className={classes.paperContainer}>
+      <Paper elevation={3} style={{ width: '700px', height: '320px', margin: '30px' }}>
         <div className={classes.root}>
           <div className={classes.left}>
-          <Typography variant="body1" gutterBottom>
-                <strong>Planta:</strong> {typeAlarm.plantName}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                <strong>Tipo de Alarma:</strong> {typeAlarm.typeAlarmName}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                <strong>Descripción:</strong>  {typeAlarm.typeAlarmDescription}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                <strong>Condición:</strong> {typeAlarm.condition}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                <strong>Número de alarmas máximas:</strong> {typeAlarm.numberAlarmsMax}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                <strong>Evento:</strong> {typeAlarm.eventName}
-                </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Planta:</strong> {typeAlarm.plantName}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Tipo de Alarma:</strong> {typeAlarm.typeAlarmName}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Descripción:</strong>  {typeAlarm.typeAlarmDescription}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Condición:</strong> {typeAlarm.condition}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Número de alarmas máximas:</strong> {typeAlarm.numberAlarmsMax}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Evento:</strong> {typeAlarm.eventName}
+            </Typography>
           </div>
           <div className={classes.right}>
-          <Typography variant="body1" gutterBottom>
-          <strong> Usuarios Asignados </strong>
+            <Typography variant="body1" gutterBottom>
+              <strong> Usuarios Asignados </strong>
             </Typography>
             <ListAvatar items={typeAlarm.usersAssigned} />
           </div>
         </div>
-        </Paper>
-      </div>
+      </Paper>
+    </div>
   );
 };
 export default DetaiTypelAlarm;

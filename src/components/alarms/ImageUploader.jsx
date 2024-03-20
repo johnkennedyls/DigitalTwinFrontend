@@ -6,15 +6,15 @@ import PropTypes from 'prop-types';
 
 const ImageDialog = ({ open, imageSrc, onAccept, onCancel }) => {
   return (
-        <Dialog open={open} onClose={onCancel}>
-            <DialogContent>
-                <img src={imageSrc} style={{ width: '250px', height: '250px' }} alt="Imagen a recortar" />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onCancel}>Cancelar</Button>
-                <Button onClick={onAccept}>Aceptar</Button>
-            </DialogActions>
-        </Dialog>
+    <Dialog open={open} onClose={onCancel}>
+      <DialogContent>
+        <img src={imageSrc} style={{ width: '250px', height: '250px' }} alt="Image to crop" />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onCancel}>Cancelar</Button>
+        <Button onClick={onAccept}>Aceptar</Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
@@ -42,29 +42,29 @@ const ImageUploader = ({ onImageAccepted }) => {
   };
 
   return (
-        <Box>
-            <input
-                accept="image/*"
-                id="image-upload"
-                type="file"
-                onChange={handleFileChange}
-                style={{ display: 'none' }}
-            />
-            <label htmlFor="image-upload"> {/* Añadir etiqueta y vincularla al input */}
-                <Button variant="outlined" component="span" startIcon={<ImageIcon />}>
-                    Cargar imagen
-                </Button>
-            </label>
-            {imageSrc && (
-                <ImageDialog
-                    open={open}
-                    imageSrc={imageSrc}
-                    onAccept={handleAccepted}
-                    onCancel={handleClose}
-                >
-                </ImageDialog>
-            )}
-        </Box>
+    <Box>
+      <input
+        accept="image/*"
+        id="image-upload"
+        type="file"
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+      />
+      <label htmlFor="image-upload">
+        <Button variant="outlined" component="span" startIcon={<ImageIcon />}>
+                    Load image
+        </Button>
+      </label>
+      {imageSrc && (
+        <ImageDialog
+          open={open}
+          imageSrc={imageSrc}
+          onAccept={handleAccepted}
+          onCancel={handleClose}
+        >
+        </ImageDialog>
+      )}
+    </Box>
   );
 };
 ImageDialog.propTypes = {

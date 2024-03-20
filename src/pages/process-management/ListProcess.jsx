@@ -19,7 +19,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import {
   getProcessesData, deleteProcess, startProcess,
   pauseProcess, stopProcess
-} from '../../services/ProcessService';
+} from '../../services/Api/ProcessService';
 
 const PROCESS_STATE = {
   STOPPED: 0,
@@ -130,11 +130,11 @@ export default function ListProcess () {
   };
 
   const columns = [
-    { field: 'name', headerName: 'Nombre', width: 200 },
-    { field: 'description', headerName: 'Descripción', flex: 1 },
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'description', headerName: 'Description', flex: 1 },
     {
       field: 'assets',
-      headerName: 'Equipos',
+      headerName: 'System',
       flex: 1,
       sortable: false,
       valueGetter: (params) => params.row.assets.map(asset => asset.name).join(', '),
@@ -153,7 +153,7 @@ export default function ListProcess () {
     },
     {
       field: 'actions',
-      headerName: 'Acciones',
+      headerName: 'Actions',
       sortable: false,
       width: 150,
       disableClickEventBubbling: true,
@@ -239,7 +239,7 @@ export default function ListProcess () {
           startIcon={<AddIcon />}
           onClick={handleAdd}
         >
-          Agregar proceso
+          Add process
         </Button>
       </Box>
     </Box>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './styles/SVGRender.css';
 import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -44,10 +43,18 @@ const PlantSVG = ({ mapSvgTag, svgImage }) => {
   }, [svgContent]);
 
   return (
-        <Box
-            className="svg-container"
-            dangerouslySetInnerHTML={{ __html: svgContent }}
-        />
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        border: '2px solid gray',
+        borderRadius: '8px',
+        marginTop: '2em'
+      }}
+      className="svg-container"
+      dangerouslySetInnerHTML={{ __html: svgContent }}
+    />
   );
 };
 
