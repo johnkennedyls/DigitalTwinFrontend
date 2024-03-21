@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Typography, Paper, Box, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-import { InfoAlert } from '../utils/Alert';
+import { InfoAlert } from '../../../components/utils/Alert';
 
 import DynamicTable from './editComponents/DynamicTable';
 import ImportDialog from './editComponents/ImportDialog';

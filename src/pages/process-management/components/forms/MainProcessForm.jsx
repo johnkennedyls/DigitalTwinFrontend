@@ -54,7 +54,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
-              label="Nombre del proceso"
+              label="Process name"
               name="name"
               value={name}
               onChange={e => setName(e.target.value)}
@@ -63,7 +63,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
               sx={{ mb: 2 }}
             />
             <TextField
-              label="Descripción del proceso"
+              label="Process description"
               name="description"
               value={description}
               onChange={e => setDescription(e.target.value)}

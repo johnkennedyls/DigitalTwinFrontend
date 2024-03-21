@@ -123,6 +123,7 @@ const ListAlarmHistory = () => {
   useEffect(() => {
     const currentPlants = Object.values(plantState);
     setPlants(currentPlants);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const emptyRows =
@@ -218,7 +219,7 @@ const ListAlarmHistory = () => {
               ? (
                 <TableRow>
                   <TableCell colSpan={12} align="center" style={{ height: '200px' }}>
-                  No hay elementos disponibles.
+                  No items available.
                   </TableCell>
                 </TableRow>
               )

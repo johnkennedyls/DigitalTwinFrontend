@@ -1,21 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Box,
-  Button,
-  IconButton,
-  Avatar
+  Box, Button, IconButton, Avatar,
+  Dialog, DialogActions, DialogContent,
+  DialogContentText, DialogTitle
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector, useDispatch } from 'react-redux';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 
 import { hasAnyRole } from '../../utils/Funtions';
 import { getPlantsData, deletePlant } from '../../services/Api/PlantService';
@@ -165,7 +159,7 @@ export default function ListPlant () {
         autoHeight
         disableSelectionOnClick
         localeText={{
-          noRowsLabel: 'No hay elementos disponibles'
+          noRowsLabel: 'No items available'
         }}
         className="clickable-row"
         onRowClick={handleRowClick}

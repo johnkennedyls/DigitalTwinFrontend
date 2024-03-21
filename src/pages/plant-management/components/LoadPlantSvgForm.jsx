@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 
-import { isValidSVG } from '../../utils/Funtions';
+import { isValidSVG } from '../../../utils/Funtions';
 
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
@@ -60,7 +60,7 @@ export default function LoadPlantSvgForm ({ onNext, onBack, svgImageUrl = null, 
         <form >
           <Paper elevation={3} sx={{ p: 4, my: 4 }}>
             <Typography variant="h6" gutterBottom textAlign={'center'}>
-                            Cargar archivo SVG*
+              Load SVG* file
             </Typography>
             <Grid item textAlign={'center'} justifyContent="center">
               <input
@@ -73,7 +73,7 @@ export default function LoadPlantSvgForm ({ onNext, onBack, svgImageUrl = null, 
               />
               <label htmlFor="upload-svg">
                 <Button variant="contained" color="primary" component="span" >
-                                    Subir archivo SVG
+                  Upload SVG file
                 </Button>
               </label>
               {previewUrl && (
@@ -84,7 +84,7 @@ export default function LoadPlantSvgForm ({ onNext, onBack, svgImageUrl = null, 
               )}
             </Grid>
             <Typography variant="h6" gutterBottom textAlign={'center'} style={{ marginTop: '2rem' }}>
-                            Convenciones
+              Convenctions
             </Typography>
             <Grid container spacing={2} style={{ marginTop: '1rem' }} justifyContent="center">
               <ReactMde
@@ -100,12 +100,12 @@ export default function LoadPlantSvgForm ({ onNext, onBack, svgImageUrl = null, 
             <Grid container spacing={2} style={{ marginTop: '1rem' }}>
               <Grid item xs={12} md={6}>
                 <Button variant="outlined" color="secondary" fullWidth onClick={handleBack}>
-                                    Atras
+                  Atras
                 </Button>
               </Grid>
               <Grid item xs={12} md={6}>
                 <Button disabled={!previewUrl} onClick={handleSubmit} type="submit" variant="contained" fullWidth>
-                                    Siguiente
+                  Siguiente
                 </Button>
               </Grid>
             </Grid>

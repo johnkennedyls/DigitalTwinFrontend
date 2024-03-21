@@ -5,14 +5,11 @@ import {
   IconButton, Table, TableBody,
   TableCell, TableHead, TableRow,
   InputLabel, Select, MenuItem,
-  FormControl, Button
+  FormControl, Button, Paper,
+  TableContainer, TableFooter, TablePagination
 } from '@mui/material';
 import { Delete, Edit, Add, Visibility } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
-import Paper from '@mui/material/Paper';
-import TableContainer from '@mui/material/TableContainer';
-import TableFooter from '@mui/material/TableFooter';
-import TablePagination from '@mui/material/TablePagination';
 import { useSelector } from 'react-redux';
 
 import AlertDialog from '../../components/alarms/AlertDialog.jsx';
@@ -268,7 +265,7 @@ const ListTypeAlarm = () => {
                 ? (
                   <TableRow>
                     <TableCell colSpan={12} align="center" style={{ height: '198px' }}>
-                    No hay elementos disponibles.
+                    No items available.
                     </TableCell>
                   </TableRow>
                 )
