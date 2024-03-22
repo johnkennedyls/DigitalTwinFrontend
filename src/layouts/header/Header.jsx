@@ -116,7 +116,7 @@ export default function Header () {
                 </MenuItem>
               </Menu>
               <MenuItem color="inherit" sx={{ marginRight: '0.5rem' }} onClick={(e) => navigate(e, '/manage-charts')}>
-                Canvas
+                Charts
               </MenuItem>
             </Menu>
           </Box>
@@ -160,7 +160,7 @@ export default function Header () {
               </MenuItem>
             </Menu>
             <Button color="inherit" sx={{ marginRight: '0.5rem' }} onClick={(e) => navigate(e, '/manage-charts')}>
-              Canvas
+              Charts
             </Button>
           </Box>
           <Box sx={{ flexGrow: 0 }}>

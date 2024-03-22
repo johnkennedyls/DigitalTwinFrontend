@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import * as ECharts from 'echarts/core';
 import ReactECharts from 'echarts-for-react';
 import moment from 'moment';
@@ -8,7 +9,6 @@ import {
   SingleAxisComponent
 } from 'echarts/components';
 import { LineChart } from 'echarts/charts';
-import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import PauseIcon from '@mui/icons-material/Pause';
@@ -29,8 +29,8 @@ import {
   SYMBOLS
 } from '../../../../utils/Constants';
 
-import ProcessSelectionForm from './SelectionForms/ProcessSelectionForm';
 import PlantSelectionForm from './SelectionForms/PlantSelectionForm';
+import ProcessSelectionForm from './SelectionForms/ProcessSelectionForm';
 import ExecutionSelectionForm from './SelectionForms/ExecutionSelectionForm';
 import TagSelectionForm from './SelectionForms/TagsSelectionForm';
 
@@ -42,37 +42,86 @@ ECharts.use([
   SingleAxisComponent
 ]);
 
-export default function TimeSeries () {
-  // Redux Data
+export default function TimeSeries ({edit, ...chartProps}) {
   const plantState = useSelector((state) => state.plants);
   const tagsState = useSelector((state) => state.tags);
-
-  // Axios Data
-  const [delimitedData, setDelimitedData] = useState({ date: [] });
-
-  // Forms
-  const [mode, setMode] = useState('');
-  const [dateRange, setDateRange] = useState({ start: '', end: '' });
-
-  // Plants
-  const [selectedPlant, setSelectedPlant] = useState('');
-  const [plants, setPlants] = useState([]);
-
-  // Processes
-  const [selectedProcess, setSelectedProcess] = useState('');
   const [processes, setProcesses] = useState([]);
-
-  // Executions
-  const [selectedExecution, setSelectedExecution] = useState('');
   const [executions, setExecutions] = useState([]);
-
-  // Tags
-  const [selectedTags, setSelectedTags] = useState([]);
   const [tags, setTags] = useState([]);
 
+  const [selectedPlant, setSelectedPlant] = useState('');
+  const [selectedProcess, setSelectedProcess] = useState('');
+  const [selectedExecution, setSelectedExecution] = useState('');
+  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [selectedTags, setSelectedTags] = useState([]);
+
+  const [mode, setMode] = useState('');
   const [isPlaying, setIsPlaying] = useState(true);
+  const [delimitedData, setDelimitedData] = useState({ date: [] });
 
   let currentOption = {};
+
+  useEffect(() => {
+    if (edit && chartProps && selectedPlant === '') {
+      setSelectedPlant(chartProps.assetId);
+    } else if (chartProps && selectedPlant === '') {
+      setSelectedPlant(chartProps.assetId);
+      setSelectedExecution(chartProps.executionId);
+      getExutionsByProcess(chartProps.processId).then(
+        (execs) => {
+          const execution = execs.find((exec) => exec.id === chartProps.executionId)
+          console.log(execution);
+          setSelectedExecution(execution);
+          handleExecutionChange(execution);
+          addTagsWithDelay();
+        }
+      );
+    }
+  }, [plantState]);
+
+  useEffect(() => {
+    if (selectedPlant) {
+      resetFlow();
+      getProcessByPlant(selectedPlant).then(setProcesses);
+      setTags(Object.keys(plantState[selectedPlant].tags));
+    }
+  }, [selectedPlant, plantState]);
+
+  useEffect(() => {
+    if (selectedPlant && chartProps && selectedProcess === '') {
+      setSelectedProcess(chartProps.processId);
+      getExecutionsOfProcess(chartProps.processId);
+    }
+  }, [processes]);
+
+  useEffect(() => {
+    if (selectedProcess && chartProps && selectedExecution === '') {
+      setSelectedExecution(executions.find(exec => exec.id === chartProps.executionId));
+      handleExecutionChange(executions.find(exec => exec.id === chartProps.executionId));
+      addTagsWithDelay();
+    }
+  }, [executions]);
+
+  useEffect(() => {
+    if (selectedTags.length > 0) {
+      if (dateRange.start !== '' && dateRange.end !== '') {
+        handleDateChange();
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTags, selectedExecution, dateRange]);
+
+  const addTagsWithDelay = async () => {
+    const tagNames = chartProps.tagList.split(',').map(tag => tag.trim());
+    const selectedTags = tags.filter(tag => tagNames.includes(plantState[selectedPlant].tags[tag]));
+    for (let i = 0; i < selectedTags.length; i++) {
+      const tag = selectedTags[i];
+      await new Promise(resolve => setTimeout(() => {
+        setSelectedTags(prevSelectedTags => [...prevSelectedTags, tag]);
+        resolve();
+      }, 100));
+    }
+  };
 
   const showTags = () => {
     return selectedPlant && (mode === 'realtime' || mode === 'range');
@@ -95,25 +144,17 @@ export default function TimeSeries () {
   };
 
   const resetFlow = () => {
-    setSelectedTags([]);
     setSelectedProcess('');
     setSelectedExecution('');
+    setDateRange({ start: '', end: '' });
+    setSelectedTags([]);
     setTags([]);
     setMode('');
     setDelimitedData({ date: [] });
   };
 
-  const getProcessesOfPlant = (plantId) => {
-    getProcessByPlant(plantId).then(setProcesses);
-  };
-
   const getExecutionsOfProcess = (processId) => {
     getExutionsByProcess(processId).then(setExecutions);
-  };
-
-  const handlePlantChange = (newPlant) => {
-    resetFlow();
-    getProcessesOfPlant(newPlant);
   };
 
   const handleProcessChange = (newProcess) => {
@@ -205,43 +246,6 @@ export default function TimeSeries () {
     }));
   };
 
-  useEffect(() => {
-    const currentPlants = Object.keys(plantState);
-    setPlants(currentPlants);
-  }, [plantState]);
-
-  useEffect(() => {
-    if (selectedPlant === '') {
-      return;
-    }
-    const data = plantState[selectedPlant].tags;
-    const currentTags = Object.keys(data);
-    setSelectedTags([]);
-    setDateRange({ start: '', end: '' });
-    setTags(currentTags);
-    setSelectedProcess('');
-  }, [selectedPlant, plantState]);
-
-  useEffect(() => {
-    if (selectedProcess) {
-      // Update the tags array when a process is selected
-      const data = plantState[selectedPlant].tags;
-      const currentTags = Object.keys(data);
-      setDateRange({ start: '', end: '' });
-      setTags(currentTags);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedProcess]);
-
-  useEffect(() => {
-    if (selectedTags.length > 0) {
-      if (dateRange.start !== '' && dateRange.end !== '') {
-        handleDateChange();
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTags, selectedExecution, dateRange]);
-
   // Executions for graphics
   const getOption = () => {
     const OFFSET = 60;
@@ -287,15 +291,12 @@ export default function TimeSeries () {
 
   return (
     <Box style={{ maxWidth: '80%', margin: 'auto' }}>
-      <Box sx={{ mb: 2 }}>
+      {edit && <Box sx={{ mb: 2 }}>
         <PlantSelectionForm
           plantState={plantState}
-          plants={plants}
-          onChange={handlePlantChange}
           selectedPlant={selectedPlant}
           setSelectedPlant={setSelectedPlant}
         />
-
         {selectedPlant &&
           <ProcessSelectionForm
             processes={processes}
@@ -304,7 +305,6 @@ export default function TimeSeries () {
             setSelectedProcess={setSelectedProcess}
           />
         }
-
         {selectedProcess &&
           <ExecutionSelectionForm
             executions={executions}
@@ -313,7 +313,6 @@ export default function TimeSeries () {
             setSelectedExecution={setSelectedExecution}
           />
         }
-
         {selectedExecution && mode === 'range' &&
           <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'space-evenly' }}>
             <DateTimePicker
@@ -334,7 +333,6 @@ export default function TimeSeries () {
             />
           </Box>
         }
-
         {showTags() && isPlaying &&
           <TagSelectionForm
             tags={tags}
@@ -344,7 +342,7 @@ export default function TimeSeries () {
             selectedPlant={selectedPlant}
           />
         }
-      </Box>
+      </Box>}
 
       {showGraphic() && showTags() && (
         <Box>

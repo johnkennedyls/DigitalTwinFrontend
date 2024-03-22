@@ -17,6 +17,7 @@ import ListProcess from '../pages/process-management/ListProcess';
 import AddProcess from '../pages/process-management/AddProcess';
 import ListExecutionsProcess from '../pages/process-management/ListExecutionsProcess';
 import App from '../App';
+import ListCanvas from '../pages/charts-management/ListCanvas';
 
 // eslint-disable-next-line react-refresh/only-export-components
 const MainLayoutRoutes = () => (
@@ -33,10 +34,13 @@ const MainLayoutRoutes = () => (
       <Route path="/edit-plant/:plantId" component={EditPlant} />
       <Route path="/manage-plant" component={ListPlant} />
       <Route path="/detail-plant/:plantId" component={Plant} />
-      <Route path="/manage-charts" component={ListTimeSeries} />
+      <Route exact path="/manage-charts" component={ListCanvas} />
+      <Route path="/manage-charts/:canvasId" component={ListTimeSeries} />
+      <Route exact path="/create-charts" component={ListTimeSeries} />
       <Route path="/manage-process" component={ListProcess} />
       <Route path="/process-executions/:processId" component={ListExecutionsProcess} />
       <Route path="/add-process" component={AddProcess} />
+      <Route path="*" component={Landing} />
     </Switch>
   </App>
 );

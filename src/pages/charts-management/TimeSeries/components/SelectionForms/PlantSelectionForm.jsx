@@ -1,9 +1,8 @@
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-function PlantSelectionForm ({ plantState, plants, onChange, selectedPlant, setSelectedPlant }) {
+function PlantSelectionForm ({ plantState, selectedPlant, setSelectedPlant }) {
   const handleChange = (event) => {
     setSelectedPlant(event.target.value);
-    onChange(plants.find(plant => plant === event.target.value.toString()));
   };
 
   return (
@@ -16,9 +15,9 @@ function PlantSelectionForm ({ plantState, plants, onChange, selectedPlant, setS
         onChange={handleChange}
         label="Select Plant"
       >
-        {plants.map((plant) => (
-          <MenuItem key={plant} value={plant}>
-            {plantState[plant].plantName}
+        {Object.values(plantState).map((plant) => (
+          <MenuItem key={plant.assetId} value={plant.assetId}>
+            {plant.plantName}
           </MenuItem>
         ))}
       </Select>
