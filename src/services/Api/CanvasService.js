@@ -1,4 +1,4 @@
-import { ErrorAlert } from '../../components/utils/Alert';
+import { ErrorAlert, SuccessAlert } from '../../components/utils/Alert';
 import axios from '../axios';
 
 export function getCanvasData () {
@@ -20,8 +20,12 @@ export function getCanvas (canvasId) {
 
 export function deleteCanvas (canvasId) {
   return axios.delete(`canvases/${canvasId}`)
-    .then(response => response.data)
+    .then(response => {
+        SuccessAlert(response.data)
+        window.location.reload()  
+      }
+    )
     .catch(error => {
-      throw error;
+      ErrorAlert(error.response.data);
     });
 }

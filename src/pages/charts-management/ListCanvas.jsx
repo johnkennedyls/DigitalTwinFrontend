@@ -22,8 +22,12 @@ export default function ListCanvas () {
             onClick={() => handleEditClick(params.row.canvasId)}
           />
           <RemoveButton 
-            disable={!hasAnyRole(['Admin-graph', 'Delete-graph']) || checkIfOwnUser(params.row.userOwner)}
-            onClick={() => deleteCanvas(params.row.canvasId)}
+            disable={!hasAnyRole(['Admin-graph', 'Delete-graph']) && !checkIfOwnUser(params.row.userOwner)}
+            onClick={(e) => {
+                e.stopPropagation();
+                deleteCanvas(params.row.canvasId)
+              }
+            }
           />
         </>
       );
@@ -62,9 +66,10 @@ export default function ListCanvas () {
           rows={canvas?.content}
           getRowId={(row) => row.canvasId}
           columns={columns}
-          pageSizeOptions={5}
+          pageSizeOptions={[10]}
+          pageSize={10}
           autoHeight
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           onRowClick={handleRowClick}
         />}
         <Box mt={2}>

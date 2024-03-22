@@ -70,10 +70,8 @@ export default function TimeSeries ({edit, ...chartProps}) {
       getExutionsByProcess(chartProps.processId).then(
         (execs) => {
           const execution = execs.find((exec) => exec.id === chartProps.executionId)
-          console.log(execution);
           setSelectedExecution(execution);
           handleExecutionChange(execution);
-          addTagsWithDelay();
         }
       );
     }
@@ -98,7 +96,6 @@ export default function TimeSeries ({edit, ...chartProps}) {
     if (selectedProcess && chartProps && selectedExecution === '') {
       setSelectedExecution(executions.find(exec => exec.id === chartProps.executionId));
       handleExecutionChange(executions.find(exec => exec.id === chartProps.executionId));
-      addTagsWithDelay();
     }
   }, [executions]);
 
@@ -111,6 +108,12 @@ export default function TimeSeries ({edit, ...chartProps}) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTags, selectedExecution, dateRange]);
 
+  useEffect(() => {
+    if (selectedExecution && mode !== '' && chartProps) {
+      addTagsWithDelay();
+    }
+  }, [selectedExecution, mode]);
+
   const addTagsWithDelay = async () => {
     const tagNames = chartProps.tagList.split(',').map(tag => tag.trim());
     const selectedTags = tags.filter(tag => tagNames.includes(plantState[selectedPlant].tags[tag]));
@@ -119,7 +122,7 @@ export default function TimeSeries ({edit, ...chartProps}) {
       await new Promise(resolve => setTimeout(() => {
         setSelectedTags(prevSelectedTags => [...prevSelectedTags, tag]);
         resolve();
-      }, 100));
+      }, 500));
     }
   };
 
