@@ -42,7 +42,7 @@ ECharts.use([
   SingleAxisComponent
 ]);
 
-export default function TimeSeries ({edit, ...chartProps}) {
+export default function TimeSeries ({edit, status, ...chartProps}) {
   const plantState = useSelector((state) => state.plants);
   const tagsState = useSelector((state) => state.tags);
   const [processes, setProcesses] = useState([]);
@@ -346,7 +346,6 @@ export default function TimeSeries ({edit, ...chartProps}) {
           />
         }
       </Box>}
-
       {showGraphic() && showTags() && (
         <Box>
           <ReactECharts
