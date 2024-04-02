@@ -17,8 +17,8 @@ export function getChartType (typeId) {
     });
 }
 
-export function getCanvasData () {
-  return axios.get('canvases')
+export function getCanvasData (page) {
+  return axios.get(`canvases?page=${page}`)
     .then(response => response.data)
     .catch(error => {
       ErrorAlert(error.response.data);

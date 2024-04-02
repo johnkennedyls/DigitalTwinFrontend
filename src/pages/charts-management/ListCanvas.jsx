@@ -10,6 +10,8 @@ import { Add } from "@mui/icons-material";
 
 export default function ListCanvas () {
   const [canvas, setCanvas] = useState([]);
+  const [page, setPage] = useState({pageSize: 10, page: 0});
+  const [totalRows, setTotalRows] = useState(0);
   const columns = [
     { field: "name", headerName: "Name", flex: 1  },
     { field: "userOwner", headerName: "Owner", width: 200 },
@@ -35,40 +37,44 @@ export default function ListCanvas () {
   ];
 
   useEffect(() => {
-    getCanvasData()
+    getCanvasData(page.page)
       .then((data) => {
         setCanvas(data);
+        setTotalRows(data?.totalElements);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [page]);
 
   const handleRowClick = (param) => {
-    const url = `dashboard/manage-charts/${param.row.canvasId}`;
+    const url = `/dashboard/manage-charts/${param.row.canvasId}`;
     window.open(url, '_blank');
   }  
 
   const handleEditClick = (canvasId) => {
-    const url = `dashboard/manage-charts/${canvasId}?edit=true`;
+    const url = `/dashboard/manage-charts/${canvasId}?edit=true`;
     window.open(url, '_blank');
   }
 
   const handleAdd = () => {
-    const url = `dashboard/create-charts`;
+    const url = `/dashboard/create-charts`;
     window.open(url, '_blank');
   }
-  
+
   return (
     <Box m={4} maxWidth={1000} mx="auto">
       <DataGrid
-        rows={canvas?.content || []}
-        getRowId={(row) => row.canvasId}
-        columns={columns}
-        pageSizeOptions={[10]}
-        pageSize={10}
         autoHeight
         disableRowSelectionOnClick
+        pageSizeOptions={[10]}
+        paginationModel={page}
+        paginationMode="server"
+        onPaginationModelChange={setPage}
+        columns={columns}
+        rows={canvas?.content || []}
+        rowCount={totalRows}
+        getRowId={(row) => row.canvasId}
         localeText={{
           noRowsLabel: 'No hay elementos disponibles'
         }}

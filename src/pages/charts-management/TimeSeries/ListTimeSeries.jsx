@@ -88,7 +88,9 @@ export default function ListTimeSeries () {
       editCanvas(canvas, canvasId);
     } else {
       saveCanvas(canvas).then((response) => {
-        window.location.href = `dashboard/manage-charts/${response}?edit=true`;
+        if (response) {  
+         window.location.href = `/dashboard/manage-charts/${response}?edit=true`;
+        }
       });
     }
   };
