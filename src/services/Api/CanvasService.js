@@ -1,6 +1,22 @@
 import { ErrorAlert, SuccessAlert } from '../../components/utils/Alert';
 import axios from '../axios';
 
+export function getChartTypes () {
+  return axios.get('chart_types')
+    .then(response => response.data)
+    .catch(error => {
+      ErrorAlert(error.response.data);
+    });
+}
+
+export function getChartType (typeId) {
+  return axios.get(`chart_types/${typeId}`)
+    .then(response => response.data)
+    .catch(error => {
+      ErrorAlert(error.response.data);
+    });
+}
+
 export function getCanvasData () {
   return axios.get('canvases')
     .then(response => response.data)
@@ -20,10 +36,11 @@ export function getCanvas (canvasId) {
 export function saveCanvas (canvas) {
   return axios.post('canvases', canvas)
     .then(response => {
-      SuccessAlert(response.data)
+      SuccessAlert(response.data.message)
+      return response.data.canvasId
     })
     .catch(error => {
-      ErrorAlert(error.response.data);
+      ErrorAlert(error.response.data[0]);
     });
 }
 
@@ -33,8 +50,7 @@ export function editCanvas (canvas, canvasId) {
       SuccessAlert(response.data)
     })
     .catch(error => {
-      console.log(error.response.data)
-      ErrorAlert(error.response.data);
+      ErrorAlert(error.response.data[0] || error.response.data);
     });
 }
 

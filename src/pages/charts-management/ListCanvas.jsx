@@ -45,34 +45,36 @@ export default function ListCanvas () {
   }, []);
 
   const handleRowClick = (param) => {
-    const url = `/manage-charts/${param.row.canvasId}`;
+    const url = `dashboard/manage-charts/${param.row.canvasId}`;
     window.open(url, '_blank');
   }  
 
   const handleEditClick = (canvasId) => {
-    const url = `/manage-charts/${canvasId}?edit=true`;
+    const url = `dashboard/manage-charts/${canvasId}?edit=true`;
     window.open(url, '_blank');
   }
 
   const handleAdd = () => {
-    const url = `/create-charts`;
+    const url = `dashboard/create-charts`;
     window.open(url, '_blank');
   }
   
   return (
     <Box m={4} maxWidth={1000} mx="auto">
-      {(canvas?.content?.length > 0) && 
-        <DataGrid
-          rows={canvas?.content}
-          getRowId={(row) => row.canvasId}
-          columns={columns}
-          pageSizeOptions={[10]}
-          pageSize={10}
-          autoHeight
-          disableRowSelectionOnClick
-          onRowClick={handleRowClick}
-        />}
-        <Box mt={2}>
+      <DataGrid
+        rows={canvas?.content || []}
+        getRowId={(row) => row.canvasId}
+        columns={columns}
+        pageSizeOptions={[10]}
+        pageSize={10}
+        autoHeight
+        disableRowSelectionOnClick
+        localeText={{
+          noRowsLabel: 'No hay elementos disponibles'
+        }}
+        onRowClick={handleRowClick}
+      />
+      <Box mt={2}>
         <Button
           disabled={!hasAnyRole(['Admin-graph', 'Add-graph'])}
           variant="contained"
