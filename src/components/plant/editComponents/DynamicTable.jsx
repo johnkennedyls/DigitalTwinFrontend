@@ -8,17 +8,16 @@ import { compareMetadata, getUniqueMetadataNames } from '../../../utils/Metadata
 
 import MetadataDialog from './MetadataDialog';
 
-const basicProperties = ['svgId', 'name', 'description'];
-
 function DynamicTable ({ tags, setTags, mapSvgTag, handleRemoveTag, handleChangeSvgId }) {
+  const basicProperties = ['svgId', 'name', 'description'];
   const [tagProperties, setTagProperties] = useState(basicProperties);
   const [editingCell, setEditingCell] = useState(null);
   const textFieldRef = useRef(null);
 
   useEffect(() => {
     if (editingCell === null) {
-      const uniqueMetadataNames = getUniqueMetadataNames(tags, tagProperties);
-      setTagProperties([...basicProperties, ...uniqueMetadataNames]);
+      setTagProperties((prevTagProperties) => [...prevTagProperties, 
+        ...getUniqueMetadataNames(tags, tagProperties)]);
     }
   }, [tags]);
 
@@ -59,6 +58,9 @@ function DynamicTable ({ tags, setTags, mapSvgTag, handleRemoveTag, handleChange
     setTags(newTags);
     if (columnName === 'svgId') {
       handleChangeSvgId(newValue);
+    }
+    if (columnName === 'name' && newTags[rowIndex].metadata.svgId !== '') {
+      handleChangeSvgId(newTags[rowIndex].metadata.svgId);
     }
   };
 
