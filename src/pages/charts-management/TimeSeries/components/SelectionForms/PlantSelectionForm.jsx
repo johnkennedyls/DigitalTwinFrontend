@@ -11,7 +11,7 @@ function PlantSelectionForm ({ plantState, selectedPlant, setSelectedPlant }) {
       <Select
         labelId="plant-select-label"
         id="plant-select"
-        value={selectedPlant}
+        value={selectedPlant || ''}
         onChange={handleChange}
         label="Select Plant"
       >

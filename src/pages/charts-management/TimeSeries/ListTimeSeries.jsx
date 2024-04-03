@@ -33,10 +33,10 @@ export default function ListTimeSeries () {
   }
 
   useEffect(() => {
-    if (canvasId) {
+    if (canvasId && Object.keys(canvas).length === 4) {
       getCanvas(canvasId).then((canvas) => {
+        setCanvas({ ...canvas, deletedCharts: []});
         if (canvas.charts.length > 0) {
-          setCanvas({ ...canvas, deletedCharts: []});
           setCharts(canvas.charts.map((chart, index) => <TimeSeries key={index} index={index} edit={edit} updateChart={updateChart} chart={chart} canvasId={canvas.canvasId} />));
         } else InfoAlert('No charts found in this canva.');
       });
@@ -85,11 +85,20 @@ export default function ListTimeSeries () {
 
   const handleSaveCharts = () => {
     if (canvasId) {
-      editCanvas(canvas, canvasId);
+      editCanvas(canvas, canvasId).then((response) => {
+        console.log('response', response);
+        response.charts.map(chart => {
+          chart.typeId = chart.type.typeId;
+          return chart; 
+        })
+        const updatedCanvas = { ...response, charts: response.charts };
+        setCanvas(updatedCanvas);
+        canvasId = response.canvasId;
+      });
     } else {
       saveCanvas(canvas).then((response) => {
-        if (response) {  
-         window.location.href = `/dashboard/manage-charts/${response}?edit=true`;
+        if (response) {
+         window.location.href = `/dashboard/manage-charts/${response.canvasId}?edit=true`;
         }
       });
     }

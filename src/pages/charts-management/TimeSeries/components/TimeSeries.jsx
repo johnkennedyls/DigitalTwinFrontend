@@ -72,7 +72,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
   console.log('chartProps', chartProps);
 
   useEffect(() => {
-    if (Object.keys(chartProps).length>0) {
+    if (Object.keys(chartProps).length>3) {
       setIsCharged(true);
     }
   }, []);
@@ -117,7 +117,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
       tags = tags.map(tag => plantState[selectedPlant].tags[tag]).join(', ');
       setChartProps((prevProps) => ({ ...prevProps, 
         tagList: tags,
-        chartInstances: [{ parameterId: selectedChartType.parameters[0].paramId, value: tags}] }));
+        chartInstances: [{ paramId: selectedChartType.parameters[0].paramId, value: tags}] }));
     }
   };
 
@@ -222,6 +222,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
   };
 
   const handleProcessChange = (newProcess) => {
+    console.log('newProcess', newProcess);
     getExecutionsOfProcess(newProcess.id);
     if (firstRender) {
       console.log('firstRender', firstRender);
@@ -384,7 +385,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
             label="Chart Name"
             margin="normal"
             fullWidth
-            value={chartProps?.name}
+            value={chartProps?.name || ''}
             onChange={handleSelectName}
             onBlur={() => setEditingName(false)}
           />

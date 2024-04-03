@@ -30,7 +30,7 @@ function ChartTypeDialog ({ selectedChartType, handleSetChartType }) {
           <PieChart />
         </IconButton>
       </Tooltip>
-      <Dialog open={open} onClose={handleClose} onBack disableEscapeKeyDown>
+      <Dialog open={open} onClose={handleClose} disableEscapeKeyDown>
         <DialogTitle>Choose a chart type</DialogTitle>
         <DialogContent>
           <FormControl fullWidth variant="outlined" margin="normal">
