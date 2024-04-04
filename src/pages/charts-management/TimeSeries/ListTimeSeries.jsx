@@ -58,14 +58,16 @@ export default function ListTimeSeries () {
   }
 
   const handleAddChart = () => {
-    setCharts([...charts, <TimeSeries key={charts.length} index={charts.length} edit={true} updateChart={updateChart} chart={{}} canvasId={canvas?.canvasId || ''} />]);
+    const newChartKey = `chart-${Date.now()}-${charts.length}`; 
+    setCharts([...charts, <TimeSeries key={newChartKey} index={charts.length} edit={true} updateChart={updateChart} chart={{}} canvasId={canvas?.canvasId || ''} />]);
   };
 
   const handleDeleteChart = (index) => {
     setCharts((prevCharts) => {
       return prevCharts.map((chart, i) => {
         if (i === index) {
-          const { chartId } = chart.props;
+          console.log('chart', chart);
+          const { chartId } = chart.props.chart;
           if (chartId) {
             setCanvas((prevCanvas) => ({
               ...prevCanvas,
@@ -91,9 +93,13 @@ export default function ListTimeSeries () {
           chart.typeId = chart.type.typeId;
           return chart; 
         })
+        setCharts(
+          response.charts.map((chart, index) => (
+            <TimeSeries key={index} index={index} edit={edit} updateChart={updateChart} chart={chart} canvasId={response.canvasId} />
+          ))
+        );
         const updatedCanvas = { ...response, charts: response.charts };
-        setCanvas(updatedCanvas);
-        canvasId = response.canvasId;
+        setCanvas({...updatedCanvas, deletedCharts: []});
       });
     } else {
       saveCanvas(canvas).then((response) => {
