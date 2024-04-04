@@ -222,10 +222,8 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
   };
 
   const handleProcessChange = (newProcess) => {
-    console.log('newProcess', newProcess);
     getExecutionsOfProcess(newProcess.id);
     if (firstRender) {
-      console.log('firstRender', firstRender);
       handleSelectExecution('');
       setDateRange({ start: '', end: '' });
       handleSelectTags([]);

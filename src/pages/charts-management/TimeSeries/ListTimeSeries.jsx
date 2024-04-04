@@ -18,10 +18,6 @@ export default function ListTimeSeries () {
   const [editingName, setEditingName] = useState(false);
   let { canvasId } = useParams();
   
-  useEffect(() => {
-    console.log('canvas', canvas);
-  }, [canvas]);
-
   function updateChart(index, chart) {
     setCanvas((prevCanvas) => {
       if (prevCanvas.charts[index]) {
@@ -66,7 +62,6 @@ export default function ListTimeSeries () {
     setCharts((prevCharts) => {
       return prevCharts.map((chart, i) => {
         if (i === index) {
-          console.log('chart', chart);
           const { chartId } = chart.props.chart;
           if (chartId) {
             setCanvas((prevCanvas) => ({
@@ -88,7 +83,6 @@ export default function ListTimeSeries () {
   const handleSaveCharts = () => {
     if (canvasId) {
       editCanvas(canvas, canvasId).then((response) => {
-        console.log('response', response);
         response.charts.map(chart => {
           chart.typeId = chart.type.typeId;
           return chart; 
