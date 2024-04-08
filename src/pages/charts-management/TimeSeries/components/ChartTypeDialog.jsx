@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { getChartTypes } from "../../../../services/Api/CanvasService";
-import { Dialog, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, Tooltip } from "@mui/material";
-import { PieChart } from "@mui/icons-material";
+import { Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 function ChartTypeDialog ({ selectedChartType, handleSetChartType }) {
   const [open, setOpen] = useState(selectedChartType === '');
@@ -25,11 +24,6 @@ function ChartTypeDialog ({ selectedChartType, handleSetChartType }) {
 
   return (
     <>
-      <Tooltip title="Select Chart Type">
-        <IconButton onClick={() => setOpen(true)}>
-          <PieChart />
-        </IconButton>
-      </Tooltip>
       <Dialog open={open} onClose={handleClose} disableEscapeKeyDown>
         <DialogTitle>Choose a chart type</DialogTitle>
         <DialogContent>
