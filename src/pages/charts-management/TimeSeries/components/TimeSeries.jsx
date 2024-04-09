@@ -104,6 +104,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
 
   const handleSelectExecution = (execution) => {
     setSelectedExecution(execution);
+    setChartProps((prevProps) => ({ ...prevProps, executionId: execution.id }));
   };
 
   const handleSelectTags = (tags, edit) => {
@@ -148,14 +149,14 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
 
   useEffect(() => {
     if (executions && isCharged && !firstRender) {
-      console.log('executions', executions);
-      const exec = executions.find(exec => exec.startDate >= chartProps.startDate && exec.endDate <= chartProps.endDate);
-      if (exec) {
-        setSelectedExecution(exec);
-      }else {
+      if (chartProps.executionId === -1) {
         setSelectedExecution({ id: -1 });
+        handleExecutionChange('Manual');
+      }else {
+        const exec = executions.find(exec => exec.id === chartProps.executionId);
+        setSelectedExecution(exec);
+        handleExecutionChange(exec);
       }
-      handleExecutionChange(exec?exec:'Manual');
     }
   }, [executions]);
 
