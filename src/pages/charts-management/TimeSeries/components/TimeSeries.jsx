@@ -34,7 +34,6 @@ import ProcessSelectionForm from './SelectionForms/ProcessSelectionForm';
 import ExecutionSelectionForm from './SelectionForms/ExecutionSelectionForm';
 import TagSelectionForm from './SelectionForms/TagsSelectionForm';
 import ChartTypeDialog from './ChartTypeDialog';
-import { getChartType } from '../../../../services/Api/CanvasService';
 
 ECharts.use([
   ToolboxComponent,
@@ -105,7 +104,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
 
   const handleSelectExecution = (execution) => {
     setSelectedExecution(execution);
-    setChartProps((prevProps) => ({ ...prevProps, executionId: execution.id}));
+    setChartProps((prevProps) => ({ ...prevProps, executionId: execution.id }));
   };
 
   const handleSelectTags = (tags, edit) => {
@@ -124,13 +123,8 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
   useEffect(() => {
     if (isCharged && selectedPlant === '') {
       handleSelectedPlant(chartProps.assetId);
-      getExutionsByProcess(chartProps.processId).then(
-        (execs) => {
-          const execution = execs.find((exec) => exec.id === chartProps.executionId);
-          handleSelectExecution(execution);
-          handleExecutionChange(execution);
-        }
-      );
+      getExecutionsOfProcess(chartProps.processId);
+      setDateRange({ start: chartProps.startDate, end: chartProps.endDate });
     }
   }, [plantState, isCharged]);
 
@@ -152,6 +146,19 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
       getExecutionsOfProcess(chartProps.processId);
     }
   }, [processes]);
+
+  useEffect(() => {
+    if (executions && isCharged && !firstRender) {
+      if (chartProps.executionId === -1) {
+        setSelectedExecution({ id: -1 });
+        handleExecutionChange('Manual');
+      }else {
+        const exec = executions.find(exec => exec.id === chartProps.executionId);
+        setSelectedExecution(exec);
+        handleExecutionChange(exec);
+      }
+    }
+  }, [executions]);
 
   useEffect(() => {
     if (selectedTags.length > 0) {
@@ -234,21 +241,29 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
 
   const handleExecutionChange = (selectedExec) => {
     if (selectedExec) {
+      setDateRange({
+        start: formatDate(selectedExec.startDate),
+        end: formatDate(selectedExec.endDate)
+      });
       if (selectedExec.state === 'running') {
         setMode('realtime');
       } else if (selectedExec.state === 'stoped') {
         setMode('range');
       } else if (selectedExec === 'Manual') {
         setMode('range');
+        if(isCharged) {
+          setDateRange({ start: chartProps.startDate, end: chartProps.endDate });
+        }else {
+          setDateRange({
+            start: formatDate(executions[0].startDate),
+            end: formatDate(executions[executions.length - 1].endDate)
+          });
+        }
       }
       setDelimitedData({ date: [] });
       if (firstRender) {
         handleSelectTags([]);
       }
-      setDateRange({
-        start: formatDate(selectedExec.startDate),
-        end: formatDate(selectedExec.endDate)
-      });
     }
   };
 
@@ -273,6 +288,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
 
       const startDateLong = new Date(dateRange.start).getTime();
       const endDateLong = new Date(dateRange.end).getTime();
+      setChartProps((prevProps) => ({ ...prevProps, startDate: startDateLong, endDate: endDateLong }));
 
       if (startDateLong > endDateLong) {
         return;
