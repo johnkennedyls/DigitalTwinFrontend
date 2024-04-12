@@ -1,5 +1,5 @@
-import { Delete } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
+import { Delete } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 
 export default function RemoveButton ({ onClick, disable }) {
   return (

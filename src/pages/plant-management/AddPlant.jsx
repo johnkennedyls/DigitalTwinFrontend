@@ -47,7 +47,7 @@ const AddPlant = () => {
       SuccessAlert('Planta creada correctamente');
     }).catch((error) => {
       console.error(error);
-      ErrorAlert('Ha ocurrido un error. No se ha podido crear la planta');
+      ErrorAlert('An error has occurred. The plant could not be created');
     });
   };
 

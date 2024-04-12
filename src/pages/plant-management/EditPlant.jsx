@@ -57,7 +57,7 @@ const EditPlant = () => {
       history.push('/manage-plant');
     }).catch((error) => {
       console.error(error);
-      ErrorAlert('Ha ocurrido un error. No se ha podido editar la planta');
+      ErrorAlert('An error has occurred. The plant could not be edited.');
     });
   };
 

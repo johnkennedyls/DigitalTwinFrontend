@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { getChartTypes } from "../../../../services/Api/CanvasService";
-import { Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useEffect, useState } from 'react';
+import { Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+
+import { getChartTypes } from '../../../../services/Api/CanvasService';
 
 function ChartTypeDialog ({ selectedChartType, handleSetChartType }) {
   const [open, setOpen] = useState(selectedChartType === '');
@@ -42,7 +43,7 @@ function ChartTypeDialog ({ selectedChartType, handleSetChartType }) {
                 </MenuItem>
               ))}
             </Select>
-        </FormControl>
+          </FormControl>
         </DialogContent>
       </Dialog>
     </>

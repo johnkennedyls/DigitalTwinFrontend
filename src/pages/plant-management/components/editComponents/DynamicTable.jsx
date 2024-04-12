@@ -16,7 +16,7 @@ function DynamicTable ({ tags, setTags, mapSvgTag, handleRemoveTag, handleChange
 
   useEffect(() => {
     if (editingCell === null) {
-      setTagProperties((prevTagProperties) => [...prevTagProperties, 
+      setTagProperties((prevTagProperties) => [...prevTagProperties,
         ...getUniqueMetadataNames(tags, tagProperties)]);
     }
   }, [tags]);
