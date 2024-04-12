@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import * as ECharts from 'echarts/core';
 import ReactECharts from 'echarts-for-react';
 import moment from 'moment';
@@ -8,8 +9,7 @@ import {
   SingleAxisComponent
 } from 'echarts/components';
 import { LineChart } from 'echarts/charts';
-import { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
+import { Box, TextField, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -29,10 +29,11 @@ import {
   SYMBOLS
 } from '../../../../utils/Constants';
 
-import ProcessSelectionForm from './SelectionForms/ProcessSelectionForm';
 import PlantSelectionForm from './SelectionForms/PlantSelectionForm';
+import ProcessSelectionForm from './SelectionForms/ProcessSelectionForm';
 import ExecutionSelectionForm from './SelectionForms/ExecutionSelectionForm';
 import TagSelectionForm from './SelectionForms/TagsSelectionForm';
+import ChartTypeDialog from './ChartTypeDialog';
 
 ECharts.use([
   ToolboxComponent,
@@ -42,37 +43,152 @@ ECharts.use([
   SingleAxisComponent
 ]);
 
-export default function TimeSeries () {
-  // Redux Data
+export default function TimeSeries ({edit, index, updateChart, chart, canvasId}) {
+  const [chartProps, setChartProps] = useState({...chart, typeId: chart?.type?.typeId || '', canvasId});
   const plantState = useSelector((state) => state.plants);
   const tagsState = useSelector((state) => state.tags);
-
-  // Axios Data
-  const [delimitedData, setDelimitedData] = useState({ date: [] });
-
-  // Forms
-  const [mode, setMode] = useState('');
-  const [dateRange, setDateRange] = useState({ start: '', end: '' });
-
-  // Plants
-  const [selectedPlant, setSelectedPlant] = useState('');
-  const [plants, setPlants] = useState([]);
-
-  // Processes
-  const [selectedProcess, setSelectedProcess] = useState('');
   const [processes, setProcesses] = useState([]);
-
-  // Executions
-  const [selectedExecution, setSelectedExecution] = useState('');
   const [executions, setExecutions] = useState([]);
-
-  // Tags
-  const [selectedTags, setSelectedTags] = useState([]);
   const [tags, setTags] = useState([]);
 
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [selectedChartType, setSelectedChartType] = useState(chart.type || '');
+  const [chartName, setChartName] = useState('');
+  const [editingName, setEditingName] = useState(false);
+  const [selectedPlant, setSelectedPlant] = useState('');
+  const [selectedProcess, setSelectedProcess] = useState('');
+  const [selectedExecution, setSelectedExecution] = useState('');
+  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [selectedTags, setSelectedTags] = useState([]);
 
+  const [mode, setMode] = useState('');
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [delimitedData, setDelimitedData] = useState({ date: [] });
   let currentOption = {};
+
+  const [firstRender, setFirstRender] = useState(!(Object.keys(chartProps).length > 3));
+  const [isCharged, setIsCharged] = useState(false);
+
+  console.log('chartProps', chartProps);
+
+  useEffect(() => {
+    if (Object.keys(chartProps).length>3) {
+      setIsCharged(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if(edit)
+      updateChart(index, chartProps);
+  }, [chartProps, updateChart, index]);
+
+  const handleSetChartType = (chartType) => {
+    setSelectedChartType(chartType);
+    setChartProps((prevProps) => ({ ...prevProps, typeId: chartType.typeId }));
+  }
+
+  const handleSelectName = (event) => {
+    const name = event.target.value;
+    setChartName(name);
+    setChartProps((prevProps) => ({ ...prevProps, name }));
+  }
+
+  const handleSelectedPlant = (assetId) => {
+    setSelectedPlant(assetId);
+    setChartProps((prevProps) => ({ ...prevProps, assetId }));
+  };
+
+  const handleSelectProcess = (processId) => {
+    setSelectedProcess(processId);
+    setChartProps((prevProps) => ({ ...prevProps, processId }));
+  };
+
+  const handleSelectExecution = (execution) => {
+    setSelectedExecution(execution);
+    setChartProps((prevProps) => ({ ...prevProps, executionId: execution.id }));
+  };
+
+  const handleSelectTags = (tags, edit) => {
+    if (tags.length === 0) {
+      setSelectedTags([]);
+      setChartProps((prevProps) => ({ ...prevProps, tagList: '' }));
+    }else {
+      setSelectedTags(tags);
+      tags = tags.map(tag => plantState[selectedPlant].tags[tag]).join(', ');
+      setChartProps((prevProps) => ({ ...prevProps, 
+        tagList: tags,
+        chartInstances: [{ paramId: selectedChartType.parameters[0].paramId, value: tags}] }));
+    }
+  };
+
+  useEffect(() => {
+    if (isCharged && selectedPlant === '') {
+      handleSelectedPlant(chartProps.assetId);
+      getExecutionsOfProcess(chartProps.processId);
+      setDateRange({ start: chartProps.startDate, end: chartProps.endDate });
+    }
+  }, [plantState, isCharged]);
+
+  useEffect(() => {
+    if (selectedProcess !== ''){
+      resetFlow();
+    }
+    if (selectedPlant) {
+      getProcessByPlant(selectedPlant).then((response) => {
+        setProcesses(response);
+      });
+      setTags(Object.keys(plantState[selectedPlant].tags));
+    }
+  }, [selectedPlant, plantState]);
+
+  useEffect(() => {
+    if (selectedPlant && isCharged && selectedProcess === '') {
+      handleSelectProcess(chartProps.processId);
+      getExecutionsOfProcess(chartProps.processId);
+    }
+  }, [processes]);
+
+  useEffect(() => {
+    if (executions && isCharged && !firstRender) {
+      if (chartProps.executionId === -1) {
+        setSelectedExecution({ id: -1 });
+        handleExecutionChange('Manual');
+      }else {
+        const exec = executions.find(exec => exec.id === chartProps.executionId);
+        setSelectedExecution(exec);
+        handleExecutionChange(exec);
+      }
+    }
+  }, [executions]);
+
+  useEffect(() => {
+    if (selectedTags.length > 0) {
+      if (dateRange.start !== '' && dateRange.end !== '') {
+        handleDateChange();
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTags, selectedExecution, dateRange]);
+
+  useEffect(() => {
+    if (selectedExecution && selectedProcess && mode !== '' && isCharged) {
+      addTagsWithDelay();
+      setFirstRender(true);
+    }
+  }, [selectedExecution, selectedProcess, mode]);
+
+  const addTagsWithDelay = async () => {
+    const tagNames = chartProps.tagList.split(',').map(tag => tag.trim());
+    const selTag = tags.filter(tag => tagNames.includes(plantState[selectedPlant].tags[tag]));
+    const addedTags = [];
+    for (let i = 0; i < selTag.length; i++) {
+      const tag = selTag[i];
+      await new Promise(resolve => setTimeout(() => {
+        handleSelectTags([...addedTags, tag])
+        addedTags.push(tag);
+        resolve();
+      }, 500));
+    }
+  };
 
   const showTags = () => {
     return selectedPlant && (mode === 'realtime' || mode === 'range');
@@ -95,50 +211,59 @@ export default function TimeSeries () {
   };
 
   const resetFlow = () => {
-    setSelectedTags([]);
-    setSelectedProcess('');
-    setSelectedExecution('');
+    handleSelectProcess('');
+    handleSelectExecution('');
+    setDateRange({ start: '', end: '' });
+    handleSelectTags([]);
     setTags([]);
     setMode('');
     setDelimitedData({ date: [] });
   };
 
-  const getProcessesOfPlant = (plantId) => {
-    getProcessByPlant(plantId).then(setProcesses);
-  };
-
   const getExecutionsOfProcess = (processId) => {
-    getExutionsByProcess(processId).then(setExecutions);
-  };
-
-  const handlePlantChange = (newPlant) => {
-    resetFlow();
-    getProcessesOfPlant(newPlant);
+    getExutionsByProcess(processId).then(
+      (execs) => {
+        setExecutions(execs);
+      }
+    );
   };
 
   const handleProcessChange = (newProcess) => {
     getExecutionsOfProcess(newProcess.id);
-    setSelectedExecution('');
-    setSelectedTags([]);
-    setMode('');
-    setDelimitedData({ date: [] });
+    if (firstRender) {
+      handleSelectExecution('');
+      setDateRange({ start: '', end: '' });
+      handleSelectTags([]);
+      setMode('');
+      setDelimitedData({ date: [] });
+    }
   };
 
   const handleExecutionChange = (selectedExec) => {
     if (selectedExec) {
+      setDateRange({
+        start: formatDate(selectedExec.startDate),
+        end: formatDate(selectedExec.endDate)
+      });
       if (selectedExec.state === 'running') {
         setMode('realtime');
       } else if (selectedExec.state === 'stoped') {
         setMode('range');
       } else if (selectedExec === 'Manual') {
         setMode('range');
+        if(isCharged) {
+          setDateRange({ start: chartProps.startDate, end: chartProps.endDate });
+        }else {
+          setDateRange({
+            start: formatDate(executions[0].startDate),
+            end: formatDate(executions[executions.length - 1].endDate)
+          });
+        }
       }
       setDelimitedData({ date: [] });
-      setSelectedTags([]);
-      setDateRange({
-        start: formatDate(selectedExec.startDate),
-        end: formatDate(selectedExec.endDate)
-      });
+      if (firstRender) {
+        handleSelectTags([]);
+      }
     }
   };
 
@@ -147,7 +272,7 @@ export default function TimeSeries () {
   };
 
   const handleTagChange = (event, value) => {
-    setSelectedTags(value);
+    handleSelectTags(value);
   };
 
   const handleDateChange = () => {
@@ -163,6 +288,7 @@ export default function TimeSeries () {
 
       const startDateLong = new Date(dateRange.start).getTime();
       const endDateLong = new Date(dateRange.end).getTime();
+      setChartProps((prevProps) => ({ ...prevProps, startDate: startDateLong, endDate: endDateLong }));
 
       if (startDateLong > endDateLong) {
         return;
@@ -204,43 +330,6 @@ export default function TimeSeries () {
       end: type === 'end' ? date : prevRange.end
     }));
   };
-
-  useEffect(() => {
-    const currentPlants = Object.keys(plantState);
-    setPlants(currentPlants);
-  }, [plantState]);
-
-  useEffect(() => {
-    if (selectedPlant === '') {
-      return;
-    }
-    const data = plantState[selectedPlant].tags;
-    const currentTags = Object.keys(data);
-    setSelectedTags([]);
-    setDateRange({ start: '', end: '' });
-    setTags(currentTags);
-    setSelectedProcess('');
-  }, [selectedPlant, plantState]);
-
-  useEffect(() => {
-    if (selectedProcess) {
-      // Update the tags array when a process is selected
-      const data = plantState[selectedPlant].tags;
-      const currentTags = Object.keys(data);
-      setDateRange({ start: '', end: '' });
-      setTags(currentTags);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedProcess]);
-
-  useEffect(() => {
-    if (selectedTags.length > 0) {
-      if (dateRange.start !== '' && dateRange.end !== '') {
-        handleDateChange();
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTags, selectedExecution, dateRange]);
 
   // Executions for graphics
   const getOption = () => {
@@ -286,90 +375,124 @@ export default function TimeSeries () {
   };
 
   return (
-    <Box style={{ maxWidth: '80%', margin: 'auto' }}>
-      <Box sx={{ mb: 2 }}>
-        <PlantSelectionForm
-          plantState={plantState}
-          plants={plants}
-          onChange={handlePlantChange}
-          selectedPlant={selectedPlant}
-          setSelectedPlant={setSelectedPlant}
-        />
-
-        {selectedPlant &&
-          <ProcessSelectionForm
-            processes={processes}
-            onChange={handleProcessChange}
-            selectedProcess={selectedProcess}
-            setSelectedProcess={setSelectedProcess}
+    <>
+      {edit && <Box
+        sx={{
+          position: 'absolute',
+          top: 5,
+          left: 10
+        }}
+        >
+          <ChartTypeDialog selectedChartType={selectedChartType} handleSetChartType={handleSetChartType} />
+      </Box>}
+      {firstRender && <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width={'60%'}
+        mx={'auto'}
+      >
+        {edit && editingName ? (
+          <TextField
+            autoFocus
+            variant="outlined"
+            label="Chart Name"
+            margin="normal"
+            fullWidth
+            value={chartProps?.name || ''}
+            onChange={handleSelectName}
+            onBlur={() => setEditingName(false)}
           />
-        }
-
-        {selectedProcess &&
-          <ExecutionSelectionForm
-            executions={executions}
-            onChange={handleExecutionChange}
-            selectedExecution={selectedExecution}
-            setSelectedExecution={setSelectedExecution}
-          />
-        }
-
-        {selectedExecution && mode === 'range' &&
-          <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'space-evenly' }}>
-            <DateTimePicker
-              label="Start Date"
-              ampm={false}
-              value={new Date(dateRange.start)}
-              minDateTime={!isManual() && new Date(dateRange.start)}
-              maxDateTime={new Date(dateRange.end)}
-              onChange={(newDate) => handleDateChangeFromPicker(newDate, 'start')}
-            />
-            <DateTimePicker
-              label="End Date"
-              ampm={false}
-              value={new Date(dateRange.end)}
-              minDateTime={new Date(dateRange.start)}
-              maxDateTime={!isManual() && new Date(dateRange.end)}
-              onChange={(newDate) => handleDateChangeFromPicker(newDate, 'end')}
-            />
-          </Box>
-        }
-
-        {showTags() && isPlaying &&
-          <TagSelectionForm
-            tags={tags}
-            selectedTags={selectedTags}
-            handleTagChange={handleTagChange}
+        ) : (
+          <Typography
+            variant="h5"
+            align='center'
+            m={0}
+            onClick={() => setEditingName(true)}
+            style={{ cursor: 'pointer' }}
+          >
+            {chartProps?.name || 'Press to Change Chart Name'}
+          </Typography>
+        )}
+      </Box>}
+      {firstRender && <Box style={{ maxWidth: '80%', margin: 'auto' }}>
+        {edit && <Box sx={{ mb: 2 }}>
+          <PlantSelectionForm
             plantState={plantState}
             selectedPlant={selectedPlant}
+            setSelectedPlant={handleSelectedPlant}
           />
-        }
-      </Box>
-
-      {showGraphic() && showTags() && (
-        <Box>
-          <ReactECharts
-            key={selectedTags.length}
-            option={getOption()}
-            style={{ height: '60vh' }}
-          />
-          {mode === 'realtime' &&
-            selectedExecution &&
-            selectedExecution.state === 'running' && (
-            <Box
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <IconButton onClick={handlePlayPause}>
-                {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-              </IconButton>
+          {selectedPlant &&
+            <ProcessSelectionForm
+              processes={processes}
+              onChange={handleProcessChange}
+              selectedProcess={selectedProcess}
+              setSelectedProcess={handleSelectProcess}
+            />
+          }
+          {selectedProcess &&
+            <ExecutionSelectionForm
+              executions={executions}
+              onChange={handleExecutionChange}
+              selectedExecution={selectedExecution}
+              setSelectedExecution={handleSelectExecution}
+            />
+          }
+          {selectedExecution && mode === 'range' &&
+            <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'space-evenly' }}>
+              <DateTimePicker
+                label="Start Date"
+                ampm={false}
+                value={new Date(dateRange.start)}
+                minDateTime={!isManual() && new Date(dateRange.start)}
+                maxDateTime={new Date(dateRange.end)}
+                onChange={(newDate) => handleDateChangeFromPicker(newDate, 'start')}
+              />
+              <DateTimePicker
+                label="End Date"
+                ampm={false}
+                value={new Date(dateRange.end)}
+                minDateTime={new Date(dateRange.start)}
+                maxDateTime={!isManual() && new Date(dateRange.end)}
+                onChange={(newDate) => handleDateChangeFromPicker(newDate, 'end')}
+              />
             </Box>
-          )}
-        </Box>
-      )}
-    </Box>
+          }
+          {showTags() && isPlaying &&
+            <TagSelectionForm
+              tags={tags}
+              selectedTags={selectedTags}
+              handleTagChange={handleTagChange}
+              plantState={plantState}
+              selectedPlant={selectedPlant}
+            />
+          }
+        </Box>}
+        {showGraphic() && showTags() && (
+          <Box>
+            <ReactECharts
+              key={selectedTags.length}
+              option={getOption()}
+              style={{ height: '60vh' }}
+            />
+            {mode === 'realtime' &&
+              selectedExecution &&
+              selectedExecution.state === 'running' && (
+              <Box
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <IconButton onClick={handlePlayPause}>
+                  {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+                </IconButton>
+              </Box>
+            )}
+          </Box>
+        )}
+      </Box>}
+    </>
   );
 }

@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Box, Button, IconButton, Avatar,
-  Dialog, DialogActions, DialogContent,
-  DialogContentText, DialogTitle
+  Box,
+  Button,
+  Avatar
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,6 +13,8 @@ import { hasAnyRole } from '../../utils/Funtions';
 import { getPlantsData, deletePlant } from '../../services/Api/PlantService';
 import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '../../reducers/plant/plantSlice';
 import { useMessage } from '../../providers/MessageContext';
+import RemoveButton from '../../components/buttons/RemoveBotton';
+import EditButton from '../../components/buttons/EditButton';
 
 export default function ListPlant () {
   const [plants, setPlants] = useState([]);
@@ -100,22 +100,16 @@ export default function ListPlant () {
       disableClickEventBubbling: true,
       renderCell: (params) => {
         return (
-          <div>
-            <IconButton
-              disabled={!hasAnyRole(['Admin-plant', 'Edit-plant'])}
-              color="primary"
+          <>
+            <EditButton
+              disable={!hasAnyRole(['Admin-plant', 'Edit-plant'])}
               onClick={() => handleEdit(params.row.plantId)}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              disabled={!hasAnyRole(['Admin-plant', 'Delete-plant'])}
-              color="secondary"
+            />
+            <RemoveButton
+              disable={!hasAnyRole(['Admin-plant', 'Delete-plant'])}
               onClick={() => handleDelete(params.row.plantId)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
+            />
+          </>
         );
       }
     }

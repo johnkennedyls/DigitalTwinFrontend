@@ -20,7 +20,6 @@ export default function TagsPlantForm ({
   const handleChangeSvgId = (value) => {
     const svgIdExists = mapSvgTag.some((tag) => tag.svgId === value);
     if (svgIdExists) {
-      console.log('K', value);
       const tagNameBeingEdited = tags.find((tag) => tag.metadata.svgId === value)?.name;
       const newTags = mapSvgTag.map((tag) =>
         tag.svgId === value
@@ -41,11 +40,11 @@ export default function TagsPlantForm ({
   };
 
   const handleAddTag = useCallback(() => {
-    const hasEmptyTag = tags.some(tag => tag.name === '');
+    const hasEmptyTag = tags.some(tag => !(tag?.name));
     if (!hasEmptyTag) {
-      setTags((prevTags) => [...prevTags, { name: '', description: '' }]);
+      setTags((prevTags) => [...prevTags, {}]);
     } else {
-      InfoAlert('Asegurate de no tener un tag vacio.');
+      InfoAlert('Make sure you fill all previous tags.');
     }
   }, [tags, setTags]);
 
@@ -79,6 +78,7 @@ export default function TagsPlantForm ({
 
   useEffect(() => {
     console.log(mapSvgTag);
+    console.log(tags);
     validateForm();
   }, [tags, validateForm]);
 

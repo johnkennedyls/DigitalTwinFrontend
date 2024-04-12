@@ -7,7 +7,7 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 function TagSelectionForm ({ tags, selectedTags, handleTagChange, plantState, selectedPlant }) {
   return (
-    <Box fullWidth sx={{ marginTop: 2 }}>
+    <Box sx={{ marginTop: 2 }}>
       <Autocomplete
         clearIcon={false}
         multiple
