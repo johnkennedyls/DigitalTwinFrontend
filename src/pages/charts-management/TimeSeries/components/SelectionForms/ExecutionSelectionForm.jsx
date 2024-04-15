@@ -19,7 +19,7 @@ function ExecutionSelectionForm ({ executions, onChange, selectedExecution, setS
       <Select
         labelId="execution-select-label"
         id="execution-select"
-        value={selectedExecution?.id??''}
+        value={selectedExecution?.id ?? ''}
         onChange={handleChange}
         label="Select Execution"
       >

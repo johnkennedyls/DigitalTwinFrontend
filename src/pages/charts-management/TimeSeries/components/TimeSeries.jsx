@@ -43,8 +43,8 @@ ECharts.use([
   SingleAxisComponent
 ]);
 
-export default function TimeSeries ({edit, index, updateChart, chart, canvasId}) {
-  const [chartProps, setChartProps] = useState({...chart, typeId: chart?.type?.typeId || '', canvasId});
+export default function TimeSeries ({ edit, index, updateChart, chart, canvasId }) {
+  const [chartProps, setChartProps] = useState({ ...chart, typeId: chart?.type?.typeId || '', canvasId });
   const plantState = useSelector((state) => state.plants);
   const tagsState = useSelector((state) => state.tags);
   const [processes, setProcesses] = useState([]);
@@ -53,7 +53,6 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
 
   const [selectedChartType, setSelectedChartType] = useState(chart.type || '');
   const [chartName, setChartName] = useState('');
-  const [editingName, setEditingName] = useState(false);
   const [selectedPlant, setSelectedPlant] = useState('');
   const [selectedProcess, setSelectedProcess] = useState('');
   const [selectedExecution, setSelectedExecution] = useState('');
@@ -71,26 +70,25 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
   console.log('chartProps', chartProps);
 
   useEffect(() => {
-    if (Object.keys(chartProps).length>3) {
+    if (Object.keys(chartProps).length > 3) {
       setIsCharged(true);
     }
   }, []);
 
   useEffect(() => {
-    if(edit)
-      updateChart(index, chartProps);
+    if (edit) { updateChart(index, chartProps); }
   }, [chartProps, updateChart, index]);
 
   const handleSetChartType = (chartType) => {
     setSelectedChartType(chartType);
     setChartProps((prevProps) => ({ ...prevProps, typeId: chartType.typeId }));
-  }
+  };
 
   const handleSelectName = (event) => {
     const name = event.target.value;
     setChartName(name);
     setChartProps((prevProps) => ({ ...prevProps, name }));
-  }
+  };
 
   const handleSelectedPlant = (assetId) => {
     setSelectedPlant(assetId);
@@ -111,12 +109,14 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
     if (tags.length === 0) {
       setSelectedTags([]);
       setChartProps((prevProps) => ({ ...prevProps, tagList: '' }));
-    }else {
+    } else {
       setSelectedTags(tags);
       tags = tags.map(tag => plantState[selectedPlant].tags[tag]).join(', ');
-      setChartProps((prevProps) => ({ ...prevProps, 
+      setChartProps((prevProps) => ({
+        ...prevProps,
         tagList: tags,
-        chartInstances: [{ paramId: selectedChartType.parameters[0].paramId, value: tags}] }));
+        chartInstances: [{ paramId: selectedChartType.parameters[0].paramId, value: tags }]
+      }));
     }
   };
 
@@ -129,7 +129,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
   }, [plantState, isCharged]);
 
   useEffect(() => {
-    if (selectedProcess !== ''){
+    if (selectedProcess !== '') {
       resetFlow();
     }
     if (selectedPlant) {
@@ -152,7 +152,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
       if (chartProps.executionId === -1) {
         setSelectedExecution({ id: -1 });
         handleExecutionChange('Manual');
-      }else {
+      } else {
         const exec = executions.find(exec => exec.id === chartProps.executionId);
         setSelectedExecution(exec);
         handleExecutionChange(exec);
@@ -253,9 +253,9 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
         setMode('range');
       } else if (selectedExec === 'Manual') {
         setMode('range');
-        if(isCharged) {
+        if (isCharged) {
           setDateRange({ start: chartProps.startDate, end: chartProps.endDate });
-        }else {
+        } else {
           setDateRange({
             start: formatDate(executions[0].startDate),
             end: formatDate(executions[executions.length - 1].endDate)
@@ -384,8 +384,8 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
           top: 5,
           left: 10
         }}
-        >
-          <ChartTypeDialog selectedChartType={selectedChartType} handleSetChartType={handleSetChartType} />
+      >
+        <ChartTypeDialog selectedChartType={selectedChartType} handleSetChartType={handleSetChartType} />
       </Box>}
       {firstRender && <Box
         display="flex"
@@ -394,28 +394,23 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
         width={'60%'}
         mx={'auto'}
       >
-        {edit && editingName ? (
-          <TextField
-            autoFocus
-            variant="outlined"
-            label="Chart Name"
-            margin="normal"
-            fullWidth
-            value={chartProps?.name || ''}
-            onChange={handleSelectName}
-            onBlur={() => setEditingName(false)}
-          />
-        ) : (
-          <Typography
-            variant="h5"
-            align='center'
-            m={0}
-            onClick={() => setEditingName(true)}
-            style={{ cursor: 'pointer', color: !chartProps?.name ? 'red' : 'inherit'}}
-          >
-            {chartProps?.name || 'Press to Change Chart Name'}
-          </Typography>
-        )}
+        {edit &&
+          (
+            <TextField
+              autoFocus
+              variant="standard"
+              placeholder="Type the chart name"
+              margin="normal"
+              fullWidth
+              value={chartProps?.name || ''}
+              onChange={handleSelectName}
+              inputProps={{
+                style: { fontSize: '30px', textAlign: 'center' },
+                maxLength: 50
+              }}
+            />
+          )
+        }
       </Box>}
       {firstRender && <Box style={{ maxWidth: '80%', margin: 'auto' }}>
         {edit && <Box sx={{ mb: 2 }}>

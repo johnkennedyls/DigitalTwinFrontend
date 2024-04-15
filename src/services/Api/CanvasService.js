@@ -36,8 +36,8 @@ export function getCanvas (canvasId) {
 export function saveCanvas (canvas) {
   return axios.post('canvases', canvas)
     .then(response => {
-      SuccessAlert(response.data.message)
-      return response.data.canvas
+      SuccessAlert(response.data.message);
+      return response.data.canvas;
     })
     .catch(error => {
       ErrorAlert(error.response.data[0]);
@@ -47,8 +47,8 @@ export function saveCanvas (canvas) {
 export function editCanvas (canvas, canvasId) {
   return axios.put(`canvases/${canvasId}`, canvas)
     .then(response => {
-      SuccessAlert(response.data.message)
-      return response.data.canvas
+      SuccessAlert(response.data.message);
+      return response.data.canvas;
     })
     .catch(error => {
       ErrorAlert(error.response.data[0] || error.response.data);
@@ -58,9 +58,9 @@ export function editCanvas (canvas, canvasId) {
 export function deleteCanvas (canvasId) {
   return axios.delete(`canvases/${canvasId}`)
     .then(response => {
-        SuccessAlert(response.data)
-        window.location.reload()  
-      }
+      SuccessAlert(response.data);
+      window.location.reload();
+    }
     )
     .catch(error => {
       ErrorAlert(error.response.data);

@@ -384,7 +384,18 @@ module.exports = {
       "text": {
         "highlightFocused": true
       },
-    }
-  }
-};
+      dot: {
+        theme: {
+          replace: false,
+          edge: {
+            arrowhead: "vee",
+            arrowsize: "0.5",
+            penwidth: "1.0",
+            color: "#D3D3D3" // Light gray color
+          },
+        }
+      }
+        }
+      }
+    };
 // generated: dependency-cruiser@16.2.3 on 2024-03-08T19:55:18.394Z

@@ -15,6 +15,7 @@ export default function ListExecutionsProcess () {
 
   useEffect(() => {
     loadExecutionsData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadExecutionsData = () => {
@@ -75,7 +76,7 @@ export default function ListExecutionsProcess () {
         disableSelectionOnClick
         onRowClick={handleRowClick}
         localeText={{
-          noRowsLabel: 'No hay elementos disponibles'
+          noRowsLabel: 'No items available'
         }}
       />
     </Box>

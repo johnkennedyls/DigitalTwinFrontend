@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Typography } from '@mui/material';
-import Paper from '@mui/material/Paper';
+import { Typography, Paper } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 import ListAvatar from '../../components/alarms/ListAvatar';

@@ -12,29 +12,37 @@ import { setCanvases } from "../../reducers/graphic/canvaSlice";
 
 export default function ListCanvas () {
   const [canvas, setCanvas] = useState([]);
-  const [page, setPage] = useState({pageSize: 10, page: 0});
+  const [page, setPage] = useState({ pageSize: 10, page: 0 });
   const [totalRows, setTotalRows] = useState(0);
   const dispatch = useDispatch();
   const columns = [
-    { field: "name", headerName: "Name", flex: 1  },
-    { field: "userOwner", headerName: "Owner", width: 200 },
-    { field: "isShared", headerName: "Shared", width: 100 },
-    { field: "actions", headerName: "Actions", width: 200, sortable: false, renderCell: (params) => {
-      return (
-        <>
-          <EditButton 
-            onClick={() => handleEditClick(params.row.canvasId)}
-          />
-          <RemoveButton 
-            onClick={(e) => {
+    { field: 'name', headerName: 'Name', flex: 1 },
+    { field: 'userOwner', headerName: 'Owner', width: 200 },
+    { field: 'isShared', headerName: 'Shared', width: 100 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 200,
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <EditButton
+              disable={!hasAnyRole(['Admin-graph', 'Edit-graph'])}
+              onClick={() => handleEditClick(params.row.canvasId)}
+            />
+            <RemoveButton
+              disable={!hasAnyRole(['Admin-graph', 'Delete-graph']) && !checkIfOwnUser(params.row.userOwner)}
+              onClick={(e) => {
                 e.stopPropagation();
-                deleteCanvas(params.row.canvasId)
+                deleteCanvas(params.row.canvasId);
               }
-            }
-          />
-        </>
-      );
-    }}
+              }
+            />
+          </>
+        );
+      }
+    }
   ];
 
   useEffect(() => {
@@ -52,17 +60,17 @@ export default function ListCanvas () {
   const handleRowClick = (param) => {
     const url = `/dashboard/manage-charts/${param.row.canvasId}`;
     window.open(url, '_blank');
-  }  
+  };
 
   const handleEditClick = (canvasId) => {
     const url = `/dashboard/manage-charts/${canvasId}?edit=true`;
     window.open(url, '_blank');
-  }
+  };
 
   const handleAdd = () => {
-    const url = `/dashboard/create-charts`;
+    const url = '/dashboard/create-charts';
     window.open(url, '_blank');
-  }
+  };
 
   return (
     <Box m={4} maxWidth={1000} mx="auto">
