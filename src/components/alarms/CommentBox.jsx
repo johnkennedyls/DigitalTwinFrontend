@@ -88,6 +88,7 @@ function CommentBox ({ alarmId, handleShowAlert }) {
 
   useEffect(() => {
     getHistoryActions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getHistoryActions = () => {

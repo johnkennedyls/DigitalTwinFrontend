@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { TextField, Button, Badge, Select, MenuItem, Checkbox, FormControl, Chip } from '@mui/material';
+import {
+  TextField, Button, Badge,
+  Select, MenuItem, Checkbox,
+  FormControl, Chip, InputLabel,
+  Autocomplete, Paper
+} from '@mui/material';
 import { useSelector } from 'react-redux';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import InputLabel from '@mui/material/InputLabel';
-import Autocomplete from '@mui/material/Autocomplete';
 import { Save, Cancel } from '@mui/icons-material';
 import validate from 'validate.js';
-import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
 
 import { getTypeAlarmById, updateTypeAlarm, getEmails, getEvents } from '../../services/Api/TypeAlarmService';
@@ -161,6 +163,7 @@ function EditTypeAlarm () {
         usersAssigned: typeAlarmData.usersAssigned || []
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeAlarmData]);
 
   useEffect(() => {
@@ -169,6 +172,7 @@ function EditTypeAlarm () {
       const selectedPlantTags = selectedPlant ? selectedPlant.tags : [];
       setTags(selectedPlantTags);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataForm.values.plant_id, typeAlarmData.plantName]);
 
   const hasError = (field) => {
@@ -184,6 +188,7 @@ function EditTypeAlarm () {
 
   useEffect(() => {
     handleErrors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataForm.values]);
 
   const handleErrors = () => {
@@ -221,6 +226,7 @@ function EditTypeAlarm () {
   useEffect(() => {
     const currentPlants = Object.values(plantState);
     setPlants(currentPlants);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const concatenateValues = () => {
@@ -275,6 +281,7 @@ function EditTypeAlarm () {
 
   useEffect(() => {
     concatenateValues();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conditionalValues]);
 
   const handleAutocompleteChange = (value) => {

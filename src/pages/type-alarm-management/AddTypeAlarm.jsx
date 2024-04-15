@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { TextField, Button, Badge, Chip, Select, MenuItem, Checkbox, FormControl } from '@mui/material';
+import {
+  TextField, Button, Badge, Chip,
+  Select, MenuItem, Checkbox, FormControl,
+  InputLabel, Autocomplete, Paper
+} from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import InputLabel from '@mui/material/InputLabel';
-import Autocomplete from '@mui/material/Autocomplete';
 import { Save, Cancel } from '@mui/icons-material';
 import validate from 'validate.js';
-import Paper from '@mui/material/Paper';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
 

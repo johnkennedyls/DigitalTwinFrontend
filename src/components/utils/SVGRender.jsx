@@ -24,6 +24,7 @@ const PlantSVG = ({ mapSvgTag, svgImage }) => {
 
   useEffect(() => {
     updateValues();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tags]);
 
   useEffect(() => {

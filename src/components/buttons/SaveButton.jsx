@@ -1,5 +1,5 @@
-import { Save } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
+import { Save } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 
 export default function SaveButton ({ onClick, disable }) {
   return (

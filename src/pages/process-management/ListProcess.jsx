@@ -1,14 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Box,
-  Button,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions
+  Box, Button, IconButton, Dialog,
+  DialogTitle, DialogContent, DialogContentText, DialogActions
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -227,7 +221,7 @@ export default function ListProcess () {
         autoHeight
         disableSelectionOnClick
         localeText={{
-          noRowsLabel: 'No hay elementos disponibles'
+          noRowsLabel: 'No items available'
         }}
         className="clickable-row"
         onRowClick={handleSeeExecutions}

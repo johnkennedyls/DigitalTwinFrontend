@@ -26,6 +26,7 @@ const Landing = () => {
       localStorage.setItem('access_token', token);
       history.push('/manage-plant');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogin = () => {
@@ -60,7 +61,7 @@ const Landing = () => {
             marginBottom: '1rem'
           }}
         >
-          Bienvenido a la Planta Piloto<br/>Ingeniería Bioquímica
+          Welcome to the Pilot Plant<br/>Biochemical Engineering
         </Typography>
       </Fade>
       <Fade in={currentIndex >= 3} timeout={1000}>
@@ -72,7 +73,7 @@ const Landing = () => {
             marginTop: '1rem'
           }}
         >
-        Iniciar sesión
+        Sign in
         </Button>
       </Fade>
     </Box>

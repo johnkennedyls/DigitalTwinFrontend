@@ -1,6 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
+import { Alert, AlertTitle } from '@mui/material';
 import PropTypes from 'prop-types';
 
 const MessageContext = createContext();

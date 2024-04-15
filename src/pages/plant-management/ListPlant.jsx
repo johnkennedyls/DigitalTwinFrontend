@@ -1,18 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Box,
-  Button,
-  Avatar
+  Box, Button, Avatar,
+  Dialog, DialogTitle, DialogContent,
+  DialogContentText, DialogActions
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector, useDispatch } from 'react-redux';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 
 import { hasAnyRole } from '../../utils/Funtions';
 import { getPlantsData, deletePlant } from '../../services/Api/PlantService';
@@ -40,7 +35,7 @@ export default function ListPlant () {
       })
       .catch((error) => {
         console.error(error);
-        showMessage('Algo salio mal, por favor intente mas tarde', 'error');
+        showMessage('Something went wrong, please try again later.', 'error');
       });
   }, [dispatch, showMessage]);
 
@@ -81,7 +76,7 @@ export default function ListPlant () {
       dispatch(deletePlantFromRedux(deleteId));
     }).catch((error) => {
       console.error(error);
-      showMessage('Algo salió mal al intentar borrar la planta, por favor intenta de nuevo más tarde', 'error');
+      showMessage('Something went wrong when trying to delete the plant, please try again later.', 'error');
     });
   };
 
@@ -158,7 +153,7 @@ export default function ListPlant () {
         autoHeight
         disableSelectionOnClick
         localeText={{
-          noRowsLabel: 'No hay elementos disponibles'
+          noRowsLabel: 'No items available'
         }}
         className="clickable-row"
         onRowClick={handleRowClick}
