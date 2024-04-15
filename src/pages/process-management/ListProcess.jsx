@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import {
   Box,
   Button,
@@ -20,6 +21,7 @@ import {
   getProcessesData, deleteProcess, startProcess,
   pauseProcess, stopProcess
 } from '../../services/Api/ProcessService';
+import { setCreatingCanvas } from '../../reducers/graphic/canvaSlice';
 
 const PROCESS_STATE = {
   STOPPED: 0,
@@ -34,6 +36,7 @@ export default function ListProcess () {
   const [deleteId, setDeleteId] = useState(null);
 
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const loadProcessData = () => {
     getProcessesData()
@@ -104,6 +107,7 @@ export default function ListProcess () {
     if (event.target.closest('[role="cell"]').dataset.field === 'actions') {
       return;
     }
+    dispatch(setCreatingCanvas({ assetId: param.row.assets[0].assetId}));
     history.push(`process-executions/${param.row.id}`);
   };
 

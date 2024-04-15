@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { format } from 'date-fns';
 
 import { getExutionsByProcess } from '../../services/Api/ProcessService';
+import { setCreatingCanvas } from '../../reducers/graphic/canvaSlice';
 
 export default function ListExecutionsProcess () {
   const [executions, setExecutions] = useState([]);
   const { processId } = useParams();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     loadExecutionsData();
@@ -50,6 +53,15 @@ export default function ListExecutionsProcess () {
     { field: 'operName', headerName: 'Operador', width: 200 }
   ];
 
+  const handleRowClick = (param) => {
+    const info = {
+      executionId: param.row.id,
+      processId: param.row.processId
+    }
+    dispatch(setCreatingCanvas(info));
+    window.open('/dashboard/create-charts', '_blank');
+  }
+
   return (
     <Box m={4} maxWidth={1000} mx="auto">
       <DataGrid
@@ -61,6 +73,7 @@ export default function ListExecutionsProcess () {
         pagination
         autoHeight
         disableSelectionOnClick
+        onRowClick={handleRowClick}
         localeText={{
           noRowsLabel: 'No hay elementos disponibles'
         }}

@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
-import { Box, Button, FormControlLabel, Switch, TextField, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { Box, Button, FormControlLabel, IconButton, Switch, TextField, Typography } from '@mui/material';
+import { Add, Delete } from '@mui/icons-material';
 import TimeSeries from './components/TimeSeries';
-import { editCanvas, getCanvas, saveCanvas } from '../../../services/Api/CanvasService';
 import SaveButton from '../../../components/buttons/SaveButton';
+
+import { editCanvas, getCanvas, saveCanvas } from '../../../services/Api/CanvasService';
+import { clearCreatingCanvas, selectCanvasById, selectCreatingCanvas } from '../../../reducers/graphic/canvaSlice';
 import { InfoAlert } from '../../../components/utils/Alert';
 
 export default function ListTimeSeries () {
@@ -17,7 +17,11 @@ export default function ListTimeSeries () {
   const [edit, setEdit] = useState(new URLSearchParams(useLocation().search).get('edit') || false);
   const [editingName, setEditingName] = useState(false);
   let { canvasId } = useParams();
-  
+
+  const dispatch = useDispatch();
+  const storedCanvas = useSelector(state => selectCanvasById(state, canvasId));
+  const creatingCanvas = useSelector(state => selectCreatingCanvas(state));
+
   function updateChart(index, chart) {
     setCanvas((prevCanvas) => {
       if (prevCanvas.charts[index]) {
@@ -30,14 +34,32 @@ export default function ListTimeSeries () {
 
   useEffect(() => {
     if (canvasId && Object.keys(canvas).length === 4) {
-      getCanvas(canvasId).then((canvas) => {
-        setCanvas({ ...canvas, deletedCharts: []});
-        if (canvas.charts.length > 0) {
-          setCharts(canvas.charts.map((chart, index) => <TimeSeries key={index} index={index} edit={edit} updateChart={updateChart} chart={chart} canvasId={canvas.canvasId} />));
+      if (storedCanvas) {
+        setCanvas({ ...storedCanvas, deletedCharts: []});
+        if (storedCanvas.charts.length > 0) {
+          setCharts(storedCanvas.charts.map((chart, index) => <TimeSeries key={index} index={index} edit={edit} updateChart={updateChart} chart={chart} canvasId={storedCanvas.canvasId} />));
         } else InfoAlert('No charts found in this canva.');
-      });
+      } else {
+        getCanvas(canvasId).then((canvas) => {
+          setCanvas({ ...canvas, deletedCharts: []});
+          if (canvas.charts.length > 0) {
+            setCharts(canvas.charts.map((chart, index) => <TimeSeries key={index} index={index} edit={edit} updateChart={updateChart} chart={chart} canvasId={canvas.canvasId} />));
+          } else InfoAlert('No charts found in this canva.');
+        });
+      }
     }else setEdit(true);
   }, [canvasId]);
+
+  useEffect(() => {
+    if (Object.keys(creatingCanvas).length > 1) {
+      setCanvas({ ...canvas, charts: [creatingCanvas]});
+      setCharts([<TimeSeries key={0} index={0} edit={true} updateChart={updateChart} chart={creatingCanvas} canvasId={creatingCanvas.canvasId} />]);
+      setEdit(true);
+    }
+    dispatch(clearCreatingCanvas())
+  }, []);
+
+  console.log(canvas)
 
   const handleNameChange = (event) => {
     setCanvas((prevCanvas) => ({ ...prevCanvas, name: event.target.value }));
@@ -132,7 +154,7 @@ export default function ListTimeSeries () {
           align='center'
           m={2}
           onClick={() => setEditingName(true)}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', color: !canvas?.name ? 'red' : 'inherit'}}
         >
           {canvas?.name || 'Press to Change Canvas Name'}
         </Typography>
@@ -187,7 +209,7 @@ export default function ListTimeSeries () {
               color="gray"
               onClick={() => handleDeleteChart(index)}
             >
-              <DeleteIcon />
+              <Delete />
             </IconButton>
           </Box>}
           {chart}
@@ -207,7 +229,7 @@ export default function ListTimeSeries () {
         {(edit) && <Button
           variant="contained"
           color="primary"
-          startIcon={<AddIcon />}
+          startIcon={<Add />}
           onClick={handleAddChart}
         >
           Add new canvas

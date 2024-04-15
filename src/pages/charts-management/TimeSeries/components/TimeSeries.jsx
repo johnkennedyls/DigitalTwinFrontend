@@ -177,16 +177,18 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
   }, [selectedExecution, selectedProcess, mode]);
 
   const addTagsWithDelay = async () => {
-    const tagNames = chartProps.tagList.split(',').map(tag => tag.trim());
-    const selTag = tags.filter(tag => tagNames.includes(plantState[selectedPlant].tags[tag]));
-    const addedTags = [];
-    for (let i = 0; i < selTag.length; i++) {
-      const tag = selTag[i];
-      await new Promise(resolve => setTimeout(() => {
-        handleSelectTags([...addedTags, tag])
-        addedTags.push(tag);
-        resolve();
-      }, 500));
+    if(chartProps.tagList) {
+      const tagNames = chartProps.tagList.split(',').map(tag => tag.trim());
+      const selTag = tags.filter(tag => tagNames.includes(plantState[selectedPlant].tags[tag]));
+      const addedTags = [];
+      for (let i = 0; i < selTag.length; i++) {
+        const tag = selTag[i];
+        await new Promise(resolve => setTimeout(() => {
+          handleSelectTags([...addedTags, tag])
+          addedTags.push(tag);
+          resolve();
+        }, 500));
+      }
     }
   };
 
@@ -409,7 +411,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
             align='center'
             m={0}
             onClick={() => setEditingName(true)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer', color: !chartProps?.name ? 'red' : 'inherit'}}
           >
             {chartProps?.name || 'Press to Change Chart Name'}
           </Typography>
