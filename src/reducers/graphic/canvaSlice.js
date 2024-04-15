@@ -4,7 +4,7 @@ export const canvaSlice = createSlice({
   name: 'canvas',
   initialState: {
     canvases: [],
-    creatingCanvas: null
+    creatingCanvas: {}
   },
   reducers: {
     setCanvases: (state, action) => {
@@ -17,7 +17,7 @@ export const canvaSlice = createSlice({
       };
     },
     clearCreatingCanvas: (state) => {
-      state.creatingCanvas = null;
+      state.creatingCanvas = {};
     }
   }
 });
