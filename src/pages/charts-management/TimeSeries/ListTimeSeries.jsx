@@ -1,33 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
-<<<<<<< HEAD
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, FormControlLabel, IconButton, Switch, TextField, Typography } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import TimeSeries from './components/TimeSeries';
-=======
-import { Box, Button, FormControlLabel, Switch, TextField, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
-
-import { editCanvas, getCanvas, saveCanvas } from '../../../services/Api/CanvasService';
->>>>>>> f84a3a1b197a3ab7853169e763218a9a38e9decc
 import SaveButton from '../../../components/buttons/SaveButton';
 
 import { editCanvas, getCanvas, saveCanvas } from '../../../services/Api/CanvasService';
 import { clearCreatingCanvas, selectCanvasById, selectCreatingCanvas } from '../../../reducers/graphic/canvaSlice';
 import { InfoAlert } from '../../../components/utils/Alert';
 
-import TimeSeries from './components/TimeSeries';
-
 export default function ListTimeSeries () {
   const [canvas, setCanvas] = useState({ name: '', isShared: true, charts: [], deletedCharts: [] });
   const [charts, setCharts] = useState([]);
 
   const [edit, setEdit] = useState(new URLSearchParams(useLocation().search).get('edit') || false);
-<<<<<<< HEAD
-  const [editingName, setEditingName] = useState(false);
   let { canvasId } = useParams();
 
   const dispatch = useDispatch();
@@ -35,11 +22,6 @@ export default function ListTimeSeries () {
   const creatingCanvas = useSelector(state => selectCreatingCanvas(state));
 
   function updateChart(index, chart) {
-=======
-  const { canvasId } = useParams();
-
-  function updateChart (index, chart) {
->>>>>>> f84a3a1b197a3ab7853169e763218a9a38e9decc
     setCanvas((prevCanvas) => {
       if (prevCanvas.charts[index]) {
         const updatedChart = [...prevCanvas.charts];
@@ -171,39 +153,6 @@ export default function ListTimeSeries () {
 
   return (
     <Box alignContent={'center'}>
-<<<<<<< HEAD
-      {edit && editingName ? (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          width={'60%'}
-          mx={'auto'}
-        >
-          <TextField
-            autoFocus
-            variant="outlined"
-            label="Canvas Name"
-            margin="normal"
-            fullWidth
-            value={canvas?.name}
-            onChange={handleNameChange}
-            onKeyDown={handleKeyPress}
-            onBlur={() => setEditingName(false)}
-          />
-        </Box>
-      ) : (
-        <Typography
-          variant="h3"
-          align='center'
-          m={2}
-          onClick={() => setEditingName(true)}
-          style={{ cursor: 'pointer', color: !canvas?.name ? 'red' : 'inherit'}}
-        >
-          {canvas?.name || 'Press to Change Canvas Name'}
-        </Typography>
-      )}
-=======
       {edit &&
         (
           <Box
@@ -229,7 +178,6 @@ export default function ListTimeSeries () {
           </Box>
         )
       }
->>>>>>> f84a3a1b197a3ab7853169e763218a9a38e9decc
       {(edit) && <Box
         sx={{
           position: 'fixed',
