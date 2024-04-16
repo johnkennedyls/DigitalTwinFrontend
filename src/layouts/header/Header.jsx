@@ -89,7 +89,7 @@ export default function Header () {
                 Plants
               </MenuItem>
               <MenuItem color="inherit" sx={{ marginRight: '0.5rem' }} onClick={(e) => navigate(e, '/manage-process')}>
-                Process
+                Processes
               </MenuItem>
               <MenuItem color="inherit" sx={{ marginRight: '0.5rem' }} onClick={(e) => navigate(e, '/manage-type-alarm')}>
                 Alarm Types
