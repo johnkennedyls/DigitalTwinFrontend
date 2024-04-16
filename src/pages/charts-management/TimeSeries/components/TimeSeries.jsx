@@ -177,16 +177,18 @@ export default function TimeSeries ({ edit, index, updateChart, chart, canvasId 
   }, [selectedExecution, selectedProcess, mode]);
 
   const addTagsWithDelay = async () => {
-    const tagNames = chartProps.tagList.split(',').map(tag => tag.trim());
-    const selTag = tags.filter(tag => tagNames.includes(plantState[selectedPlant].tags[tag]));
-    const addedTags = [];
-    for (let i = 0; i < selTag.length; i++) {
-      const tag = selTag[i];
-      await new Promise(resolve => setTimeout(() => {
-        handleSelectTags([...addedTags, tag]);
-        addedTags.push(tag);
-        resolve();
-      }, 500));
+    if(chartProps.tagList) {
+      const tagNames = chartProps.tagList.split(',').map(tag => tag.trim());
+      const selTag = tags.filter(tag => tagNames.includes(plantState[selectedPlant].tags[tag]));
+      const addedTags = [];
+      for (let i = 0; i < selTag.length; i++) {
+        const tag = selTag[i];
+        await new Promise(resolve => setTimeout(() => {
+          handleSelectTags([...addedTags, tag])
+          addedTags.push(tag);
+          resolve();
+        }, 500));
+      }
     }
   };
 
