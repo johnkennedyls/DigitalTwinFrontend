@@ -34,6 +34,8 @@ import ProcessSelectionForm from './SelectionForms/ProcessSelectionForm';
 import ExecutionSelectionForm from './SelectionForms/ExecutionSelectionForm';
 import TagSelectionForm from './SelectionForms/TagsSelectionForm';
 import ChartTypeDialog from './ChartTypeDialog';
+import Button from '@mui/material/Button';
+import GetAppIcon from '@mui/icons-material/GetApp';
 
 ECharts.use([
   ToolboxComponent,
@@ -374,6 +376,36 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
     return option;
   };
 
+  const exportToCsv = (data, filename) => {
+    if (data.date.length === 0) {
+      return;
+    }
+    const csv = [];
+    const header = ['Date', ...selectedTags.map(tag => plantState[selectedPlant].tags[tag])];
+    csv.push(header.join(','));
+
+    for (let i = 0; i < data.date.length; i++) {
+      const row = [data.date[i]];
+      for (let j = 0; j < selectedTags.length; j++) {
+        const tag = selectedTags[j];
+        const value = data[tag][i] ? data[tag][i][1] : '';
+        row.push(value);
+      }
+      csv.push(row.join(','));
+    }
+
+    const csvContent = csv.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${filename}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       {edit && <Box
@@ -475,6 +507,14 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
               option={getOption()}
               style={{ height: '60vh' }}
             />
+            <Button
+        startIcon={<GetAppIcon />}
+        onClick={() => exportToCsv(delimitedData, 'chart-data')}
+        variant="contained"
+        color="primary"
+      >
+        Descargar CSV
+      </Button>
             {mode === 'realtime' &&
               selectedExecution &&
               selectedExecution.state === 'running' && (
