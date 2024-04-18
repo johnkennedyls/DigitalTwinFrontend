@@ -133,7 +133,7 @@ export default function Header () {
               Plants
             </Button>
             <Button color="inherit" sx={{ marginRight: '0.5rem' }} onClick={(e) => navigate(e, '/manage-process')}>
-              Process
+              Processes
             </Button>
             <Button color="inherit" sx={{ marginRight: '0.5rem' }} onClick={(e) => navigate(e, '/manage-type-alarm')}>
               Alarm Types
