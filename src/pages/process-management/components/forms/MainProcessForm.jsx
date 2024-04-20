@@ -6,10 +6,11 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import AddIcon from '@mui/icons-material/Add';
 
 const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', initialSelected = [] }) => {
   const plantState = useSelector(state => state.plants);
-
+  
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
   const [selectedAssets, setSelectedAssets] = useState(initialSelected);
@@ -109,7 +110,9 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                   </AccordionDetails>
                 </Accordion>
               ))}
-
+              <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
+                Add process
+              </Button>
             </form>
           </Paper>
           <Accordion
@@ -125,14 +128,15 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails sx={{ backgroundColor: isAccordionExpanded ? '#f6f6f6' : 'inherit' }}>
-                  <Button type="submit" variant="contained" sx={{ mt: 4 }}>
+                  <Button 
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={handleAddManualTag}
+                  >
                     add manual tag
                   </Button>
                 </AccordionDetails>
             </Accordion>
-            <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
-                Add process
-              </Button>
         </Grid>
       </Grid>
   );
