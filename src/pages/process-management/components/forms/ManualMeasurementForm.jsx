@@ -10,10 +10,21 @@ import { useSelector } from "react-redux";
 import { handleBreakpoints } from "@mui/system";
 
 
-const ManualMeasurementForm = () => {
+const ManualMeasurementForm = ({ onNext, initialName = '', initialDescription = '' }) => {
+
+    const [name, setName] = useState(initialName);
+    const [description, setDescription] = useState(initialDescription);
+
+    ManualMeasurementForm.propTypes = {
+        onNext: PropTypes.func.isRequired,
+        initialName: PropTypes.string,
+        initialDescription: PropTypes.string
+    }
 
     const handleSubmit = e => {
         e.preventDefault();
+
+        onNext({ manualTagName: name, ManualTagDescription: description });
     }
 
     return (
@@ -25,19 +36,19 @@ const ManualMeasurementForm = () => {
                     </Typography>
                     <form onSubmit={handleSubmit}>
                         <TextField
-                            label="Tag name"
+                            label="Name"
                             name="name"
-                            
+                            value={name}
                             onChange={e => setName(e.target.value)}
                             fullWidth
                             required
                             sx={{ my: 2 }}  
                         />
                         <TextField
-                            label="Tag description"
+                            label="Description"
                             name="description"
-                            
-                            onChange={e => setName(e.target.value)}
+                            value={description}
+                            onChange={e => setDescription(e.target.value)}
                             fullWidth
                             required
                             sx={{ my: 2 }}  
@@ -53,6 +64,7 @@ const ManualMeasurementForm = () => {
         </Grid>
     );
 };
+
 
 export default ManualMeasurementForm;
 
