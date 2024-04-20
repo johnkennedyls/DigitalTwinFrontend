@@ -1,3 +1,4 @@
+import { ErrorRounded } from '@mui/icons-material';
 import axios from '../axios';
 
 export const getProcessesData = () => {
@@ -120,6 +121,19 @@ export const pauseProcess = (id) => {
 export const stopProcess = (id) => {
   return new Promise((resolve, reject) => {
     axios.post(`processes/stop/${id}`)
+      .then(response => {
+        resolve(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+        reject(error);
+      });
+  });
+};
+
+export const addManualMeasurement = (manualMeasurement) => {
+  return new Promise((resolve, reject) => {
+    axios.post(`processes/manual`, manualMeasurement)
       .then(response => {
         resolve(response.data);
       })
