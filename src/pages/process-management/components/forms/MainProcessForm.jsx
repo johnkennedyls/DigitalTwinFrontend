@@ -45,75 +45,96 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
     onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets });
   };
 
+  const [isAccordionExpanded, setIsAccordionExpanded] = useState(false);
+
   return (
     <Grid container justifyContent="center">
-      <Grid item xs={12} sm={6} md={6}>
-        <Paper elevation={3} sx={{ p: 4, my: 4 }}>
-          <Typography variant="h6" gutterBottom>
-            Add process
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              label="Process name"
-              name="name"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              fullWidth
-              required
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Process description"
-              name="description"
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              fullWidth
-              multiline
-              rows={4}
-              sx={{ mb: 2 }}
-            />
-            {Object.keys(plantState).map((plantKey) => (
-              <Accordion key={plantState[plantKey].assetId}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                  onClick={(event) => event.stopPropagation()}
-                >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={selectedAssets.includes(plantState[plantKey].assetId)}
-                        onChange={() => handleCheck(plantState[plantKey].assetId)}
-                      />
-                    }
-                    label={plantState[plantKey].plantName}
-                  />
-                </AccordionSummary>
-                <AccordionDetails>
-                  {Object.keys(plantState[plantKey].tags).map((assetId) => (
+        <Grid item xs={12} sm={6} md={6}>
+          <Paper elevation={3} sx={{ p: 4, my: 4 }}>
+            <Typography variant="h6" gutterBottom fontWeight="bold">
+              Add process
+            </Typography>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                label="Process name"
+                name="name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                fullWidth
+                required
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Process description"
+                name="description"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                fullWidth
+                multiline
+                rows={4}
+                sx={{ mb: 2 }}
+              />
+              {Object.keys(plantState).map((plantKey) => (
+                <Accordion key={plantState[plantKey].assetId}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <FormControlLabel
-                      key={assetId}
                       control={
                         <Checkbox
-                          disabled={selectedAssets.includes(plantState[plantKey].assetId)}
-                          checked={selectedAssets.includes(Number(assetId))}
-                          onChange={() => handleCheck(Number(assetId))}
+                          checked={selectedAssets.includes(plantState[plantKey].assetId)}
+                          onChange={() => handleCheck(plantState[plantKey].assetId)}
                         />
                       }
-                      label={plantState[plantKey].tags[assetId]}
+                      label={plantState[plantKey].plantName}
                     />
-                  ))}
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    {Object.keys(plantState[plantKey].tags).map((assetId) => (
+                      <FormControlLabel
+                        key={assetId}
+                        control={
+                          <Checkbox
+                            disabled={selectedAssets.includes(plantState[plantKey].assetId)}
+                            checked={selectedAssets.includes(Number(assetId))}
+                            onChange={() => handleCheck(Number(assetId))}
+                          />
+                        }
+                        label={plantState[plantKey].tags[assetId]}
+                      />
+                    ))}
+                  </AccordionDetails>
+                </Accordion>
+              ))}
+
+            </form>
+          </Paper>
+          <Accordion
+               expanded={isAccordionExpanded}
+               onChange={(event, isExpanded) => setIsAccordionExpanded(isExpanded)}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel2a-content"
+                  id="panel2a-header"
+                >
+                  <Typography variant="h6" gutterBottom fontWeight="bold">
+                    Manual measurements
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails sx={{ backgroundColor: isAccordionExpanded ? '#f6f6f6' : 'inherit' }}>
+                  <Button type="submit" variant="contained" sx={{ mt: 4 }}>
+                    add manual tag
+                  </Button>
                 </AccordionDetails>
-              </Accordion>
-            ))}
+            </Accordion>
             <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
-              Add process
-            </Button>
-          </form>
-        </Paper>
+                Add process
+              </Button>
+        </Grid>
       </Grid>
-    </Grid>
   );
 };
 
