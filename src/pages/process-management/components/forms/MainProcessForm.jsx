@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button, TextField, Grid, Paper, Typography, Accordion,
   AccordionSummary, AccordionDetails, FormControlLabel, Checkbox
@@ -6,13 +6,27 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { getOperations } from '../../../../services/Api/OperationService';
+import { Box } from '@mui/system';
 
 const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', initialSelected = [] }) => {
   const plantState = useSelector(state => state.plants);
+  const [operations, setOperations] = useState([]);
 
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
   const [selectedAssets, setSelectedAssets] = useState(initialSelected);
+  const [selectedOperations, setSelectedOperations] = useState([]);
+
+  useEffect(() => {
+    getOperations()
+      .then(data => {
+        setOperations(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
 
   const handleCheck = (assetId) => {
     const alreadySelected = selectedAssets.includes(assetId);
@@ -20,6 +34,15 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
       setSelectedAssets(selectedAssets.filter(s => s !== assetId));
     } else {
       setSelectedAssets([...selectedAssets, assetId]);
+    }
+  };
+
+  const handleCheckOperation = (operationId) => {
+    const alreadySelected = selectedOperations.includes(operationId);
+    if (alreadySelected) {
+      setSelectedOperations(selectedOperations.filter(s => s !== operationId));
+    } else {
+      setSelectedOperations([...selectedOperations, operationId]);
     }
   };
 
@@ -42,7 +65,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
     let finalSelectedAssets = [...new Set([...selectedPlantsAssetId, ...filteredTags])];
     finalSelectedAssets = finalSelectedAssets.map(assetId => parseInt(assetId));
 
-    onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets });
+    onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets, selectedOperations: selectedOperations });
   };
 
   return (
@@ -50,7 +73,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
       <Grid item xs={12} sm={6} md={6}>
         <Paper elevation={3} sx={{ p: 4, my: 4 }}>
           <Typography variant="h6" gutterBottom>
-            Add process
+            Process Information
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -107,6 +130,31 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                 </AccordionDetails>
               </Accordion>
             ))}
+            <Box m={2} />
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <Typography>Add Operations</Typography>
+              </AccordionSummary>
+                <AccordionDetails>
+                  {operations.map(operation => (
+                      <FormControlLabel
+                        key={operation.id}
+                        control={
+                          <Checkbox
+                            checked={selectedOperations.includes(operation.id)}
+                            onChange={() => handleCheckOperation(operation.id)}
+                          />
+                        }
+                        label={operation.name}
+                      />
+                  ))}
+                </AccordionDetails>
+            </Accordion>
             <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
               Add process
             </Button>
