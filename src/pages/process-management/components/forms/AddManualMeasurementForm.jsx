@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
-    Box, Button, TextField, Grid, Paper, Typography,
-    Dialog
+    Box, Button, TextField, Typography,
+    Dialog, DialogContent, DialogTitle
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import { addManualMeasurement } from "../../../../services/Api/ProcessService/";
@@ -52,40 +52,36 @@ const ManualMeasurementForm = ({initialName = '', initialDescription = '' }) => 
                 add manual tag
             </Button>
             <Dialog open={open} onClose={handleClose}>
-                <Grid container justifyContent="center">
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Paper elevation={3} sx={{ p: 4, my: 4 }}>
-                            <Typography variant="h6" gutterBottom fontWeight="bold">
-                                Add manual tag
-                            </Typography>
-                            <form onSubmit={handleSubmit}>
-                                <TextField
-                                    label="Name"
-                                    name="name"
-                                    value={name}
-                                    onChange={e => setName(e.target.value)}
-                                    fullWidth
-                                    required
-                                    sx={{ my: 2 }}  
-                                />
-                                <TextField
-                                    label="Description"
-                                    name="description"
-                                    value={description}
-                                    onChange={e => setDescription(e.target.value)}
-                                    fullWidth
-                                    required
-                                    sx={{ my: 2 }}  
-                                />
-                                <Box display="flex" justifyContent="center" width="100%" sx={{ mt: 4 }}>
-                                    <Button type="submit" variant="contained">
-                                        Save
-                                    </Button>
-                                </Box>
-                            </form>
-                        </Paper>
-                    </Grid>   
-                </Grid>
+                <DialogTitle variant="h6" fontWeight="bold">
+                    Add manual tag
+                </DialogTitle>
+                <DialogContent>
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            label="Name"
+                            name="name"
+                            value={name}
+                            onChange={e => setName(e.target.value)}
+                            fullWidth
+                            required
+                            sx={{ my: 2 }}  
+                        />
+                        <TextField
+                            label="Description"
+                            name="description"
+                            value={description}
+                            onChange={e => setDescription(e.target.value)}
+                            fullWidth
+                            required
+                            sx={{ my: 2 }}  
+                        />
+                        <Box display="flex" justifyContent="center" width="100%" sx={{ mt: 4 }}>
+                            <Button type="submit" variant="contained">
+                                Save
+                            </Button>
+                        </Box>
+                    </form>
+                </DialogContent>
             </Dialog>
         </>
     );
