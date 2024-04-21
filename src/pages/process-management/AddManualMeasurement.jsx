@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom';
 
 import { addManualMeasurement } from '../../services/Api/ProcessService';
-import ManualMeasurementForm from './components/forms/ManualMeasurementForm';
+import ManualMeasurementForm from './components/forms/AddManualMeasurementForm';
 
 
 export default function AddManualMeasurement () {

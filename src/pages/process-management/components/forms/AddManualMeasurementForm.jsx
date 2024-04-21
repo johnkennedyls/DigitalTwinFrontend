@@ -13,8 +13,7 @@ const ManualMeasurementForm = ({ onNext, initialName = '', initialDescription = 
 
     const handleSubmit = e => {
         e.preventDefault();
-
-        onNext({ manualTagName: name, ManualTagDescription: description });
+        onNext({ name: name, description: description });
     }
 
     return (

@@ -19,6 +19,8 @@ import ListExecutionsProcess from '../pages/process-management/ListExecutionsPro
 import App from '../App';
 import ListCanvas from '../pages/charts-management/ListCanvas';
 import AddManualMeasurement from '../pages/process-management/AddManualMeasurement';
+import RegisterManualMeasurementForm from '../pages/process-management/components/forms/RegisterManualMeasurementForm';
+
 
 // eslint-disable-next-line react-refresh/only-export-components
 const MainLayoutRoutes = () => (
