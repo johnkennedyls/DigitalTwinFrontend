@@ -62,8 +62,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
       });
     });
 
-    let finalSelectedAssets = [...new Set([...selectedPlantsAssetId, ...filteredTags])];
-    finalSelectedAssets = finalSelectedAssets.map(assetId => parseInt(assetId));
+    const finalSelectedAssets = [...new Set([...selectedPlantsAssetId, ...filteredTags])].map(assetId => assetId.toString());
 
     onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets, selectedOperations: selectedOperations });
   };
