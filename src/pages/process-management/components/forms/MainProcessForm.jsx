@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux';
 
 
 import AddManualMeasurementForm from "./AddManualMeasurementForm";
-import { init } from 'echarts';
 
 
 const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', initialSelected = [], initialManualTags = [] }) => {
@@ -120,11 +119,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                   </AccordionDetails>
                 </Accordion>
               ))}
-              <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
-                Add process
-              </Button>
-            </form>
-            <Accordion
+              <Accordion
                 expanded={isAccordionExpanded}
                 onChange={(event, isExpanded) => setIsAccordionExpanded(isExpanded)}
                 sx={{ mt: 4 }}
@@ -149,6 +144,10 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                   />
                 </AccordionDetails>
               </Accordion>
+              <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
+                Add process
+              </Button>
+            </form>
           </Paper>
         </Grid>
       </Grid>

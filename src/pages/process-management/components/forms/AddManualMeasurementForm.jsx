@@ -18,7 +18,6 @@ const ManualMeasurementForm = ({ onManualTagAdd, initialName = '', initialDescri
 
     const handleSubmit = e => {
         e.preventDefault();
-
         addManualMeasurement(   
             {
                 name: name,
@@ -35,6 +34,8 @@ const ManualMeasurementForm = ({ onManualTagAdd, initialName = '', initialDescri
         .catch(error => {
             console.error(error);
         });
+        //The next line is used when you make click on the save button of this form, it will not trigger the click event of the parent component
+        e.stopPropagation(); 
     }
 
     
