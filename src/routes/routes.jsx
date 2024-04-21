@@ -18,9 +18,6 @@ import AddProcess from '../pages/process-management/AddProcess';
 import ListExecutionsProcess from '../pages/process-management/ListExecutionsProcess';
 import App from '../App';
 import ListCanvas from '../pages/charts-management/ListCanvas';
-import AddManualMeasurement from '../pages/process-management/AddManualMeasurement';
-import RegisterManualMeasurementForm from '../pages/process-management/components/forms/RegisterManualMeasurementForm';
-
 
 // eslint-disable-next-line react-refresh/only-export-components
 const MainLayoutRoutes = () => (
@@ -43,7 +40,6 @@ const MainLayoutRoutes = () => (
       <Route path="/manage-process" component={ListProcess} />
       <Route path="/process-executions/:processId" component={ListExecutionsProcess} />
       <Route path="/add-process" component={AddProcess} />
-      <Route path="/add-manual" component={AddManualMeasurement} />
       <Route path="*" component={Landing} />
     </Switch>
   </App>

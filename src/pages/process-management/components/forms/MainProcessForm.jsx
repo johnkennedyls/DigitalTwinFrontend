@@ -1,24 +1,27 @@
 import { useState } from 'react';
-import { useHistory } from 'react-router';
 import {
-  Button, TextField, Grid, Paper, Typography, Accordion,
+  Dialog, Button, TextField, Grid, Paper, Typography, Accordion,
   AccordionSummary, AccordionDetails, FormControlLabel, Checkbox
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import AddIcon from '@mui/icons-material/Add';
+
+
+import AddManualMeasurementForm from "./AddManualMeasurementForm";
+
 
 const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', initialSelected = [] }) => {
-  
-  const history = useHistory();
   
   const plantState = useSelector(state => state.plants);
   
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
   const [selectedAssets, setSelectedAssets] = useState(initialSelected);
-
+  
+  const [isAccordionExpanded, setIsAccordionExpanded] = useState(false);
+  const [manualTags, setManualTags] = useState([]);
+  
   const handleCheck = (assetId) => {
     const alreadySelected = selectedAssets.includes(assetId);
     if (alreadySelected) {
@@ -49,12 +52,6 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
 
     onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets });
   };
-
-  const [isAccordionExpanded, setIsAccordionExpanded] = useState(false);
-
-  const handleAddManualTag = () => {
-    history.push('add-manual');
-  }
 
   return (
     <Grid container justifyContent="center">
@@ -135,14 +132,14 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                     Manual measurements
                   </Typography>
                 </AccordionSummary>
+                
                 <AccordionDetails sx={{ backgroundColor: isAccordionExpanded ? '#f6f6f6' : 'inherit' }}>
-                  <Button 
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={handleAddManualTag}
-                  >
-                    add manual tag
-                  </Button>
+                  {manualTags.map((tag, index) => (
+                  <Typography>
+                    {tag.name}: {tag.description}
+                  </Typography>
+                  ))}
+                  <AddManualMeasurementForm />
                 </AccordionDetails>
             </Accordion>
         </Grid>
