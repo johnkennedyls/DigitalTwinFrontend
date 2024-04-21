@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useHistory } from 'react-router';
 import {
   Button, TextField, Grid, Paper, Typography, Accordion,
   AccordionSummary, AccordionDetails, FormControlLabel, Checkbox
@@ -9,6 +10,9 @@ import { useSelector } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 
 const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', initialSelected = [] }) => {
+  
+  const history = useHistory();
+  
   const plantState = useSelector(state => state.plants);
   
   const [name, setName] = useState(initialName);
@@ -47,6 +51,10 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
   };
 
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false);
+
+  const handleAddManualTag = () => {
+    history.push('add-manual');
+  }
 
   return (
     <Grid container justifyContent="center">

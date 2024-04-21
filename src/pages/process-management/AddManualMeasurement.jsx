@@ -1,23 +1,25 @@
 import { useHistory } from 'react-router-dom';
 
 import { addManualMeasurement } from '../../services/Api/ProcessService';
+import ManualMeasurementForm from './components/forms/ManualMeasurementForm';
 
-import MainProcessForm from './components/forms/MainProcessForm';
 
-export default function addManualMeasurement () {
+export default function AddManualMeasurement () {
+    const history = useHistory();
 
     const handleNext = (manualMeasurementData) => {
+        console.log(manualMeasurementData);
         addManualMeasurement(manualMeasurementData)
-            .then(() => {
-                history.pushState('/manage-process')
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    } ;
+        .then(() => {
+            history.push('add-process');
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    };
 
-    return (
-        <MainProcessForm
+    return (    
+        <ManualMeasurementForm
             onNext={handleNext}
         />
     );

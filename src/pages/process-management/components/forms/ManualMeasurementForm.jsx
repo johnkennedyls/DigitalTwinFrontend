@@ -1,25 +1,15 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import {
-    Box, Button, TextField, Grid, Paper, Typography, Accordion,
-    AccordionSummary, AccordionDetails, FormControlLabel, Checkbox
+    Box, Button, TextField, Grid, Paper, Typography
 } from "@mui/material";
 
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
-import { handleBreakpoints } from "@mui/system";
-
 
 const ManualMeasurementForm = ({ onNext, initialName = '', initialDescription = '' }) => {
 
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
 
-    ManualMeasurementForm.propTypes = {
-        onNext: PropTypes.func.isRequired,
-        initialName: PropTypes.string,
-        initialDescription: PropTypes.string
-    }
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -63,6 +53,12 @@ const ManualMeasurementForm = ({ onNext, initialName = '', initialDescription = 
             </Grid>   
         </Grid>
     );
+};
+
+ManualMeasurementForm.propTypes = {
+    onNext: PropTypes.func.isRequired,
+    initialName: PropTypes.string,
+    initialDescription: PropTypes.string
 };
 
 
