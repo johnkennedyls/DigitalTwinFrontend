@@ -115,14 +115,11 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                   </AccordionDetails>
                 </Accordion>
               ))}
-              <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
-                Add process
-              </Button>
-            </form>
-          </Paper>
-          <Accordion
-               expanded={isAccordionExpanded}
-               onChange={(event, isExpanded) => setIsAccordionExpanded(isExpanded)}>
+              <Accordion
+                expanded={isAccordionExpanded}
+                onChange={(event, isExpanded) => setIsAccordionExpanded(isExpanded)}
+                sx={{ mt: 4 }}
+              >
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel2a-content"
@@ -132,7 +129,6 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                     Manual measurements
                   </Typography>
                 </AccordionSummary>
-                
                 <AccordionDetails sx={{ backgroundColor: isAccordionExpanded ? '#f6f6f6' : 'inherit' }}>
                   {manualTags.map((tag, index) => (
                   <Typography>
@@ -141,7 +137,12 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                   ))}
                   <AddManualMeasurementForm />
                 </AccordionDetails>
-            </Accordion>
+              </Accordion>
+              <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
+                Add process
+              </Button>
+            </form>
+          </Paper>
         </Grid>
       </Grid>
   );
