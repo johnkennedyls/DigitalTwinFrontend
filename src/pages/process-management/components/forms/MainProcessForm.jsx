@@ -9,9 +9,10 @@ import { useSelector } from 'react-redux';
 
 
 import AddManualMeasurementForm from "./AddManualMeasurementForm";
+import { init } from 'echarts';
 
 
-const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', initialSelected = [] }) => {
+const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', initialSelected = [], initialManualTags = [] }) => {
   
   const plantState = useSelector(state => state.plants);
   
@@ -50,7 +51,11 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
     let finalSelectedAssets = [...new Set([...selectedPlantsAssetId, ...filteredTags])];
     finalSelectedAssets = finalSelectedAssets.map(assetId => parseInt(assetId));
 
-    onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets });
+    onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets, manualTags: manualTags });
+  };
+
+  const addManualTag = (tag) => {
+    setManualTags([...manualTags, tag]);
   };
 
   return (
@@ -115,7 +120,11 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                   </AccordionDetails>
                 </Accordion>
               ))}
-              <Accordion
+              <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
+                Add process
+              </Button>
+            </form>
+            <Accordion
                 expanded={isAccordionExpanded}
                 onChange={(event, isExpanded) => setIsAccordionExpanded(isExpanded)}
                 sx={{ mt: 4 }}
@@ -131,17 +140,15 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                 </AccordionSummary>
                 <AccordionDetails sx={{ backgroundColor: isAccordionExpanded ? '#f6f6f6' : 'inherit' }}>
                   {manualTags.map((tag, index) => (
-                  <Typography>
-                    {tag.name}: {tag.description}
+                  <Typography key={index}>
+                    {tag.id} - {tag.name}: {tag.description}
                   </Typography>
                   ))}
-                  <AddManualMeasurementForm />
+                  <AddManualMeasurementForm 
+                    onManualTagAdd={addManualTag}
+                  />
                 </AccordionDetails>
               </Accordion>
-              <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
-                Add process
-              </Button>
-            </form>
           </Paper>
         </Grid>
       </Grid>
@@ -152,7 +159,8 @@ MainProcessForm.propTypes = {
   onNext: PropTypes.func.isRequired,
   initialName: PropTypes.string,
   initialDescription: PropTypes.string,
-  initialSelected: PropTypes.arrayOf(PropTypes.number)
+  initialSelected: PropTypes.arrayOf(PropTypes.number),
+  initialManualTags: PropTypes.arrayOf(PropTypes.number)
 };
 
 export default MainProcessForm;

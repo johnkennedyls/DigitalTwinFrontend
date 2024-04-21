@@ -29,7 +29,7 @@ export const getProcessData = (id) => {
 
 export const addProcess = (process) => {
   return new Promise((resolve, reject) => {
-    axios.post('processes/add', process)
+    axios.post('processes/', process)
       .then(response => {
         resolve(response.data);
       })

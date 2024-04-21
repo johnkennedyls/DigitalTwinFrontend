@@ -8,7 +8,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { addManualMeasurement } from "../../../../services/Api/ProcessService/";
 
-const ManualMeasurementForm = ({initialName = '', initialDescription = '' }) => {
+const ManualMeasurementForm = ({ onManualTagAdd, initialName = '', initialDescription = '' }) => {
 
     const history = useHistory();
 
@@ -25,7 +25,11 @@ const ManualMeasurementForm = ({initialName = '', initialDescription = '' }) => 
                 description: description
             }
         )
-        .then(() => {
+        .then((response) => {
+            if (response) {
+                onManualTagAdd(response); 
+                handleClose(); 
+              }
             history.push('add-process');
         })
         .catch(error => {
@@ -43,14 +47,16 @@ const ManualMeasurementForm = ({initialName = '', initialDescription = '' }) => 
     };
 
     return (
-        <>
-            <Button 
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleClickOpen}
-            >
-                add manual tag
-            </Button>
+        <>  
+            <Box mt={3}>
+                <Button 
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={handleClickOpen}
+                >
+                    add manual tag
+                </Button>
+            </Box>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle variant="h6" fontWeight="bold">
                     Add manual tag
