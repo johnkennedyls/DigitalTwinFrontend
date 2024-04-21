@@ -2,7 +2,7 @@ import { AddTask } from "@mui/icons-material";
 import { Collapse, Dialog, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, Tooltip } from "@mui/material";
 import { useState } from "react";
 import PropTypes from 'prop-types';
-import AddComment from "./AddComment";
+import AddComment from "./operations/AddComment";
 import { useSelector } from "react-redux";
 
 export default function OperationDialog({ execution, reload, setReload }) {

@@ -6,15 +6,14 @@ import { DataGrid } from '@mui/x-data-grid';
 import { format } from 'date-fns';
 
 import { getExutionsByProcess } from '../../services/Api/ProcessService';
-import { setCreatingCanvas } from '../../reducers/graphic/canvaSlice';
-import OperationDialog from './components/operations/OperationDialog';
-import ListOperationDialog from './components/operations/ListOperationDialog';
+import OperationDialog from './components/actions/OperationDialog';
+import ListOperationDialog from './components/actions/ListOperationDialog';
+import ViewGraph from './components/actions/ViewGraph';
 
 export default function ListExecutionsProcess () {
   const [executions, setExecutions] = useState([]);
   const [reload, setReload] = useState(false);
   const { processId } = useParams();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     loadExecutionsData();
@@ -56,24 +55,16 @@ export default function ListExecutionsProcess () {
     },
     { field: 'state', headerName: 'State', width: 100 },
     { field: 'operName', headerName: 'Operator', width: 200 },
-    { field: 'actions', headerName: 'Actions', type: 'actions', width: 100,
+    { field: 'actions', headerName: 'Actions', type: 'actions', width: 150,
       renderCell: (params) => (
         <>
           <OperationDialog execution={params.row} reload={reload} setReload={setReload} />
           <ListOperationDialog logs={params.row.logs} />
+          <ViewGraph param={params.row} />
         </>
       )
     }
   ];
-
-  const handleRowClick = (param) => {
-    const info = {
-      executionId: param.row.id,
-      processId: param.row.processId
-    }
-    dispatch(setCreatingCanvas(info));
-    window.open('/dashboard/create-charts', '_blank');
-  }
 
   return (
     <Box m={4} maxWidth={1000} mx="auto">
@@ -86,7 +77,6 @@ export default function ListExecutionsProcess () {
         pagination
         autoHeight
         disableRowSelectionOnClick
-        onRowClick={handleRowClick}
         localeText={{
           noRowsLabel: 'No items available'
         }}
