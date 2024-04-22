@@ -16,7 +16,8 @@ const RegisterManualMeasurementForm = () => {
     const[open, setOpen] = useState(false)
     const[isAccordionExpanded, setIsAccordionExpanded] = useState(false)
 
-    const handleClickOpen = () => {
+    const handleClickOpen = e => {
+        e.stopPropagation();
         setOpen(true);
     };
 

@@ -143,3 +143,18 @@ export const addManualMeasurement = (manualMeasurement) => {
       });
   });
 };
+
+
+export const getManualMeasurements = () => {
+  return new Promise((resolve, reject) => {
+    axios.get('processes/manual/tags')
+      .then(response => {
+        resolve(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+        reject(error);
+      });
+  });
+};
+

@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 
 import { getExutionsByProcess } from '../../services/Api/ProcessService';
 import { setCreatingCanvas } from '../../reducers/graphic/canvaSlice';
+import RegisterManualMeasurementForm from './components/forms/RegisterManualMeasurementForm';
 
 export default function ListExecutionsProcess () {
   const [executions, setExecutions] = useState([]);
@@ -50,8 +51,22 @@ export default function ListExecutionsProcess () {
       width: 200,
       valueFormatter: (params) => formatDate(params.value) // Formatear la fecha de fin
     },
-    { field: 'state', headerName: 'Estado', width: 150 },
-    { field: 'operName', headerName: 'Operador', width: 200 }
+    { field: 'state', headerName: 'Estado', width: 80 },
+    { field: 'operName', headerName: 'Operador', width: 200 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      sortable: false,
+      flex: 1,
+      disableClickEventBubbling: true,
+      renderCell: () => {
+        return (
+          <>
+            <RegisterManualMeasurementForm />
+          </>
+        )
+      }
+    }
   ];
 
   const handleRowClick = (param) => {

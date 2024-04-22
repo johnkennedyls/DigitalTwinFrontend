@@ -16,7 +16,6 @@ import {
   pauseProcess, stopProcess
 } from '../../services/Api/ProcessService';
 import { setCreatingCanvas } from '../../reducers/graphic/canvaSlice';
-import { width } from '@mui/system';
 import RegisterManualMeasurementForm from './components/forms/RegisterManualMeasurementForm';
 
 const PROCESS_STATE = {
