@@ -36,6 +36,9 @@ import TagSelectionForm from './SelectionForms/TagsSelectionForm';
 import ChartTypeDialog from './ChartTypeDialog';
 import Button from '@mui/material/Button';
 import GetAppIcon from '@mui/icons-material/GetApp';
+import { exportToCsv } from '../../../../utils/Funtions';
+import { getAllMeasures } from '../../../../services/Api/measumerentService';
+
 
 ECharts.use([
   ToolboxComponent,
@@ -69,6 +72,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
 
   const [firstRender, setFirstRender] = useState(!(Object.keys(chartProps).length > 3));
   const [isCharged, setIsCharged] = useState(false);
+  const [header, setHeader] = useState(['Date']);
 
   console.log('chartProps', chartProps);
 
@@ -119,8 +123,11 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
       setChartProps((prevProps) => ({ ...prevProps, 
         tagList: tags,
         chartInstances: [{ paramId: selectedChartType.parameters[0].paramId, value: tags}] }));
+        const header = ['Date', ...selectedTags.map(tag => plantState[selectedPlant].tags[tag])];
+        setHeader(header);
     }
   };
+
 
   useEffect(() => {
     if (isCharged && selectedPlant === '') {
@@ -333,6 +340,17 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
     }));
   };
 
+  const handleExportClick = async () => {
+    try {
+      const allData = await getAllMeasures(selectedExecution.id); 
+      //const formattedData = formatDataForCsv(allData);
+      exportToCsv(allData,  'chart-data');
+    } catch (error) {
+      console.error(error);}
+  };
+  
+  
+
   // Executions for graphics
   const getOption = () => {
     const OFFSET = 60;
@@ -376,36 +394,7 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
     return option;
   };
 
-  const exportToCsv = (data, filename) => {
-    if (data.date.length === 0) {
-      return;
-    }
-    const csv = [];
-    const header = ['Date', ...selectedTags.map(tag => plantState[selectedPlant].tags[tag])];
-    csv.push(header.join(','));
-
-    for (let i = 0; i < data.date.length; i++) {
-      const row = [data.date[i]];
-      for (let j = 0; j < selectedTags.length; j++) {
-        const tag = selectedTags[j];
-        const value = data[tag][i] ? data[tag][i][1] : '';
-        row.push(value);
-      }
-      csv.push(row.join(','));
-    }
-
-    const csvContent = csv.join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `${filename}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
+ 
   return (
     <>
       {edit && <Box
@@ -507,12 +496,13 @@ export default function TimeSeries ({edit, index, updateChart, chart, canvasId})
               option={getOption()}
               style={{ height: '60vh' }}
             />
-            <Button
-        startIcon={<GetAppIcon />}
-        onClick={() => exportToCsv(delimitedData, 'chart-data')}
-        variant="contained"
-        color="primary"
-      >
+             <Button
+              startIcon={<GetAppIcon />}
+              onClick={() => handleExportClick()}
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 3 }}
+            >
         Descargar CSV
       </Button>
             {mode === 'realtime' &&
