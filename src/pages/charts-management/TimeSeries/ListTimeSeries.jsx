@@ -1,43 +1,85 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
-import { Box, Button, FormControlLabel, Switch, TextField, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { Box, Button, FormControlLabel, IconButton, Switch, TextField, Typography } from '@mui/material';
+import { Add, Delete } from '@mui/icons-material';
 import TimeSeries from './components/TimeSeries';
-import { editCanvas, getCanvas, saveCanvas } from '../../../services/Api/CanvasService';
 import SaveButton from '../../../components/buttons/SaveButton';
+
+import { editCanvas, getCanvas, saveCanvas } from '../../../services/Api/CanvasService';
+import { clearCreatingCanvas, selectCanvasById, selectCreatingCanvas } from '../../../reducers/graphic/canvaSlice';
 import { InfoAlert } from '../../../components/utils/Alert';
 
 export default function ListTimeSeries () {
-  const [canvas, setCanvas] = useState({ name: '', isShared: true, charts: [], deletedCharts: []});
+  const [canvas, setCanvas] = useState({ name: '', isShared: true, charts: [], deletedCharts: [] });
   const [charts, setCharts] = useState([]);
 
   const [edit, setEdit] = useState(new URLSearchParams(useLocation().search).get('edit') || false);
-  const [editingName, setEditingName] = useState(false);
   let { canvasId } = useParams();
-  
+
+  const dispatch = useDispatch();
+  const storedCanvas = useSelector(state => selectCanvasById(state, canvasId));
+  const creatingCanvas = useSelector(state => selectCreatingCanvas(state));
+
   function updateChart(index, chart) {
     setCanvas((prevCanvas) => {
       if (prevCanvas.charts[index]) {
         const updatedChart = [...prevCanvas.charts];
         updatedChart[index] = chart;
         return { ...prevCanvas, charts: updatedChart };
-      }else return { ...prevCanvas, charts: [...prevCanvas.charts, chart] };
+      } else return { ...prevCanvas, charts: [...prevCanvas.charts, chart] };
     });
   }
 
   useEffect(() => {
     if (canvasId && Object.keys(canvas).length === 4) {
-      getCanvas(canvasId).then((canvas) => {
-        setCanvas({ ...canvas, deletedCharts: []});
-        if (canvas.charts.length > 0) {
-          setCharts(canvas.charts.map((chart, index) => <TimeSeries key={index} index={index} edit={edit} updateChart={updateChart} chart={chart} canvasId={canvas.canvasId} />));
+      if (storedCanvas) {
+        setCanvas({ ...storedCanvas, deletedCharts: []});
+        if (storedCanvas.charts.length > 0) {
+          setCharts(
+            storedCanvas.charts.map((chart, index) => (
+              <TimeSeries 
+                key={index} 
+                index={index} 
+                edit={edit} 
+                updateChart={updateChart} 
+                chart={chart} 
+                canvasId={storedCanvas.canvasId} />
+            ))
+          );
         } else InfoAlert('No charts found in this canva.');
-      });
+      } else {
+        getCanvas(canvasId).then((canvas) => {
+          setCanvas({ ...canvas, deletedCharts: []});
+          if (canvas.charts.length > 0) {
+            setCharts(
+              canvas.charts.map((chart, index) => (
+                <TimeSeries
+                  key={index}
+                  index={index}
+                  edit={edit}
+                  updateChart={updateChart}
+                  chart={chart}
+                  canvasId={canvas.canvasId}
+                />
+              ))
+            );
+          } else InfoAlert('No charts found in this canva.');
+        });
+      }
     }else setEdit(true);
   }, [canvasId]);
+
+  useEffect(() => {
+    if (Object.keys(creatingCanvas).length > 1) {
+      setCanvas({ ...canvas, charts: [creatingCanvas]});
+      setCharts([<TimeSeries key={0} index={0} edit={true} updateChart={updateChart} chart={creatingCanvas} canvasId={creatingCanvas.canvasId} />]);
+      setEdit(true);
+    }
+    dispatch(clearCreatingCanvas())
+  }, []);
+
+  console.log(canvas)
 
   const handleNameChange = (event) => {
     setCanvas((prevCanvas) => ({ ...prevCanvas, name: event.target.value }));
@@ -47,15 +89,19 @@ export default function ListTimeSeries () {
     setCanvas((prevCanvas) => ({ ...prevCanvas, isShared: event.target.checked }));
   };
 
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter' || event.key === 'Escape') {
-      setEditingName(false);
-    }
-  }
-
   const handleAddChart = () => {
-    const newChartKey = `chart-${Date.now()}-${charts.length}`; 
-    setCharts([...charts, <TimeSeries key={newChartKey} index={charts.length} edit={true} updateChart={updateChart} chart={{}} canvasId={canvas?.canvasId || ''} />]);
+    const newChartKey = `chart-${Date.now()}-${charts.length}`;
+    setCharts([
+      ...charts,
+      <TimeSeries
+        key={newChartKey}
+        index={charts.length}
+        edit={true}
+        updateChart={updateChart}
+        chart={{}}
+        canvasId={canvas?.canvasId || ''}
+      />
+    ]);
   };
 
   const handleDeleteChart = (index) => {
@@ -81,24 +127,25 @@ export default function ListTimeSeries () {
   };
 
   const handleSaveCharts = () => {
+    console.log(canvas);
     if (canvasId) {
       editCanvas(canvas, canvasId).then((response) => {
         response.charts.map(chart => {
           chart.typeId = chart.type.typeId;
-          return chart; 
-        })
+          return chart;
+        });
         setCharts(
           response.charts.map((chart, index) => (
             <TimeSeries key={index} index={index} edit={edit} updateChart={updateChart} chart={chart} canvasId={response.canvasId} />
           ))
         );
         const updatedCanvas = { ...response, charts: response.charts };
-        setCanvas({...updatedCanvas, deletedCharts: []});
+        setCanvas({ ...updatedCanvas, deletedCharts: [] });
       });
     } else {
       saveCanvas(canvas).then((response) => {
         if (response) {
-         window.location.href = `/dashboard/manage-charts/${response.canvasId}?edit=true`;
+          window.location.href = `/dashboard/manage-charts/${response.canvasId}?edit=true`;
         }
       });
     }
@@ -106,37 +153,31 @@ export default function ListTimeSeries () {
 
   return (
     <Box alignContent={'center'}>
-      {edit && editingName ? (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          width={'60%'}
-          mx={'auto'}
-        >
-          <TextField
-            autoFocus
-            variant="outlined"
-            label="Canvas Name"
-            margin="normal"
-            fullWidth
-            value={canvas?.name}
-            onChange={handleNameChange}
-            onKeyDown={handleKeyPress}
-            onBlur={() => setEditingName(false)}
-          />
-        </Box>
-      ) : (
-        <Typography
-          variant="h3"
-          align='center'
-          m={2}
-          onClick={() => setEditingName(true)}
-          style={{ cursor: 'pointer' }}
-        >
-          {canvas?.name || 'Press to Change Canvas Name'}
-        </Typography>
-      )}
+      {edit &&
+        (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            width={'60%'}
+            mx={'auto'}
+          >
+            <TextField
+              autoFocus
+              variant="standard"
+              placeholder="Type the canvas name"
+              margin="normal"
+              fullWidth
+              value={canvas?.name}
+              onChange={handleNameChange}
+              inputProps={{
+                style: { fontSize: '30px', textAlign: 'center' },
+                maxLength: 50
+              }}
+            />
+          </Box>
+        )
+      }
       {(edit) && <Box
         sx={{
           position: 'fixed',
@@ -155,13 +196,13 @@ export default function ListTimeSeries () {
           zIndex: 1000
         }}
       >
-        <FormControlLabel 
+        <FormControlLabel
           control={<Switch
-                    checked={canvas?.isShared}
-                    onChange={handleSharedChange}
-                  />}
-          label={canvas?.isShared ? "Shared" : "Not Shared"}
-        />  
+            checked={canvas?.isShared}
+            onChange={handleSharedChange}
+          />}
+          label={canvas?.isShared ? 'Shared' : 'Not Shared'}
+        />
       </Box>}
       {charts.map((chart, index) => (
         <Box
@@ -187,7 +228,7 @@ export default function ListTimeSeries () {
               color="gray"
               onClick={() => handleDeleteChart(index)}
             >
-              <DeleteIcon />
+              <Delete />
             </IconButton>
           </Box>}
           {chart}
@@ -207,7 +248,7 @@ export default function ListTimeSeries () {
         {(edit) && <Button
           variant="contained"
           color="primary"
-          startIcon={<AddIcon />}
+          startIcon={<Add />}
           onClick={handleAddChart}
         >
           Add new canvas

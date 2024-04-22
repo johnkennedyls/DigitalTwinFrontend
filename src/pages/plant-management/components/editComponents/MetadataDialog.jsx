@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 
-import { toCamelCase } from '../../../utils/TextConverter';
-import { ErrorAlert, SuccessAlert } from '../../utils/Alert';
+import { toCamelCase } from '../../../../utils/TextConverter';
+import { ErrorAlert, SuccessAlert } from '../../../../components/utils/Alert';
 
 function MetadataDialog ({ tagProperties, setTagProperties }) {
   const [open, setOpen] = useState(false);

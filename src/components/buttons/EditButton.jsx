@@ -1,7 +1,7 @@
-import { Edit } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
+import { Edit } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 
-export default function EditButton({ onClick, disable }) {
+export default function EditButton ({ onClick, disable }) {
   return (
     <Tooltip title="Edit" >
       <IconButton
@@ -12,5 +12,5 @@ export default function EditButton({ onClick, disable }) {
         <Edit />
       </IconButton>
     </Tooltip>
-  )
-} 
+  );
+}

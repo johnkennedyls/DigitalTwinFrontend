@@ -3,8 +3,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import PropTypes from 'prop-types';
 import { Delete } from '@mui/icons-material';
 
-import { toTitleCase } from '../../../utils/TextConverter';
-import { compareMetadata, getUniqueMetadataNames } from '../../../utils/MetadataSearch';
+import { toTitleCase } from '../../../../utils/TextConverter';
+import { compareMetadata, getUniqueMetadataNames } from '../../../../utils/MetadataSearch';
 
 import MetadataDialog from './MetadataDialog';
 
@@ -16,7 +16,7 @@ function DynamicTable ({ tags, setTags, mapSvgTag, handleRemoveTag, handleChange
 
   useEffect(() => {
     if (editingCell === null) {
-      setTagProperties((prevTagProperties) => [...prevTagProperties, 
+      setTagProperties((prevTagProperties) => [...prevTagProperties,
         ...getUniqueMetadataNames(tags, tagProperties)]);
     }
   }, [tags]);
