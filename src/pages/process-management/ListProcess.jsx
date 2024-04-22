@@ -10,7 +10,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { PlayCircleFilled, PauseCircleFilled, StopRounded } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
-import SquareFootIcon from '@mui/icons-material/SquareFoot';
 
 import {
   getProcessesData, deleteProcess, startProcess,
@@ -18,6 +17,7 @@ import {
 } from '../../services/Api/ProcessService';
 import { setCreatingCanvas } from '../../reducers/graphic/canvaSlice';
 import { width } from '@mui/system';
+import RegisterManualMeasurementForm from './components/forms/RegisterManualMeasurementForm';
 
 const PROCESS_STATE = {
   STOPPED: 0,
@@ -178,12 +178,7 @@ export default function ListProcess () {
                   <StopRounded sx={{ fontSize: '100%', borderRadius: '50%' }} />
                 </IconButton>
               )}
-            <IconButton
-              color="primary"
-              onClick={() => handleManualMeasurement}
-            >
-              <SquareFootIcon />
-            </IconButton>
+
             <IconButton
               color="primary"
               disabled
@@ -191,7 +186,7 @@ export default function ListProcess () {
             >
               <EditIcon />
             </IconButton>
-
+            <RegisterManualMeasurementForm />
             <IconButton
               color="secondary"
               onClick={() => handleDelete(params.row.id)}

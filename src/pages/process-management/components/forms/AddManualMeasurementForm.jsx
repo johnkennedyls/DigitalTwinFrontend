@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
-    Box, Button, TextField, Typography,
+    Box, Button, TextField,
     Dialog, DialogContent, DialogTitle
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';

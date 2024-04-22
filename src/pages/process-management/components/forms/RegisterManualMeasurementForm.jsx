@@ -1,43 +1,96 @@
 import { useState } from "react";
 import {
-    Box, Button, TextField, Grid, Paper, Typography
+    Box, Button, IconButton, TextField, Tooltip, Dialog, DialogTitle,
+    DialogContent, Accordion, AccordionSummary, AccordionDetails
 } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SquareFootIcon from '@mui/icons-material/SquareFoot';
 
 import PropTypes from "prop-types";
 
-const RegisterManualMeasurementForm = ({ onNext, initialName = '', initialDescription = '' }) => {
+const RegisterManualMeasurementForm = () => {
 
+    const[name, setName] = useState('')
+    const[currentDateTime, setCurrentDateTime] = useState('')
+    const[open, setOpen] = useState(false)
+    const[isAccordionExpanded, setIsAccordionExpanded] = useState(false)
 
-    const handleSubmit = e => {
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const handleSubmit = () => {
         e.preventDefault();
+        
+        //register manual measurement back end method
 
+        e.stopPropagation()
     }
 
     return (
-        <Grid container justifyContent="center">
-            <Grid item xs={12} sm={6} md={6}>
-                <Paper elevation={3} sx={{ p: 4, my: 4 }}>
-                    <Typography variant="h6" gutterBottom fontWeight="bold">
-                        Register manual measurement
-                    </Typography>
+        <>  
+            <Tooltip title="Register manual measurement">
+                <IconButton
+                color="primary"
+                onClick={handleClickOpen}
+                >
+                    <SquareFootIcon />
+                </IconButton>
+            </Tooltip>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle variant="h6" fontWeight="bold">
+                    Register manual measurement
+                </DialogTitle>
+                <DialogContent>
                     <form onSubmit={handleSubmit}>
+                        <Accordion
+                            expanded={isAccordionExpanded}
+                            onChange={(event, isExpanded) => setIsAccordionExpanded(isExpanded)}
+                            sx={{ mt: 4}}
+                        >
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel2a-content"
+                                id="panel2a-header"
+                            ></AccordionSummary>
+                            <AccordionDetails>
+                            </AccordionDetails>
+                        </Accordion>
+
                         <TextField
-                            label="Measured value"
-                            name="value"
-                            value={value}
-                            onChange={e => setDescription(e.target.value)}
+                            label="Measured Value"
+                            name="name"
+                            value={name}
+                            onChange={e => setName(e.target.value)}
                             fullWidth
                             required
-                            sx={{ my: 2 }}  
+                            sx={{ my: 2}}
                         />
-
+                        <TextField
+                            label="Current Date & Time"
+                            name="currentDateTime"
+                            value={currentDateTime}
+                            onChange={e => setCurrentDateTime(e.target.value)}
+                            fullWidth
+                            required
+                            disabled
+                            sx={{ my: 2}}
+                        />
+                        <Box display="flex" justifyContent="center" width="100%" sx={{ mt: 4 }}>
+                            <Button type="submit" variant="contained">
+                                Register
+                            </Button>
+                        </Box>
                     </form>
-                </Paper>
-            </Grid>
-        </Grid>
+                </DialogContent>
+            </Dialog>
+        </>
     );
 };
-
 
 
 export default RegisterManualMeasurementForm;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  Dialog, Button, TextField, Grid, Paper, Typography, Accordion,
+  Button, TextField, Grid, Paper, Typography, Accordion,
   AccordionSummary, AccordionDetails, FormControlLabel, Checkbox
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -18,9 +18,9 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
   const [selectedAssets, setSelectedAssets] = useState(initialSelected);
-  
+  const [manualTags, setManualTags] = useState(initialManualTags);
+
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false);
-  const [manualTags, setManualTags] = useState([]);
   
   const handleCheck = (assetId) => {
     const alreadySelected = selectedAssets.includes(assetId);
