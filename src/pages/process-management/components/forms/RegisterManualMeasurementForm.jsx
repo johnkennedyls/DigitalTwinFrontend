@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import {
     Box, Button, IconButton, TextField, Tooltip, Dialog, DialogTitle,
     DialogContent, Accordion, AccordionSummary, AccordionDetails
@@ -22,6 +23,11 @@ const RegisterManualMeasurementForm = () => {
     const handleClose = () => {
         setOpen(false)
     }
+
+    useEffect(() => {
+        const currentDateTime = new Date().toLocaleString();
+        setCurrentDateTime(currentDateTime);
+    }, []);
 
     const handleSubmit = () => {
         e.preventDefault();
