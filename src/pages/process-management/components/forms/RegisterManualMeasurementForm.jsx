@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useState } from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
@@ -9,6 +10,14 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
 import { getManualMeasurementsByProcess } from "../../../../services/Api/ProcessService";
 
@@ -25,6 +34,12 @@ const RegisterManualMeasurementForm = () => {
     const[isAccordionExpanded, setIsAccordionExpanded] = useState(false)
 
     const [manualMeasurements, setManualMeasurements] = useState([]);
+
+    dayjs.extend(utc);
+    dayjs.extend(timezone);
+
+    const now = dayjs().tz(dayjs.tz.guess());
+    const [value, setValue] = React.useState(dayjs(now));
 
 
     const handleClickOpen = e => {
@@ -118,6 +133,16 @@ const RegisterManualMeasurementForm = () => {
                             disabled
                             sx={{ my: 2}}
                         />
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
+        <DateTimePicker
+          label="Controlled picker"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+        />
+      </DemoContainer>
+    </LocalizationProvider>
+
                         <Box display="flex" justifyContent="center" width="100%" sx={{ mt: 4 }}>
                             <Button type="submit" variant="contained">
                                 Register
