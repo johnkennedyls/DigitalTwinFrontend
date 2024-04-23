@@ -8,12 +8,18 @@ import { useSelector } from "react-redux";
 export default function OperationDialog({ execution, reload, setReload }) {
     const [open, setOpen] = useState(false);
     let selectProcess = useSelector(state => state.processes.processes.find(p => p.id === execution.processId));
-    const [selectedOperation, setSelectedOperation] = useState('');
+    const [selectedOperation, setSelectedOperation] = useState();
 
     const onClose = () => {
         setSelectedOperation();
         setOpen(false);
     }
+    
+    const operationOptions = {
+        "Comment": <AddComment execution={execution} onClose={onClose} reload={reload} setReload={setReload}
+            operation={selectProcess.operations.find(op => op.name === "Comment")}
+        />
+    };
 
     return (
         <>
@@ -34,12 +40,12 @@ export default function OperationDialog({ execution, reload, setReload }) {
                             disabled={!selectProcess?.operations.length}
                         >
                             {selectProcess?.operations.map(op => (
-                                <MenuItem key={op.id} value={op.id}>{op.name}</MenuItem>
+                                <MenuItem key={op.id} value={op}>{op.name}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
-                    <Collapse in={selectedOperation === 1}>
-                        <AddComment execution={execution} onClose={onClose} reload={reload} setReload={setReload} />
+                    <Collapse in={selectedOperation !== null}>
+                        {selectedOperation && operationOptions[selectedOperation.name]}
                     </Collapse>
                 </DialogContent>
             </Dialog>

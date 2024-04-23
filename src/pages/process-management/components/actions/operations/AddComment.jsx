@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useState } from "react";
 import { applyOperation } from "../../../../../services/Api/OperationService";
 
-export default function AddComment({ execution, onClose, reload, setReload }) {
+export default function AddComment({ execution, onClose, operation, reload, setReload }) {
     const [comment, setComment] = useState('');
 
     const handleClose = () => {
@@ -13,11 +13,11 @@ export default function AddComment({ execution, onClose, reload, setReload }) {
 
     const handleSubmit = () => {
         applyOperation({
-            operId: 1,
+            operId: operation.id,
             execId: execution.id,
             parameters: [
                 {
-                    paramId: 1,
+                    paramId: operation.parameters.find(p => p.name === "comment").id,
                     value: comment
                 }
             ]
