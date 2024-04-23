@@ -123,26 +123,15 @@ const RegisterManualMeasurementForm = () => {
                             required
                             sx={{ my: 2}}
                         />
-                        <TextField
-                            label="Current Date & Time"
-                            name="currentDateTime"
-                            value={currentDateTime}
-                            onChange={e => setCurrentDateTime(e.target.value)}
-                            fullWidth
-                            required
-                            disabled
-                            sx={{ my: 2}}
-                        />
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
-        <DateTimePicker
-          label="Controlled picker"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-        />
-      </DemoContainer>
-    </LocalizationProvider>
-
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
+                                <DateTimePicker
+                                label="Controlled picker"
+                                value={value}
+                                onChange={(newValue) => setValue(newValue)}
+                                />
+                            </DemoContainer>
+                        </LocalizationProvider>
                         <Box display="flex" justifyContent="center" width="100%" sx={{ mt: 4 }}>
                             <Button type="submit" variant="contained">
                                 Register
