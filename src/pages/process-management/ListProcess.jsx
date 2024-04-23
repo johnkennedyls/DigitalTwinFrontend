@@ -185,7 +185,6 @@ export default function ListProcess () {
             >
               <EditIcon />
             </IconButton>
-            <RegisterManualMeasurementForm />
             <IconButton
               color="secondary"
               onClick={() => handleDelete(params.row.id)}

@@ -145,9 +145,9 @@ export const addManualMeasurement = (manualMeasurement) => {
 };
 
 
-export const getManualMeasurements = () => {
+export const getManualMeasurementsByProcess = (processId) => {
   return new Promise((resolve, reject) => {
-    axios.get('processes/manual/tags')
+    axios.get(`processes/manual/${processId}`)
       .then(response => {
         resolve(response.data);
       })

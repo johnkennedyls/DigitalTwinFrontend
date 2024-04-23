@@ -1,20 +1,31 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import {
     Box, Button, IconButton, TextField, Tooltip, Dialog, DialogTitle,
-    DialogContent, Accordion, AccordionSummary, AccordionDetails
+    DialogContent, Accordion, AccordionSummary, AccordionDetails, 
+    Typography, FormControlLabel, Checkbox
 } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
+
+import { getManualMeasurementsByProcess } from "../../../../services/Api/ProcessService";
 
 import PropTypes from "prop-types";
 
 const RegisterManualMeasurementForm = () => {
 
+    const history = useHistory();
+    const{ processId }= useParams();
+
     const[name, setName] = useState('')
     const[currentDateTime, setCurrentDateTime] = useState('')
     const[open, setOpen] = useState(false)
     const[isAccordionExpanded, setIsAccordionExpanded] = useState(false)
+
+    const [manualMeasurements, setManualMeasurements] = useState([]);
+
 
     const handleClickOpen = e => {
         e.stopPropagation();
@@ -28,13 +39,18 @@ const RegisterManualMeasurementForm = () => {
     useEffect(() => {
         const currentDateTime = new Date().toLocaleString();
         setCurrentDateTime(currentDateTime);
+        getManualMeasurementsByProcess(processId)
+        .then((manualMeasurements) => {
+            setManualMeasurements(manualMeasurements)
+        })
+        .catch(error => {
+            console.error(error)
+        });
     }, []);
 
     const handleSubmit = () => {
         e.preventDefault();
-        
-        //register manual measurement back end method
-
+        getManualMeasurements()
         e.stopPropagation()
     }
 
@@ -63,8 +79,23 @@ const RegisterManualMeasurementForm = () => {
                                 expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel2a-content"
                                 id="panel2a-header"
-                            ></AccordionSummary>
+                            >
+                                <Typography>
+                                    Manual Tag
+                                </Typography>
+                            </AccordionSummary>
                             <AccordionDetails>
+                                {manualMeasurements.map((measurement, index) => (
+                                    <FormControlLabel
+                                    key={index}
+                                    control={
+                                        <Checkbox
+                                        // Ajusta estas propiedades según tus necesidades
+                                        />
+                                    }   
+                                    label={measurement.name} // Reemplaza 'someProperty' con la propiedad que quieres mostrar
+                                    />
+                                ))}
                             </AccordionDetails>
                         </Accordion>
 

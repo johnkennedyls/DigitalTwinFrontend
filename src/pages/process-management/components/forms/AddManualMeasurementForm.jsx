@@ -28,8 +28,7 @@ const ManualMeasurementForm = ({ onManualTagAdd, initialName = '', initialDescri
             if (response) {
                 onManualTagAdd(response); 
                 handleClose(); 
-              }
-            history.push('add-process');
+            }
         })
         .catch(error => {
             console.error(error);

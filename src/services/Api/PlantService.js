@@ -29,7 +29,7 @@ export const getPlantData = (plantId) => {
 
 export const addPlant = (plant) => {
   return new Promise((resolve, reject) => {
-    axios.post('plants/add', plant)
+    axios.post('plants', plant)
       .then(response => {
         resolve(response.data);
       })
@@ -42,7 +42,7 @@ export const addPlant = (plant) => {
 
 export const editPlant = (plant, plantId) => {
   return new Promise((resolve, reject) => {
-    axios.put(`plants/edit/${plantId}`, plant)
+    axios.put(`plants/${plantId}`, plant)
       .then(response => {
         resolve(response.data);
       })
