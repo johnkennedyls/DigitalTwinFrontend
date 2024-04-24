@@ -79,7 +79,10 @@ const RegisterManualMeasurementForm = () => {
                     <SquareFootIcon />
                 </IconButton>
             </Tooltip>
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={open} onClose={handleClose}
+            maxWidth="sm"
+            fullWidth={true}
+            >
                 <DialogTitle variant="h6" fontWeight="bold">
                     Register manual measurement
                 </DialogTitle>
@@ -113,7 +116,6 @@ const RegisterManualMeasurementForm = () => {
                                 ))}
                             </AccordionDetails>
                         </Accordion>
-
                         <TextField
                             label="Measured Value"
                             name="name"
