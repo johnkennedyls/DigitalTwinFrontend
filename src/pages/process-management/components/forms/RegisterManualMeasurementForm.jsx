@@ -1,49 +1,31 @@
-import * as React from 'react';
 import { useState } from "react";
 import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import { useParams } from 'react-router-dom';
 import {
     Box, Button, IconButton, TextField, Tooltip, Dialog, DialogTitle,
-    DialogContent, Accordion, AccordionSummary, AccordionDetails, 
-    Typography, FormControlLabel, Checkbox
+    DialogContent, InputLabel, MenuItem, FormControl, Select
 } from "@mui/material";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
-import dayjs from 'dayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 
 import { getManualMeasurementsByProcess } from "../../../../services/Api/ProcessService";
-
+import { registerManualMeasurement } from "../../../../services/Api/MeasuresService";
 import PropTypes from "prop-types";
 
-const RegisterManualMeasurementForm = () => {
+const RegisterManualMeasurementForm = ({ executionId }) => {
 
-    const history = useHistory();
     const{ processId }= useParams();
 
-    const[name, setName] = useState('')
-    const[currentDateTime, setCurrentDateTime] = useState('')
-    const[open, setOpen] = useState(false)
-    const[isAccordionExpanded, setIsAccordionExpanded] = useState(false)
+    const [selectedTag, setSelectedTag] = useState('');
+    const[measuredValue, setMeasuredValue] = useState('');
+    
+    const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
+    const[open, setOpen] = useState(false)
     const [manualMeasurements, setManualMeasurements] = useState([]);
 
-    dayjs.extend(utc);
-    dayjs.extend(timezone);
-
-    const now = dayjs().tz(dayjs.tz.guess());
-    const [value, setValue] = React.useState(dayjs(now));
-
-
     const handleClickOpen = e => {
-        e.stopPropagation();
         setOpen(true);
     };
 
@@ -52,8 +34,6 @@ const RegisterManualMeasurementForm = () => {
     }
 
     useEffect(() => {
-        const currentDateTime = new Date().toLocaleString();
-        setCurrentDateTime(currentDateTime);
         getManualMeasurementsByProcess(processId)
         .then((manualMeasurements) => {
             setManualMeasurements(manualMeasurements)
@@ -63,11 +43,27 @@ const RegisterManualMeasurementForm = () => {
         });
     }, []);
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        getManualMeasurements()
-        e.stopPropagation()
+        registerManualMeasurement(
+            {
+                assetId: selectedTag,
+                value: measuredValue,
+                execId: executionId,
+                timeStamp: currentDateTime.getTime()
+            }
+        )
+        .then(() => {
+            handleClose()
+        })
+        .catch(error => {
+            console.error(error)
+        });
     }
+    
+    const handleChange = (e) => {
+        setSelectedTag(e.target.value);
+    };
 
     return (
         <>  
@@ -88,52 +84,33 @@ const RegisterManualMeasurementForm = () => {
                 </DialogTitle>
                 <DialogContent>
                     <form onSubmit={handleSubmit}>
-                        <Accordion
-                            expanded={isAccordionExpanded}
-                            onChange={(event, isExpanded) => setIsAccordionExpanded(isExpanded)}
-                            sx={{ mt: 4}}
-                        >
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel2a-content"
-                                id="panel2a-header"
+                        <FormControl fullWidth sx={{ mt: 1}}>
+                            <InputLabel>Manual Tag</InputLabel>
+                            {manualMeasurements.map((measurement, index) => (
+                            <Select
+                            key={index}
+                            value={selectedTag}
+                            label="Manual Tag"
+                            onChange={handleChange}
                             >
-                                <Typography>
-                                    Manual Tag
-                                </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                {manualMeasurements.map((measurement, index) => (
-                                    <FormControlLabel
-                                    key={index}
-                                    control={
-                                        <Checkbox
-                                        // Ajusta estas propiedades según tus necesidades
-                                        />
-                                    }   
-                                    label={measurement.name} // Reemplaza 'someProperty' con la propiedad que quieres mostrar
-                                    />
-                                ))}
-                            </AccordionDetails>
-                        </Accordion>
+                                <MenuItem value={measurement.assetId}>{measurement.name}</MenuItem>
+                            </Select>
+                            ))}
+                        </FormControl>
                         <TextField
                             label="Measured Value"
-                            name="name"
-                            value={name}
-                            onChange={e => setName(e.target.value)}
+                            name="measured value"
+                            value={measuredValue}
+                            onChange={e => setMeasuredValue(e.target.value)}
                             fullWidth
                             required
                             sx={{ my: 2}}
                         />
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
-                                <DateTimePicker
-                                label="Controlled picker"
-                                value={value}
-                                onChange={(newValue) => setValue(newValue)}
-                                />
-                            </DemoContainer>
-                        </LocalizationProvider>
+                        <DateTimePicker sx={{width: '100%'}}
+                            label="Date & time"
+                            value={currentDateTime}
+                            onChange={(newDate) => setCurrentDateTime(newDate)}
+                        />
                         <Box display="flex" justifyContent="center" width="100%" sx={{ mt: 4 }}>
                             <Button type="submit" variant="contained">
                                 Register

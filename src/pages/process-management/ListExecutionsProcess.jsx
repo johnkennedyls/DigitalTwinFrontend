@@ -12,6 +12,7 @@ import RegisterManualMeasurementForm from './components/forms/RegisterManualMeas
 export default function ListExecutionsProcess () {
   const [executions, setExecutions] = useState([]);
   const { processId } = useParams();
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -55,14 +56,15 @@ export default function ListExecutionsProcess () {
     { field: 'operName', headerName: 'Operador', width: 200 },
     {
       field: 'actions',
+      type: 'actions',
       headerName: 'Actions',
       sortable: false,
       flex: 1,
       disableClickEventBubbling: true,
-      renderCell: () => {
+      renderCell: (params) => {
         return (
           <>
-            <RegisterManualMeasurementForm />
+            <RegisterManualMeasurementForm executionId={params.row.id}/>
           </>
         )
       }
