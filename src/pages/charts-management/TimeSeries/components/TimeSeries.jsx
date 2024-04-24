@@ -399,7 +399,7 @@ export default function TimeSeries ({ edit, index, updateChart, chart, canvasId 
             <TextField
               autoFocus
               variant="standard"
-              placeholder="Type the chart name"
+              placeholder="Enter the chart name"
               margin="normal"
               fullWidth
               value={chartProps?.name || ''}
