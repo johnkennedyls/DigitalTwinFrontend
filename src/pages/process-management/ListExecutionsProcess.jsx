@@ -22,13 +22,12 @@ export default function ListExecutionsProcess () {
 
   const loadExecutionsData = () => {
     getExutionsByProcess(processId)
-      .then((data) => {
-        setExecutions(data);
-      })
-      .catch((error) => {
-        console.error(error);
-        // Manejar el error adecuadamente
-      });
+    .then((data) => {
+      setExecutions(data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   };
 
   const formatDate = (date) => {

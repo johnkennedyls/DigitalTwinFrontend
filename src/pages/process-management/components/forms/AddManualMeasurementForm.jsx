@@ -1,16 +1,12 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
     Box, Button, TextField,
     Dialog, DialogContent, DialogTitle
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import { addManualMeasurement } from "../../../../services/Api/ProcessService/";
 
 const ManualMeasurementForm = ({ onManualTagAdd, initialName = '', initialDescription = '' }) => {
-
-    const history = useHistory();
 
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
@@ -18,22 +14,13 @@ const ManualMeasurementForm = ({ onManualTagAdd, initialName = '', initialDescri
 
     const handleSubmit = e => {
         e.preventDefault();
-        addManualMeasurement(   
+        onManualTagAdd(
             {
                 name: name,
                 description: description
             }
-        )
-        .then((response) => {
-            if (response) {
-                onManualTagAdd(response); 
-                handleClose(); 
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        });
-        //The next line is used when you make click on the save button of this form, it will not trigger the click event of the parent component
+        );
+        handleClose();
         e.stopPropagation(); 
     }
 
@@ -43,6 +30,8 @@ const ManualMeasurementForm = ({ onManualTagAdd, initialName = '', initialDescri
     };
 
     const handleClose = () => {
+        setName('');
+        setDescription('');
         setOpen(false);
     };
 
@@ -54,7 +43,7 @@ const ManualMeasurementForm = ({ onManualTagAdd, initialName = '', initialDescri
                     startIcon={<AddIcon />}
                     onClick={handleClickOpen}
                 >
-                    add manual tag
+                    Add manual tag
                 </Button>
             </Box>
             <Dialog open={open} onClose={handleClose}>

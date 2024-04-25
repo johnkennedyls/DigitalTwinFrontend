@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button, TextField, Grid, Paper, Typography, Accordion,
   AccordionSummary, AccordionDetails, FormControlLabel, Checkbox
@@ -6,19 +6,20 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-
-
 import AddManualMeasurementForm from "./AddManualMeasurementForm";
 
+import { addManualMeasurement } from "../../../../services/Api/ProcessService/";
 
-const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', initialSelected = [], initialManualTags = [] }) => {
+
+const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', initialSelected = [], initialmanualTags = [] }) => {
   
   const plantState = useSelector(state => state.plants);
   
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
   const [selectedAssets, setSelectedAssets] = useState(initialSelected);
-  const [manualTags, setManualTags] = useState(initialManualTags);
+  const [manualTags, setManualTags] = useState(initialmanualTags);
+  const [manualTagIds, setManualTagIds] = useState([]);
 
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false);
   
@@ -34,23 +35,36 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
   const handleSubmit = e => {
     e.preventDefault();
 
-    const selectedPlantsAssetId = Object.keys(plantState)
+    const promises = manualTags.map(tag => {
+      return addManualMeasurement(tag);
+    });
+
+    Promise.all(promises)
+    .then((tagIds) => {
+      const manualTagIds = tagIds;
+      
+      const selectedPlantsAssetId = Object.keys(plantState)
       .filter(plantId => selectedAssets.includes(plantState[plantId].assetId))
       .map(plantId => plantState[plantId].assetId);
 
-    const filteredTags = [];
-    Object.keys(plantState).forEach(plantId => {
-      Object.keys(plantState[plantId].tags).forEach(assetId => {
-        if (selectedAssets.includes(Number(assetId)) && !selectedPlantsAssetId.includes(plantState[plantId].assetId)) {
-          filteredTags.push(Number(assetId));
-        }
+      const filteredTags = [];
+      Object.keys(plantState).forEach(plantId => {
+        Object.keys(plantState[plantId].tags).forEach(assetId => {
+          if (selectedAssets.includes(Number(assetId)) && !selectedPlantsAssetId.includes(plantState[plantId].assetId)) {
+            filteredTags.push(Number(assetId));
+          }
+        });
       });
+
+      let finalSelectedAssets = [...new Set([...selectedPlantsAssetId, ...filteredTags])];
+      finalSelectedAssets = finalSelectedAssets.map(assetId => parseInt(assetId));
+
+      onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets, manualTags: manualTagIds });
+    })
+    .catch((error) => {
+      console.error(error);
     });
-
-    let finalSelectedAssets = [...new Set([...selectedPlantsAssetId, ...filteredTags])];
-    finalSelectedAssets = finalSelectedAssets.map(assetId => parseInt(assetId));
-
-    onNext({ processName: name, processDescription: description, selectedAssets: finalSelectedAssets, manualTags: manualTags });
+     
   };
 
   const addManualTag = (tag) => {
@@ -136,7 +150,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                 <AccordionDetails sx={{ backgroundColor: isAccordionExpanded ? '#f6f6f6' : 'inherit' }}>
                   {manualTags.map((tag, index) => (
                   <Typography key={index}>
-                    {tag.id} - {tag.name}: {tag.description}
+                    {tag.name}: {tag.description}
                   </Typography>
                   ))}
                   <AddManualMeasurementForm 
@@ -159,7 +173,7 @@ MainProcessForm.propTypes = {
   initialName: PropTypes.string,
   initialDescription: PropTypes.string,
   initialSelected: PropTypes.arrayOf(PropTypes.number),
-  initialManualTags: PropTypes.arrayOf(PropTypes.number)
+  initialmanualTags: PropTypes.arrayOf(PropTypes.number)
 };
 
 export default MainProcessForm;

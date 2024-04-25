@@ -91,6 +91,7 @@ const RegisterManualMeasurementForm = ({ executionId }) => {
                             key={index}
                             value={selectedTag}
                             label="Manual Tag"
+                            required
                             onChange={handleChange}
                             >
                                 <MenuItem value={measurement.assetId}>{measurement.name}</MenuItem>
