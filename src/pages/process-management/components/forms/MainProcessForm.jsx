@@ -19,7 +19,6 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
   const [description, setDescription] = useState(initialDescription);
   const [selectedAssets, setSelectedAssets] = useState(initialSelected);
   const [manualTags, setManualTags] = useState(initialmanualTags);
-  const [manualTagIds, setManualTagIds] = useState([]);
 
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false);
   
@@ -64,7 +63,7 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
     .catch((error) => {
       console.error(error);
     });
-     
+
   };
 
   const addManualTag = (tag) => {
