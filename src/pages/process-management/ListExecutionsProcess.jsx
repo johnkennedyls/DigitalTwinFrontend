@@ -6,22 +6,25 @@ import { DataGrid } from '@mui/x-data-grid';
 import { format } from 'date-fns';
 
 import { getExutionsByProcess } from '../../services/Api/ProcessService';
-import { setCreatingCanvas } from '../../reducers/graphic/canvaSlice';
+import OperationDialog from './components/actions/OperationDialog';
+import ListOperationDialog from './components/actions/ListOperationDialog';
+import ViewGraph from './components/actions/ViewGraph';
 
 export default function ListExecutionsProcess () {
   const [executions, setExecutions] = useState([]);
+  const [reload, setReload] = useState(false);
   const { processId } = useParams();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     loadExecutionsData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reload]);
 
   const loadExecutionsData = () => {
     getExutionsByProcess(processId)
       .then((data) => {
         setExecutions(data);
+        console.log(data);
       })
       .catch((error) => {
         console.error(error);
@@ -37,31 +40,31 @@ export default function ListExecutionsProcess () {
   };
 
   const columns = [
-    { field: 'processName', headerName: 'Proceso', width: 200 },
+    { field: 'processName', headerName: 'Process', width: 200 },
     {
       field: 'startDate',
-      headerName: 'Fecha de inicio',
-      width: 200,
+      headerName: 'Start Date',
+      width: 175,
       valueFormatter: (params) => formatDate(params.value) // Formatear la fecha de inicio
     },
     {
       field: 'endDate',
-      headerName: 'Fecha de fin',
-      width: 200,
+      headerName: 'Ending Date',
+      width: 175,
       valueFormatter: (params) => formatDate(params.value) // Formatear la fecha de fin
     },
-    { field: 'state', headerName: 'Estado', width: 150 },
-    { field: 'operName', headerName: 'Operador', width: 200 }
-  ];
-
-  const handleRowClick = (param) => {
-    const info = {
-      executionId: param.row.id,
-      processId: param.row.processId
+    { field: 'state', headerName: 'State', width: 100 },
+    { field: 'operName', headerName: 'Operator', width: 200 },
+    { field: 'actions', headerName: 'Actions', type: 'actions', width: 150,
+      renderCell: (params) => (
+        <>
+          <OperationDialog execution={params.row} reload={reload} setReload={setReload} />
+          <ListOperationDialog logs={params.row.logs} />
+          <ViewGraph param={params.row} />
+        </>
+      )
     }
-    dispatch(setCreatingCanvas(info));
-    window.open('/dashboard/create-charts', '_blank');
-  }
+  ];
 
   return (
     <Box m={4} maxWidth={1000} mx="auto">
@@ -73,8 +76,7 @@ export default function ListExecutionsProcess () {
         rowsPerPageOptions={[10, 25, 50]}
         pagination
         autoHeight
-        disableSelectionOnClick
-        onRowClick={handleRowClick}
+        disableRowSelectionOnClick
         localeText={{
           noRowsLabel: 'No items available'
         }}

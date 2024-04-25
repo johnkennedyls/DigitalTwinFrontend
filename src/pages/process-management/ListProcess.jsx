@@ -16,6 +16,7 @@ import {
   pauseProcess, stopProcess
 } from '../../services/Api/ProcessService';
 import { setCreatingCanvas } from '../../reducers/graphic/canvaSlice';
+import { loadProcessesByPlant } from '../../reducers/plant/processSlice';
 
 const PROCESS_STATE = {
   STOPPED: 0,
@@ -35,6 +36,7 @@ export default function ListProcess () {
   const loadProcessData = () => {
     getProcessesData()
       .then((data) => {
+        dispatch(loadProcessesByPlant(data));
         setProcesses(data);
         data.forEach((process) => {
           setProcessState((prevState) => {
