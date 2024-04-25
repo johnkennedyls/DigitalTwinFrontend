@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import {
     Box, Button, IconButton, TextField, Tooltip, Dialog, DialogTitle,
-    DialogContent, InputLabel, MenuItem, FormControl, Select
+    DialogContent, InputLabel, MenuItem, FormControl,
+    Select
 } from "@mui/material";
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -11,7 +12,6 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 import { getManualMeasurementsByProcess } from "../../../../services/Api/ProcessService";
 import { registerManualMeasurement } from "../../../../services/Api/MeasuresService";
-import PropTypes from "prop-types";
 
 const RegisterManualMeasurementForm = ({ executionId }) => {
 
@@ -85,18 +85,19 @@ const RegisterManualMeasurementForm = ({ executionId }) => {
                 <DialogContent>
                     <form onSubmit={handleSubmit}>
                         <FormControl fullWidth sx={{ mt: 1}}>
-                            <InputLabel>Manual Tag</InputLabel>
-                            {manualMeasurements.map((measurement, index) => (
+                            <InputLabel>{manualMeasurements.length === 0 ? 'No manual tags available' : 'Manual Tag'}</InputLabel>
                             <Select
-                            key={index}
-                            value={selectedTag}
+                            value={selectedTag??''}
                             label="Manual Tag"
                             required
                             onChange={handleChange}
+                            disabled={manualMeasurements.length === 0}
                             >
+                            {manualMeasurements.map((measurement, index) => (
                                 <MenuItem value={measurement.assetId}>{measurement.name}</MenuItem>
-                            </Select>
                             ))}
+                            </Select>
+                            
                         </FormControl>
                         <TextField
                             label="Measured Value"
