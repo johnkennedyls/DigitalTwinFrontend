@@ -24,7 +24,6 @@ const ManualMeasurementForm = ({ onManualTagAdd, initialName = '', initialDescri
         e.stopPropagation(); 
     }
 
-    
     const handleClickOpen = () => {
         setOpen(true);
     };

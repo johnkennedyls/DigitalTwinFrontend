@@ -10,7 +10,6 @@ import AddManualMeasurementForm from "./AddManualMeasurementForm";
 
 import { addManualMeasurement } from "../../../../services/Api/ProcessService/";
 
-
 const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', initialSelected = [], initialmanualTags = [] }) => {
   
   const plantState = useSelector(state => state.plants);
@@ -148,9 +147,21 @@ const MainProcessForm = ({ onNext, initialName = '', initialDescription = '', in
                 </AccordionSummary>
                 <AccordionDetails sx={{ backgroundColor: isAccordionExpanded ? '#f6f6f6' : 'inherit' }}>
                   {manualTags.map((tag, index) => (
-                  <Typography key={index}>
-                    {tag.name}: {tag.description}
-                  </Typography>
+                    <Typography 
+                      key={index} 
+                      style={{
+                        backgroundColor: "#FFFFFF",
+                        border: '2px solid #D8D8D8', 
+                        padding: '10px', 
+                        margin: '5px 0',
+                        borderRadius: '5px',
+                        wordWrap: "break-word"
+                      }}
+                    >
+                      <span style={{ fontSize: '0.9em', opacity: 0.6 }}>Name: </span>{tag.name} 
+                      <br/> 
+                      <span style={{ fontSize: '0.9em', opacity: 0.6 }}>Description: </span>{tag.description}
+                    </Typography>
                   ))}
                   <AddManualMeasurementForm 
                     onManualTagAdd={addManualTag}
