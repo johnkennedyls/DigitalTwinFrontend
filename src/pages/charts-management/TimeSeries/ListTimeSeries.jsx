@@ -165,7 +165,7 @@ export default function ListTimeSeries () {
             <TextField
               autoFocus
               variant="standard"
-              placeholder="Type the canvas name"
+              placeholder="Enter the canvas name"
               margin="normal"
               fullWidth
               value={canvas?.name}
@@ -251,7 +251,7 @@ export default function ListTimeSeries () {
           startIcon={<Add />}
           onClick={handleAddChart}
         >
-          Add new canvas
+          Add new chart
         </Button>}
       </Box>
     </Box>

@@ -41,7 +41,7 @@ export const addProcess = (process) => {
 
 export const editProcess = (process) => {
   return new Promise((resolve, reject) => {
-    axios.put(`processes/edit/${process.id}`, process)
+    axios.put(`processes/${process.id}`, process)
       .then(response => {
         resolve(response.data);
       })
@@ -54,7 +54,7 @@ export const editProcess = (process) => {
 
 export const deleteProcess = (id) => {
   return new Promise((resolve, reject) => {
-    axios.delete(`processes/delete/${id}`)
+    axios.delete(`processes/${id}`)
       .then(response => {
         resolve(response.data);
       })

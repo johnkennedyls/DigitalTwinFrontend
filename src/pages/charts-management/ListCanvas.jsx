@@ -22,8 +22,8 @@ export default function ListCanvas () {
     {
       field: 'actions',
       headerName: 'Actions',
+      type: 'actions',
       width: 200,
-      sortable: false,
       renderCell: (params) => {
         return (
           <>

@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { format } from 'date-fns';
 
 import { getExutionsByProcess } from '../../services/Api/ProcessService';
-import { setCreatingCanvas } from '../../reducers/graphic/canvaSlice';
 import RegisterManualMeasurementForm from './components/forms/RegisterManualMeasurementForm';
+import OperationDialog from './components/actions/OperationDialog';
+import ListOperationDialog from './components/actions/ListOperationDialog';
+import ViewGraph from './components/actions/ViewGraph';
 
 export default function ListExecutionsProcess () {
   const [executions, setExecutions] = useState([]);
+  const [reload, setReload] = useState(false);
   const { processId } = useParams();
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     loadExecutionsData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reload]);
 
   const loadExecutionsData = () => {
     getExutionsByProcess(processId)
@@ -38,17 +38,17 @@ export default function ListExecutionsProcess () {
   };
 
   const columns = [
-    { field: 'processName', headerName: 'Proceso', width: 200 },
+    { field: 'processName', headerName: 'Process', width: 200 },
     {
       field: 'startDate',
-      headerName: 'Fecha de inicio',
-      width: 200,
+      headerName: 'Start Date',
+      width: 175,
       valueFormatter: (params) => formatDate(params.value) // Formatear la fecha de inicio
     },
     {
       field: 'endDate',
-      headerName: 'Fecha de fin',
-      width: 200,
+      headerName: 'Ending Date',
+      width: 175,
       valueFormatter: (params) => formatDate(params.value) // Formatear la fecha de fin
     },
     { field: 'state', headerName: 'Estado', width: 80 },
@@ -57,27 +57,19 @@ export default function ListExecutionsProcess () {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
-      sortable: false,
       flex: 1,
-      disableClickEventBubbling: true,
       renderCell: (params) => {
         return (
           <>
             <RegisterManualMeasurementForm executionId={params.row.id}/>
+            <OperationDialog execution={params.row} reload={reload} setReload={setReload} />
+            <ListOperationDialog logs={params.row.logs} />
+            <ViewGraph param={params.row} />
           </>
         )
       }
     }
   ];
-
-  const handleRowClick = (param) => {
-    const info = {
-      executionId: param.row.id,
-      processId: param.row.processId
-    }
-    dispatch(setCreatingCanvas(info));
-    window.open('/dashboard/create-charts', '_blank');
-  }
 
   return (
     <Box m={4} maxWidth={1000} mx="auto">
@@ -89,8 +81,7 @@ export default function ListExecutionsProcess () {
         rowsPerPageOptions={[10, 25, 50]}
         pagination
         autoHeight
-        disableSelectionOnClick
-        onRowClick={handleRowClick}
+        disableRowSelectionOnClick
         localeText={{
           noRowsLabel: 'No items available'
         }}

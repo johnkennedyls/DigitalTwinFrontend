@@ -68,3 +68,62 @@ export function isValidSVG (svgText) {
     return false;
   }
 }
+
+export function exportToCsv(data, filename) {
+  if (!data || data.length === 0) {
+      console.log("No data to export");
+      return;
+  }
+
+  // Primero, extrae todos los nombres únicos de los activos para usarlos como cabeceras.
+  const assetNames = new Set();
+  data.forEach(asset => {
+      asset.measures.forEach(measure => {
+          assetNames.add(measure.assetName);
+      });
+  });
+
+  const headers = ["Date", "Time", "Millitm", ...assetNames];
+  const csv = [headers.join(',')];
+
+  // Crear un mapa para agrupar las medidas por timestamp
+  const groupedByTimestamp = {};
+
+  data.forEach(asset => {
+      asset.measures.forEach(measure => {
+          const date = new Date(measure.timeStamp);
+          const dateKey = `${date.toLocaleDateString()},${date.toLocaleTimeString()},${date.getMilliseconds()}`;
+          if (!groupedByTimestamp[dateKey]) {
+              groupedByTimestamp[dateKey] = {};
+          }
+          groupedByTimestamp[dateKey][measure.assetName] = measure.value.toFixed(8);  // Asumiendo que deseas 8 decimales.
+      });
+  });
+
+  // Convertir el mapa a filas CSV
+  for (const [key, values] of Object.entries(groupedByTimestamp)) {
+      const row = new Array(headers.length).fill('0.00000000');
+      row[0] = key.split(',')[0];  // Date
+      row[1] = key.split(',')[1];  // Time
+      row[2] = key.split(',')[2];  // Millitm
+      headers.forEach((header, index) => {
+          if (values[header]) {
+              row[index] = values[header];
+          }
+      });
+      csv.push(row.join(','));
+  }
+
+  const csvContent = csv.join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', `${filename}.csv`);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+
