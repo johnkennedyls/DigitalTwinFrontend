@@ -1,21 +1,21 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { getTypeAlarms, deleteTypeAlarm, getTypeAlarmsByPlant } from '../../services/TypeAlarmService';
-import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
-import { IconButton } from '@mui/material';
+import {
+  IconButton, Table, TableBody,
+  TableCell, TableHead, TableRow,
+  InputLabel, Select, MenuItem,
+  FormControl, Button, Paper,
+  TableContainer, TableFooter, TablePagination
+} from '@mui/material';
 import { Delete, Edit, Add, Visibility } from '@mui/icons-material';
-import { Table, TableBody, TableCell, TableHead, TableRow, TextField, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
-import { Typography, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import AlertMessage from '../../components/messages/AlertMessage';
-import Paper from '@mui/material/Paper';
-import TableContainer from '@mui/material/TableContainer';
-import TableFooter from '@mui/material/TableFooter';
-import TablePagination from '@mui/material/TablePagination';
-import AlertDialog from '../../components/alarms/AlertDialog.jsx';
 import { useSelector } from 'react-redux';
 
+import AlertDialog from '../../components/alarms/AlertDialog.jsx';
+import AlertMessage from '../../components/messages/AlertMessage';
+import AvatarLetter from '../../components/alarms/AvatarLetter.jsx';
+import { getTypeAlarms, deleteTypeAlarm, getTypeAlarmsByPlant } from '../../services/Api/TypeAlarmService.js';
 
 const useStyles = makeStyles({
   tableContainer: {
@@ -25,49 +25,49 @@ const useStyles = makeStyles({
     width: '80%',
     margin: '0 auto',
     marginTop: '30px',
-    marginBottom: '30px',
+    marginBottom: '30px'
   },
   table: {
     maxWidth: '800px',
-    marginBottom: '50px',
+    marginBottom: '50px'
   },
   button: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   actionCell: {
     width: '120px', // ajuste el ancho de la celda aquí
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   title: {
-    color: "#2764E3",
+    color: '#2764E3',
     paddingTop: 30,
-    fontSize: 15,
+    fontSize: 15
   },
   tableCell: {
     fontWeight: 'bold',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   paperContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100vw',
-    height: '100vh',
+    height: '100vh'
   },
   actionColumn: {
     width: '150px',
-    textAlign: 'center !important',
+    textAlign: 'center !important'
   },
   centeredCell: {
-    textAlign: 'center !important',
+    textAlign: 'center !important'
   },
   maxCell: {
     width: '150px',
-    textAlign: 'center !important',
+    textAlign: 'center !important'
   },
   titleCell: {
     fontStyle: 'italic',
@@ -77,23 +77,21 @@ const useStyles = makeStyles({
   },
   stickyFooter: {
     position: 'sticky',
-    bottom: 0,
-  },
+    bottom: 0
+  }
 });
 
-
 const ListTypeAlarm = () => {
-
   const history = useHistory();
   const basePath = import.meta.env.VITE_DASHBOARD_BASE_PATH;
-  const plantState = useSelector(state => state.plants)
-  const [plants, setPlants] = useState([])
+  const plantState = useSelector(state => state.plants);
+  const [plants, setPlants] = useState([]);
   const publicUrl = import.meta.env.VITE_PUBLIC_URL;
   const classes = useStyles();
 
-  const showTypeAlarmPath = `/detail-type-alarm/`
-  const addTypeAlarmPath = `/add-type-alarm`
-  const editTypeAlarmPath = `/edit-type-alarm/`
+  const showTypeAlarmPath = '/detail-type-alarm/';
+  const addTypeAlarmPath = '/add-type-alarm';
+  const editTypeAlarmPath = '/edit-type-alarm/';
 
   const [alarms, setAlarms] = useState([]);
   const [open, setOpen] = useState(false);
@@ -104,11 +102,9 @@ const ListTypeAlarm = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
 
   useEffect(() => {
     const currentPlants = Object.values(plantState);
@@ -116,8 +112,8 @@ const ListTypeAlarm = () => {
   }, [plantState]);
 
   useEffect(() => {
-    const currentPlants = Object.values(plantState)
-    setPlants(currentPlants)
+    const currentPlants = Object.values(plantState);
+    setPlants(currentPlants);
   }, []);
 
   const handleChangeRowsPerPage = (event) => {
@@ -127,24 +123,24 @@ const ListTypeAlarm = () => {
 
   const columns = [
     {
-      title: "Nombre",
-      field: "typeAlarmName"
+      title: 'Nombre',
+      field: 'typeAlarmName'
     },
     {
-      title: "Planta",
-      field: "plantName"
+      title: 'Planta',
+      field: 'plantName'
     },
     {
-      title: "Descripción",
-      field: "typeAlarmDescription"
+      title: 'Descripción',
+      field: 'typeAlarmDescription'
     },
     {
-      title: "Maximo de Alarmas",
-      field: "numberAlarmsMax"
+      title: 'Maximo de Alarmas',
+      field: 'numberAlarmsMax'
     },
     {
-      title: "Condición",
-      field: "condition"
+      title: 'Condición',
+      field: 'condition'
     }
   ];
 
@@ -152,7 +148,6 @@ const ListTypeAlarm = () => {
     setCurrentRow(row);
     setOpen(true);
   };
-
 
   const handleCloseDialog = () => {
     setOpen(false);
@@ -166,41 +161,40 @@ const ListTypeAlarm = () => {
     history.push(`/detail-type-alarm/${row.typeAlarmId}`);
   };
 
-
   const handleDelete = () => {
     if (currentRow) {
       deleteTypeAlarm(currentRow.typeAlarmId)
         .then(() => {
-          let message = 'Se ha eliminado exitosamente el tipo de alarma';
-          let severity = 'success';
-          setAlert({ show: true, message: message, severity: severity });
+          const message = 'Se ha eliminado exitosamente el tipo de alarma';
+          const severity = 'success';
+          setAlert({ show: true, message, severity });
           const newAlarms = alarms.filter(alarm => alarm.typeAlarmId !== currentRow.typeAlarmId);
           setAlarms(newAlarms);
         })
         .catch((error) => {
-          let message = 'No se ha podido eliminar la alarma';
-          let severity = 'error';
-          setAlert({ show: true, message: message, severity: severity });
-        })
+          console.error(error);
+          const message = 'No se ha podido eliminar la alarma';
+          const severity = 'error';
+          setAlert({ show: true, message, severity });
+        });
     }
     setOpen(false);
   };
   const handleCloseAlert = () => {
     setAlert(prevState => ({ ...prevState, show: false }));
-  }
+  };
 
   useEffect(() => {
-    getAlarms()
+    getAlarms();
   }, []);
 
   const getAlarms = () => {
-    console.log("OLAAAAAAAAAAAAA")
     getTypeAlarms()
       .then((data) => {
         setAlarms(data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -218,7 +212,7 @@ const ListTypeAlarm = () => {
           setAlarms(data);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     } else {
       getTypeAlarmsByPlant(plantId)
@@ -230,8 +224,6 @@ const ListTypeAlarm = () => {
         });
     }
   };
-
-
 
   return (
     <>
@@ -269,42 +261,44 @@ const ListTypeAlarm = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {alarms.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={12} align="center" style={{ height: '198px' }}>
-                    No hay elementos disponibles.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                <>
-                  {(rowsPerPage > 0
-                    ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    : alarms
-                  ).map((row) => (
-                    <TableRow key={row.typeAlarmId}>
-                      {columns.map((column) => (
-                        <TableCell className={classes.centeredCell} key={`${row.typeAlarmId}-${column.field}`} width={column.width}>
-                          {row[column.field]}
+              {alarms.length === 0
+                ? (
+                  <TableRow>
+                    <TableCell colSpan={12} align="center" style={{ height: '198px' }}>
+                    No items available.
+                    </TableCell>
+                  </TableRow>
+                )
+                : (
+                  <>
+                    {(rowsPerPage > 0
+                      ? alarms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      : alarms
+                    ).map((row) => (
+                      <TableRow key={row.typeAlarmId}>
+                        {columns.map((column) => (
+                          <TableCell className={classes.centeredCell} key={`${row.typeAlarmId}-${column.field}`} width={column.width}>
+                            {row[column.field]}
+                          </TableCell>
+                        ))}
+                        <TableCell className={classes.usersCell}>
+                          <AvatarLetter names={row.usersAssigned} />
                         </TableCell>
-                      ))}
-                      <TableCell className={classes.usersCell}>
-                        <AvatarLetter names={row.usersAssigned} />
-                      </TableCell>
-                      <TableCell className={classes.actionColumn}>
-                        <IconButton aria-label="show" onClick={() => handleShow(row)}>
-                          <Visibility />
-                        </IconButton>
-                        <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
-                          <Edit />
-                        </IconButton>
-                        <IconButton aria-label="delete" onClick={() => handleOpenDialog(row)}>
-                          <Delete />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </>
-              )}
+                        <TableCell className={classes.actionColumn}>
+                          <IconButton aria-label="show" onClick={() => handleShow(row)}>
+                            <Visibility />
+                          </IconButton>
+                          <IconButton aria-label="edit" onClick={() => handleEdit(row)}>
+                            <Edit />
+                          </IconButton>
+                          <IconButton aria-label="delete" onClick={() => handleOpenDialog(row)}>
+                            <Delete />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
+                )}
             </TableBody>
             <TableFooter className={classes.stickyFooter}>
               <TableRow style={{ textAlign: 'center' }}>
@@ -316,9 +310,9 @@ const ListTypeAlarm = () => {
                   page={page}
                   SelectProps={{
                     inputProps: {
-                      'aria-label': 'rows per page',
+                      'aria-label': 'rows per page'
                     },
-                    native: true,
+                    native: true
                   }}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
@@ -356,7 +350,7 @@ const ListTypeAlarm = () => {
         />
       </div>
     </>
-  )
-}
+  );
+};
 
 export default ListTypeAlarm;

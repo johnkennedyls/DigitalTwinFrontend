@@ -1,25 +1,25 @@
-import { useHistory } from "react-router-dom";
-import MainProcessForm from "/src/components/process/forms/MainProcessForm"
+import { useHistory } from 'react-router-dom';
 
-import { addProcess } from "../../services/ProcessService"
+import { addProcess } from '../../services/Api/ProcessService';
 
-export default function AddProcess() {
+import MainProcessForm from './components/forms/MainProcessForm';
 
+export default function AddProcess () {
   const history = useHistory();
 
   const handleNext = (processData) => {
     addProcess(processData)
       .then(() => {
-        history.push(`/manage-process`);
+        history.push('/manage-process');
       })
       .catch(error => {
         console.error(error);
       });
-  }
+  };
 
   return (
     <MainProcessForm
       onNext={handleNext}
     />
-  )
+  );
 }

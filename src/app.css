@@ -1,0 +1,23 @@
+.clickable-row {
+    cursor: pointer !important;
+}
+
+.swal2-container {
+    z-index: 20000 !important;
+}
+
+body {
+  margin: 0;
+}
+
+/* Estilos base para el tooltip, si decides crear uno personalizado */
+.tooltip {
+  position: absolute;
+  background-color: white;
+  color: black;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: none; /* Importante para que inicialmente no se muestre */
+  max-width: 200px;
+}

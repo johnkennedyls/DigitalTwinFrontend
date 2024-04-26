@@ -1,28 +1,34 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { getExutionsByProcess } from '/src/services/ProcessService';
-import { format } from 'date-fns'; 
+import { format } from 'date-fns';
 
-export default function ListExecutionsProcess() {
+import { getExutionsByProcess } from '../../services/Api/ProcessService';
+import RegisterManualMeasurementForm from './components/forms/RegisterManualMeasurementForm';
+import OperationDialog from './components/actions/OperationDialog';
+import ListOperationDialog from './components/actions/ListOperationDialog';
+import ViewGraph from './components/actions/ViewGraph';
+
+export default function ListExecutionsProcess () {
   const [executions, setExecutions] = useState([]);
+  const [reload, setReload] = useState(false);
   const { processId } = useParams();
 
   useEffect(() => {
     loadExecutionsData();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reload]);
 
   const loadExecutionsData = () => {
     getExutionsByProcess(processId)
-      .then((data) => {
-        setExecutions(data);
-      })
-      .catch((error) => {
-        console.error(error);
-        // Manejar el error adecuadamente
-      });
-  }
+    .then((data) => {
+      setExecutions(data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  };
 
   const formatDate = (date) => {
     if (date === -1) {
@@ -32,21 +38,37 @@ export default function ListExecutionsProcess() {
   };
 
   const columns = [
-    { field: 'processName', headerName: 'Proceso', width: 200 },
+    { field: 'processName', headerName: 'Process', width: 200 },
     {
       field: 'startDate',
-      headerName: 'Fecha de inicio',
-      width: 200,
-      valueFormatter: (params) => formatDate(params.value), // Formatear la fecha de inicio
+      headerName: 'Start Date',
+      width: 175,
+      valueFormatter: (params) => formatDate(params.value) // Formatear la fecha de inicio
     },
     {
       field: 'endDate',
-      headerName: 'Fecha de fin',
-      width: 200,
-      valueFormatter: (params) => formatDate(params.value), // Formatear la fecha de fin
+      headerName: 'Ending Date',
+      width: 175,
+      valueFormatter: (params) => formatDate(params.value) // Formatear la fecha de fin
     },
-    { field: 'state', headerName: 'Estado', width: 150 },
+    { field: 'state', headerName: 'Estado', width: 80 },
     { field: 'operName', headerName: 'Operador', width: 200 },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <>
+            <RegisterManualMeasurementForm executionId={params.row.id}/>
+            <OperationDialog execution={params.row} reload={reload} setReload={setReload} />
+            <ListOperationDialog logs={params.row.logs} />
+            <ViewGraph param={params.row} />
+          </>
+        )
+      }
+    }
   ];
 
   return (
@@ -59,9 +81,9 @@ export default function ListExecutionsProcess() {
         rowsPerPageOptions={[10, 25, 50]}
         pagination
         autoHeight
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         localeText={{
-          noRowsLabel: 'No hay elementos disponibles',
+          noRowsLabel: 'No items available'
         }}
       />
     </Box>

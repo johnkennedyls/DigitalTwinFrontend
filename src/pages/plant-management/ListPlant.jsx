@@ -1,75 +1,60 @@
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
-  Box,
-  Button,
-  IconButton,
-  Avatar,
+  Box, Button, Avatar,
+  Dialog, DialogTitle, DialogContent,
+  DialogContentText, DialogActions
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { getPlantsData, deletePlant } from '/src/services/PlantService'
-import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '/src/reducers/plant/plantSlice';
-import { useSelector, useDispatch } from "react-redux";
-import { hasAnyRole } from "/src/services/utils/funtions";
+import { hasAnyRole } from '../../utils/Funtions';
+import { getPlantsData, deletePlant } from '../../services/Api/PlantService';
+import { loadAllPlantsData, deletePlant as deletePlantFromRedux } from '../../reducers/plant/plantSlice';
+import { useMessage } from '../../providers/MessageContext';
+import RemoveButton from '../../components/buttons/RemoveBotton';
+import EditButton from '../../components/buttons/EditButton';
 
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-
-import { useMessage } from '/src/providers/MessageContext';
-
-export default function ListPlant() {
+export default function ListPlant () {
   const [plants, setPlants] = useState([]);
 
-  const plantState = useSelector(state => state.plants)
+  const plantState = useSelector(state => state.plants);
   const dispatch = useDispatch();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-
   const history = useHistory();
   const { showMessage } = useMessage();
 
-  const loadPLantData = () => {
+  useEffect(() => {
     getPlantsData()
       .then((data) => {
         dispatch(loadAllPlantsData(data));
       })
       .catch((error) => {
         console.error(error);
-        showMessage("Algo salio mal, por favor intente mas tarde", 'error')
+        showMessage('Something went wrong, please try again later.', 'error');
       });
-  }
+  }, [dispatch, showMessage]);
 
   useEffect(() => {
-    loadPLantData();
-  }, []);
-
-  useEffect(() => {
-
-    const currentPlants = []
-    console.log(plantState)
+    const currentPlants = [];
     Object.keys(plantState).forEach((plant) => {
       currentPlants.push({
-        plantId: plantState[plant].plantId,
+        plantId: plantState[plant].assetId,
         plantName: plantState[plant].plantName,
         plantDescription: plantState[plant].plantDescription,
-        plantPhoto: plantState[plant].plantPhoto,
-      })
+        plantPhoto: plantState[plant].plantPhoto
+      });
     });
 
     setPlants(currentPlants);
   }, [plantState]);
 
   const handleAdd = () => {
-    history.push(`/add-plant`);
+    history.push('/add-plant');
   };
 
   const handleEdit = (id) => {
@@ -91,54 +76,47 @@ export default function ListPlant() {
       dispatch(deletePlantFromRedux(deleteId));
     }).catch((error) => {
       console.error(error);
-      showMessage("Algo salió mal al intentar borrar la planta, por favor intenta de nuevo más tarde", 'error')
+      showMessage('Something went wrong when trying to delete the plant, please try again later.', 'error');
     });
   };
-
 
   const columns = [
     {
       field: 'plantPhoto',
-      headerName: 'Imagen',
+      headerName: 'Image',
       sortable: false,
       width: 120,
       renderCell: (params) => (
         <Avatar src={params.value} alt={params.row.name} />
-      ),
+      )
     },
-    { field: 'plantName', headerName: 'Nombre', width: 200 },
-    { field: 'plantDescription', headerName: 'Descripción', flex: 1 },
+    { field: 'plantName', headerName: 'Name', width: 200 },
+    { field: 'plantDescription', headerName: 'Description', flex: 1 },
     {
       field: 'actions',
-      headerName: 'Acciones',
+      headerName: 'Actions',
       sortable: false,
       width: 150,
       disableClickEventBubbling: true,
       renderCell: (params) => {
         return (
-          <div>
-            <IconButton
-              disabled={!hasAnyRole(['Admin-plant', 'Edit-plant'])}
-              color="primary"
+          <>
+            <EditButton
+              disable={!hasAnyRole(['Admin-plant', 'Edit-plant'])}
               onClick={() => handleEdit(params.row.plantId)}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              disabled={!hasAnyRole(['Admin-plant', 'Delete-plant'])}
-              color="secondary"
+            />
+            <RemoveButton
+              disable={!hasAnyRole(['Admin-plant', 'Delete-plant'])}
               onClick={() => handleDelete(params.row.plantId)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
+            />
+          </>
         );
-      },
-    },
+      }
+    }
   ];
 
   const handleRowClick = (param, event) => {
-    if (event.target.closest('[role="cell"]').dataset.field === "actions") {
+    if (event.target.closest('[role="cell"]').dataset.field === 'actions') {
       return;
     }
     history.push(`/detail-plant/${param.row.plantId}`);
@@ -175,7 +153,7 @@ export default function ListPlant() {
         autoHeight
         disableSelectionOnClick
         localeText={{
-          noRowsLabel: 'No hay elementos disponibles',
+          noRowsLabel: 'No items available'
         }}
         className="clickable-row"
         onRowClick={handleRowClick}
@@ -188,7 +166,7 @@ export default function ListPlant() {
           startIcon={<AddIcon />}
           onClick={handleAdd}
         >
-          Agregar planta
+          Add plant
         </Button>
       </Box>
     </Box>

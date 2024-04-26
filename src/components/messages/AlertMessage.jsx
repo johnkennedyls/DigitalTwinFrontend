@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
 const AlertMessage = ({ message, severity, open, handleClose }) => {
-  const [isOpen, setIsOpen] = useState(open);
-
   useEffect(() => {
     if (open) {
       const timer = setTimeout(() => {

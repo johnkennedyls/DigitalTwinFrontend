@@ -1,14 +1,9 @@
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import {
-  Box,
-  Button,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions
+  Box, Button, IconButton, Dialog,
+  DialogTitle, DialogContent, DialogContentText, DialogActions
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -16,46 +11,53 @@ import { PlayCircleFilled, PauseCircleFilled, StopRounded } from '@mui/icons-mat
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 
-import { getProcessesData, deleteProcess, startProcess, pauseProcess, stopProcess } from '/src/services/ProcessService';
+import {
+  getProcessesData, deleteProcess, startProcess,
+  pauseProcess, stopProcess
+} from '../../services/Api/ProcessService';
+import { setCreatingCanvas } from '../../reducers/graphic/canvaSlice';
+import { loadProcessesByPlant } from '../../reducers/plant/processSlice';
 
 const PROCESS_STATE = {
   STOPPED: 0,
   RUNNING: 1,
-  PAUSED: 2,
-}
+  PAUSED: 2
+};
 
-export default function ListProcess() {
+export default function ListProcess () {
   const [processes, setProcesses] = useState([]);
   const [processState, setProcessState] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const loadProcessData = () => {
     getProcessesData()
       .then((data) => {
+        dispatch(loadProcessesByPlant(data));
         setProcesses(data);
         data.forEach((process) => {
           setProcessState((prevState) => {
             return {
               ...prevState,
-              [process.id]: process.state,
-            }
-          })
+              [process.id]: process.state
+            };
+          });
         });
       })
       .catch((error) => {
         console.error(error);
       });
-  }
+  };
 
   useEffect(() => {
     loadProcessData();
   }, []);
 
   const handleAdd = () => {
-    history.push("add-process");
+    history.push('add-process');
   };
 
   const handlePlay = (id) => {
@@ -63,46 +65,47 @@ export default function ListProcess() {
       setProcessState((prevState) => {
         return {
           ...prevState,
-          [id]: PROCESS_STATE.RUNNING,
-        }
-      })
+          [id]: PROCESS_STATE.RUNNING
+        };
+      });
     }).catch((error) => {
       console.error(error);
     });
-  }
+  };
 
   const handlePause = (id) => {
     pauseProcess(id).then(() => {
       setProcessState((prevState) => {
         return {
           ...prevState,
-          [id]: PROCESS_STATE.PAUSED,
-        }
-      })
+          [id]: PROCESS_STATE.PAUSED
+        };
+      });
     }).catch((error) => {
       console.error(error);
     });
-  }
+  };
 
   const handleStop = (id) => {
     stopProcess(id).then(() => {
       setProcessState((prevState) => {
         return {
           ...prevState,
-          [id]: PROCESS_STATE.STOPPED,
-        }
-      })
+          [id]: PROCESS_STATE.STOPPED
+        };
+      });
     }).catch((error) => {
       console.error(error);
     });
-  }
+  };
 
   const handleSeeExecutions = (param, event) => {
-    if (event.target.closest('[role="cell"]').dataset.field === "actions") {
+    if (event.target.closest('[role="cell"]').dataset.field === 'actions') {
       return;
     }
+    dispatch(setCreatingCanvas({ assetId: param.row.assets[0].assetId}));
     history.push(`process-executions/${param.row.id}`);
-  }
+  };
 
   const handleEdit = (id) => {
     history.push(`/edit-process/${id}`);
@@ -127,32 +130,32 @@ export default function ListProcess() {
   };
 
   const columns = [
-    { field: 'name', headerName: 'Nombre', width: 200 },
-    { field: 'description', headerName: 'Descripción', flex: 1 },
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'description', headerName: 'Description', flex: 1 },
     {
       field: 'assets',
-      headerName: 'Equipos',
+      headerName: 'System',
       flex: 1,
       sortable: false,
-      valueGetter: (params) => params.row.assets.map(asset => asset.name).join(", "),
+      valueGetter: (params) => params.row.assets.map(asset => asset.name).join(', '),
       renderCell: (params) => {
-        const assetNames = params.value.split(", ");
-        const displayAssets = assetNames.slice(0, 3).join(", ");
+        const assetNames = params.value.split(', ');
+        const displayAssets = assetNames.slice(0, 3).join(', ');
         return (
           <span>
-            {assetNames.length > 3 ? 
-              `${displayAssets}, ...` : 
-              displayAssets
+            {assetNames.length > 3
+              ? `${displayAssets}, ...`
+              : displayAssets
             }
           </span>
         );
-      },
+      }
     },
     {
       field: 'actions',
-      headerName: 'Acciones',
+      headerName: 'Actions',
       sortable: false,
-      width: 150,
+      width: 200,
       disableClickEventBubbling: true,
       renderCell: (params) => {
         return (
@@ -183,7 +186,6 @@ export default function ListProcess() {
             >
               <EditIcon />
             </IconButton>
-
             <IconButton
               color="secondary"
               onClick={() => handleDelete(params.row.id)}
@@ -192,8 +194,8 @@ export default function ListProcess() {
             </IconButton>
           </div>
         );
-      },
-    },
+      }
+    }
   ];
 
   return (
@@ -224,7 +226,7 @@ export default function ListProcess() {
         autoHeight
         disableSelectionOnClick
         localeText={{
-          noRowsLabel: 'No hay elementos disponibles',
+          noRowsLabel: 'No items available'
         }}
         className="clickable-row"
         onRowClick={handleSeeExecutions}
@@ -236,7 +238,7 @@ export default function ListProcess() {
           startIcon={<AddIcon />}
           onClick={handleAdd}
         >
-          Agregar proceso
+          Add process
         </Button>
       </Box>
     </Box>
